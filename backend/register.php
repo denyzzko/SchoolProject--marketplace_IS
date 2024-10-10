@@ -1,35 +1,35 @@
-<?php
-include 'db.php';
+<?php 
+include 'db.php';  // Ensure this file contains the PDO connection setup
+
+header('Content-Type: application/json');  // Set response content type as JSON
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST["name"];
-    $email = $_POST["email"];
-    $password = password_hash($_POST["password"], PASSWORD_BCRYPT);  // Hash the password
-    $role = $_POST["role"];
+    // Sanitize user inputs
+    $name = htmlspecialchars(trim($_POST["name"]));
+    $email = htmlspecialchars(trim($_POST["email"]));
+    $password = password_hash(trim($_POST["password"]), PASSWORD_BCRYPT);  // Hash the password
+    $role = htmlspecialchars(trim($_POST["role"]));
 
-    // Check if email already exists
-    $check_email = $conn->prepare("SELECT * FROM Usr WHERE email = ?");
-    $check_email->bind_param("s", $email);
-    $check_email->execute();
-    $result = $check_email->get_result();
-    
-    if ($result->num_rows > 0) {
-        echo "Email is already registered!";
-    } else {
-        $sql = "INSERT INTO Usr (name, email, password, role) VALUES (?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssss", $name, $email, $password, $role);
+    try {
+        // Check if email already exists
+        $check_email = $pdo->prepare("SELECT * FROM Usr WHERE email = ?");
+        $check_email->execute([$email]);
+        $result = $check_email->fetch(PDO::FETCH_ASSOC);
 
-        if ($stmt->execute()) {
-            echo "Registration successful!";
+        if ($result) {
+            echo json_encode(["status" => "error", "message" => "Email is already registered!"]);
         } else {
-            echo "Error: " . $conn->error;
+            // Insert user into database
+            $sql = "INSERT INTO Usr (name, email, password, role) VALUES (?, ?, ?, ?)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$name, $email, $password, $role]);
+
+            echo json_encode(["status" => "success", "message" => "Registration successful!"]);
         }
-
-        $stmt->close();
+    } catch (PDOException $e) {
+        echo json_encode(["status" => "error", "message" => "Error: " . $e->getMessage()]);
     }
-
-    $check_email->close();
-    $conn->close();
+} else {
+    echo json_encode(["status" => "error", "message" => "Invalid request method."]);
 }
 ?>

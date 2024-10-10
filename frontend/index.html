@@ -3,18 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World Frontend</title>
+    <title>Home</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Hello World from Frontend!</h1>
-        <button onclick="fetchBackend()">Say Hello from Backend</button>
+        <h1>Welcome to Zelni Trh Jebingos</h1>
         <p id="response"></p>
+
+        <div id="auth-buttons">
+            <button onclick="window.location.href='register.html'">Register</button>
+            <button onclick="window.location.href='login.html'">Login</button>
+            <button onclick="logout()">Logout</button>
+        </div>
     </div>
 
     <script>
-        function fetchBackend() {
+        function logout() {
+            fetch('../backend/logout.php')
+            .then(response => response.json())  // Parse the JSON response
+            .then(data => {
+                if (data.status === "success") {
+                    // Clear the user interface and reload the page to reflect the logout state
+                    document.getElementById('response').innerHTML = data.message;
+                    setTimeout(() => {
+                        window.location.reload();  // Reload the page after a short delay
+                    }, 1000);  // Adjust the delay as needed (in milliseconds)
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        // Automatically check if the user is logged in when the page loads
+        window.onload = function() {
             fetch('../backend/index.php')
                 .then(response => response.text())
                 .then(data => {
