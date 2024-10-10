@@ -1,8 +1,12 @@
-# Use the official PHP image
+#PHP image
 FROM php:7.4-apache
 
-# Copy the content of the project to the Apache web root
+# Copy frontend and backend directory to root
 COPY ./frontend /var/www/html
+COPY ./backend /var/www/html/backend
 
-# Expose port 80 to allow traffic
+# permissions
+RUN chown -R www-data:www-data /var/www/html
+
+# port 80 for traffic
 EXPOSE 80
