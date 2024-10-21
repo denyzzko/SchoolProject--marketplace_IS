@@ -1,7 +1,6 @@
 <?php 
-include 'db.php';  // Ensure this file contains the PDO connection setup
-
 header('Content-Type: application/json');  // Set response content type as JSON
+include 'db.php';  // Ensure this file contains the PDO connection setup
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Sanitize user inputs

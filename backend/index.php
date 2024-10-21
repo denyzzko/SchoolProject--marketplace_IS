@@ -1,5 +1,6 @@
 <?php
 session_start();  // Start the session
+include 'db.php';
 
 if (isset($_SESSION["user_id"])) {
     // If logged in, return user info

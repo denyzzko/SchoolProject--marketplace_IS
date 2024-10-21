@@ -1,7 +1,6 @@
 <?php
-include 'db.php';  // Include the PDO connection setup
-
 session_start();  // Start the session
+include 'db.php';  // Include the PDO connection setup
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Sanitize inputs
