@@ -1,40 +1,29 @@
 <?php
+include 'db.php';  // Include the pg_connect setup
+
 session_start();  // Start the session
-include 'db.php';  // Include the PDO connection setup
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Sanitize inputs
-    $email = htmlspecialchars(trim($_POST["email"]));
-    $password = trim($_POST["password"]);
+    $email = pg_escape_string($conn, $_POST["email"]);
+    $password = $_POST["password"];
 
-    try {
-        // Prepare SQL to find user by email
-        $sql = "SELECT * FROM Usr WHERE email = ?";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([$email]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $sql = "SELECT * FROM Usr WHERE email = '$email'";
+    $result = pg_query($conn, $sql);
 
-        if ($row) {
-            // Verify the hashed password
-            if (password_verify($password, $row["password"])) {
-                // Set session variables
-                $_SESSION["user_id"] = $row["user_id"];
-                $_SESSION["name"] = $row["name"];
-                $_SESSION["role"] = $row["role"];
-
-                // Redirect to the home page after successful login
-                header("Location: ../frontend/index.html");
-                exit();  // Stop script execution after redirect
-            } else {
-                echo json_encode(["status" => "error", "message" => "Invalid password!"]);
-            }
+    if (pg_num_rows($result) == 1) {
+        $row = pg_fetch_assoc($result);
+        if (password_verify($password, $row["password"])) {
+            // Set session variables for the logged-in user
+            $_SESSION["user_id"] = $row["user_id"];
+            $_SESSION["role"] = $row["role"];
+            $_SESSION["name"] = $row["name"];
+            echo "Login successful!";
         } else {
-            echo json_encode(["status" => "error", "message" => "No user found with this email!"]);
+            echo "Invalid password!";
         }
-    } catch (PDOException $e) {
-        echo json_encode(["status" => "error", "message" => "Error: " . $e->getMessage()]);
+    } else {
+        echo "No user found with this email!";
     }
-} else {
-    echo json_encode(["status" => "error", "message" => "Invalid request method."]);
 }
 ?>
