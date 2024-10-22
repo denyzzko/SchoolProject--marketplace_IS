@@ -1,34 +1,46 @@
-<?php 
-header('Content-Type: application/json');  // Set response content type as JSON
-include 'db.php';  // Ensure this file contains the PDO connection setup
+<?php
+session_start();
+include 'db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Sanitize user inputs
+    // retrieve user inputs
     $name = htmlspecialchars(trim($_POST["name"]));
     $email = htmlspecialchars(trim($_POST["email"]));
-    $password = password_hash(trim($_POST["password"]), PASSWORD_BCRYPT);  // Hash the password
+    $password = password_hash(trim($_POST["password"]), PASSWORD_BCRYPT);
     $role = htmlspecialchars(trim($_POST["role"]));
 
-    try {
-        // Check if email already exists
-        $check_email = $pdo->prepare("SELECT * FROM Usr WHERE email = ?");
-        $check_email->execute([$email]);
-        $result = $check_email->fetch(PDO::FETCH_ASSOC);
+    // check if email already exists in the database
+    $sql = "SELECT * FROM Usr WHERE email = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-        if ($result) {
-            echo json_encode(["status" => "error", "message" => "Email is already registered!"]);
+    if ($result->num_rows > 0) {
+        // email already exists
+        echo "Email is already registered!";
+    } else {
+        // insert new user
+        $sql = "INSERT INTO Usr (name, email, password, role) VALUES (?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssss", $name, $email, $password, $role);
+
+        if ($stmt->execute()) {
+            // successful registration (set session and redirect)
+            $_SESSION["user_id"] = $conn->insert_id;
+            $_SESSION["name"] = $name;
+            $_SESSION["role"] = $role;
+
+            header("Location: ../index.html");
+            exit();
         } else {
-            // Insert user into database
-            $sql = "INSERT INTO Usr (name, email, password, role) VALUES (?, ?, ?, ?)";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([$name, $email, $password, $role]);
-
-            echo json_encode(["status" => "success", "message" => "Registration successful!"]);
+            // error occured
+            echo "Error: " . $conn->error;
         }
-    } catch (PDOException $e) {
-        echo json_encode(["status" => "error", "message" => "Error: " . $e->getMessage()]);
     }
-} else {
-    echo json_encode(["status" => "error", "message" => "Invalid request method."]);
+
+    // close statement and connection
+    $stmt->close();
+    $conn->close();
 }
 ?>

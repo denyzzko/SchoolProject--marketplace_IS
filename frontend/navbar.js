@@ -1,0 +1,109 @@
+function logout() {
+    fetch('../backend/logout.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                window.location.href = "../index.html";
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+function loadNavbar() {
+    // update navigation bar based on user info & logged in status
+    fetch('../backend/index.php')
+        .then(response => response.json())
+        .then(data => {
+            const navLinks = document.getElementById('nav-links');
+            const profile = document.getElementById('profile');
+            const responseElement = document.getElementById('response');
+
+            if (data.loggedIn) {
+                // logged in
+                if (data.role === "customer") {
+                    // customer specific
+                    navLinks.innerHTML = `
+                        <a href="../frontend/category_proposal.html">Category Proposal</a>
+                        <a href="../frontend/market.html">Market</a>
+                        <a href="../frontend/my_events.html">My Events</a>
+                    `;
+                    profile.innerHTML = `
+                        <div class="profile-info">
+                            <p><strong>${data.name}</strong></p>
+                            <p>${data.role}</p>
+                        </div>
+                        <img src="/assets/images/profile_icon.png" alt="Profile" class="profile-icon" onclick="toggleDropdown()">
+                        <div class="dropdown" id="profileDropdown">
+                            <a href="my_profile.html">My Profile</a>
+                            <a href="my_offers.html">My Offers</a>
+                            <a href="#" onclick="logout()">Logout</a>
+                        </div>
+                    `;
+                } else if (data.role === "farmer") {
+                    // farmer specific
+                    navLinks.innerHTML = `
+                        <a href="categories.html">Category Proposal</a>
+                        <a href="market.html">Market</a>
+                        <a href="my_events.html">My Events</a>
+                    `;
+                    profile.innerHTML = `
+                        <div class="profile-info">
+                            <p><strong>${data.name}</strong></p>
+                            <p>${data.role}</p>
+                        </div>
+                        <button onclick="logout()">Logout</button>
+                    `;
+                }
+
+                // activate the current page link
+                activateCurrentPageLink();
+
+            } else {
+                // not logged in
+                profile.innerHTML = `
+                    <div class="log-reg-buttons">
+                        <button onclick="window.location.href='../frontend/register.html'">Register</button>
+                        <button onclick="window.location.href='../frontend/login.html'">Login</button>
+                    </div>
+                `;
+                responseElement.textContent = "You are not logged in. Please login or register.";
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+// profile dropdown menu
+function toggleDropdown() {
+    var dropdown = document.getElementById("profileDropdown");
+    dropdown.classList.toggle("show");
+}
+
+// call loadNavbar on page load
+window.addEventListener('DOMContentLoaded', loadNavbar);
+
+// close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+    if (!event.target.matches('.profile-icon')) {
+        var dropdowns = document.getElementsByClassName("dropdown");
+        for (var i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
+};
+
+// function to highlight the active page link
+function activateCurrentPageLink() {
+    document.querySelectorAll(".nav-links a").forEach((link) => {
+        if (link.href === window.location.href) {
+            link.classList.add("active");
+            link.setAttribute("aria-current", "page");
+        }
+    });
+}

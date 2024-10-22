@@ -1,29 +1,39 @@
 <?php
-include 'db.php';  // Include the pg_connect setup
-
-session_start();  // Start the session
+session_start();
+include 'db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Sanitize inputs
-    $email = pg_escape_string($conn, $_POST["email"]);
+    // retrieve user inputs
+    $email = $_POST["email"];
     $password = $_POST["password"];
 
-    $sql = "SELECT * FROM Usr WHERE email = '$email'";
-    $result = pg_query($conn, $sql);
+    // check if email exists in the database
+    $sql = "SELECT * FROM Usr WHERE email = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    if (pg_num_rows($result) == 1) {
-        $row = pg_fetch_assoc($result);
+    if ($result->num_rows == 1) {
+        // email exists so verify password
+        $row = $result->fetch_assoc();
         if (password_verify($password, $row["password"])) {
-            // Set session variables for the logged-in user
+            // password correct so set session and redirect
             $_SESSION["user_id"] = $row["user_id"];
             $_SESSION["role"] = $row["role"];
             $_SESSION["name"] = $row["name"];
-            echo "Login successful!";
+
+            header("Location: ../index.html");
+            exit();
         } else {
             echo "Invalid password!";
         }
     } else {
         echo "No user found with this email!";
     }
+
+    // close statement and connectio
+    $stmt->close();
+    $conn->close();
 }
 ?>

@@ -1,0 +1,154 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    margin: 20px 0;
+}
+
+p {
+    font-size: 18px;
+}
+
+.container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+/* responses*/
+#response {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #28a745;
+}
+
+/* navbar */
+.navbar {
+    background-color: #333;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    /*border: 1px solid red;*/
+
+}
+
+.navbar .logo {
+    color: #fff;
+    font-size: 20px;
+    margin-left: 20px;
+    flex: 1;
+}
+
+.navbar .nav-links {
+    display: flex;
+    justify-content: center;
+    flex: 2;
+    align-items: flex-end;
+    margin-top: 35px;
+}
+  
+.navbar .nav-links a {
+    color: #f2f2f2;
+    text-align: center;
+    padding: 10px 15px;
+    display: inline-block;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0 15px;
+}
+
+.navbar .nav-links a:hover {
+    background-color: #575757;
+    border-radius: 5px;
+}
+
+.navbar .nav-links .active {
+    background-color: #8a8888;
+    border-radius: 5px;
+}
+
+.navbar .profile {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-right: 25px;
+    flex: 1
+}
+
+.navbar .profile .log-reg-buttons button{
+    padding: 10px 20px;
+    margin-left: 50px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #222222;
+    color: white;
+    border: 1px solid white;
+    border-radius: 5px;
+}
+
+.navbar .profile .log-reg-buttons button:hover {
+    background-color: #575757;
+}
+
+.navbar .profile .profile-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.navbar .profile .profile-info {
+    display: flex;
+    flex-direction: column;
+    margin-right: 15px;
+    text-align: right;
+}
+
+.profile-info p {
+    color: #fff;
+    font-size: 15px;
+    margin: 0;
+}
+
+/* profile dropdown menu */
+.dropdown {
+    display: none;
+    position: absolute;
+    top: 60%;
+    right: 0;
+    background-color: #222222;
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    z-index: 20;
+    padding: 10px;
+    min-width: 150px;
+}
+
+.dropdown a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+    font-size: 16px;
+}
+
+.dropdown a:hover {
+    background-color: #575757;
+    border-radius: 5px;
+}
+
+.dropdown.show {
+    display: block;
+}
