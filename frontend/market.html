@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Market</title>
     <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../market.css">
 </head>
 <body>
 
@@ -23,13 +24,72 @@
         </nav>
     </div>
 
-    <!-- Content Section -->
-    <div class="container">
-        <h1>This is Market</h1>
+    <!-- Main Content -->
+    <div class="main-layout">
+        <!-- Left Sidebar -->
+        <aside class="left-sidebar">
+            <button class="sidebar-btn" id="create-offer-btn" >Create offer</button>
+            <button class="sidebar-btn">My offers</button>
+            <button class="sidebar-btn">View orders</button>
+            <button class="sidebar-btn">View reviews</button>
+        </aside>
+
+        <!-- Market Offers -->
+        <main id="market-container" class="market-container">
+            <!-- Offers will be dynamically loaded here -->
+        </main>
     </div>
 
-    <!-- Load the navbar.js script -->
-    <script src="navbar.js"></script>
+    <!-- Form Modal for Creating Offer -->
+    <div id="createOfferModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Create offer</h2>
+            <form id="create-offer-form">
+                <label for="category_id">Category ID:</label>
+                <input type="number" id="category_id" name="category_id" required><br><br>
 
+                <label for="type">Type:</label>
+                <select id="type" name="type" required>
+                    <option value="sale">Sale</option>
+                    <option value="selfpick">Self-pick</option>
+                </select><br><br>
+
+                <label for="price">Price:</label>
+                <input type="number" id="price" name="price" step="0.01" required><br><br>
+
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" name="quantity" required><br><br>
+
+                <label for="origin">Origin:</label>
+                <select id="origin" name="origin" required>
+                    <option value="Czech Republic">Czech Republic</option>
+                    <option value="Spain">Spain</option>
+                    <option value="England">England</option>
+                    <option value="Portugal">Portugal</option>
+                    <option value="USA">USA</option>
+                    <option value="Germany">Germany</option>
+                    <option value="Poland">Poland</option>
+                    <option value="Belgium">Belgium</option>
+                </select><br><br>
+
+                <label for="date_of_harvest">Date of Harvest:</label>
+                <input type="date" id="date_of_harvest" name="date_of_harvest" required><br><br>
+
+                <label for="price_item">Price per Item:</label>
+                <input type="number" id="price_item" name="price_item" step="0.01"><br><br>
+
+                <label for="price_kg">Price per Kg:</label>
+                <input type="number" id="price_kg" name="price_kg" step="0.01"><br><br>
+
+                <button type="button" id="submitOfferForm">Create Offer</button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Scripts -->
+    <script src="navbar.js"></script>
+    <script src="market.js"></script>
 </body>
 </html>

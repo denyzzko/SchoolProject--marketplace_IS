@@ -44,16 +44,21 @@ function loadNavbar() {
                 } else if (data.role === "farmer") {
                     // farmer specific
                     navLinks.innerHTML = `
-                        <a href="categories.html">Category Proposal</a>
-                        <a href="market.html">Market</a>
-                        <a href="my_events.html">My Events</a>
+                        <a href="../frontend/category_proposal.html">Category Proposal</a>
+                        <a href="../frontend/market.html">Market</a>
+                        <a href="../frontend/my_events.html">My Events</a>
                     `;
                     profile.innerHTML = `
                         <div class="profile-info">
                             <p><strong>${data.name}</strong></p>
                             <p>${data.role}</p>
                         </div>
-                        <button onclick="logout()">Logout</button>
+                        <img src="/assets/images/profile_icon.png" alt="Profile" class="profile-icon" onclick="toggleDropdown()">
+                        <div class="dropdown" id="profileDropdown">
+                            <a href="my_profile.html">My Profile</a>
+                            <a href="my_offers.html">My Offers</a>
+                            <a href="#" onclick="logout()">Logout</a>
+                        </div>
                     `;
                 }
 
