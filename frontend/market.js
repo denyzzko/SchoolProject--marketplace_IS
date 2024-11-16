@@ -72,19 +72,34 @@ window.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             const marketContainer = document.getElementById('market-container');
+            marketContainer.innerHTML = ''; // Vyčistíme obsah před přidáním nových nabídek
             data.forEach(offer => {
                 const offerBox = document.createElement('div');
                 offerBox.className = 'grid-item';
                 offerBox.innerHTML = `
-                    <p><strong>Category ID:</strong> ${offer.category_id}</p>
-                    <p><strong>Type:</strong> ${offer.type}</p>
-                    <p><strong>Price:</strong> ${offer.price}</p>
-                    <p><strong>Quantity:</strong> ${offer.quantity}</p>
-                    <p><strong>Origin:</strong> ${offer.origin}</p>
-                    <p><strong>Date of Harvest:</strong> ${offer.date_of_harvest}</p>
+                    <div class="top-section"></div>
+                    <div class="middle-section">${offer.type === 'sale' ? 'Sale' : 'Selfpick'}</div>
+                    <div class="bottom-section">
+                        <div>
+                            <p><strong>Name:</strong> ${offer.category_id}</p>
+                            <p><strong>Farmer:</strong> ${offer.farmer_name}</p>
+                            <p>${offer.price_item} CZK</p>
+                            <p>${offer.price_kg} CZK/kg</p>
+                        </div>
+                        <div>
+                            <p><strong>Remains:</strong> ${offer.quantity}</p>
+                            <div class="actions">
+                                <button class="button">Porovnat cenu</button>
+                            </div>
+                        </div>
+                    </div>
                 `;
                 marketContainer.appendChild(offerBox);
             });
         })
         .catch(error => console.error('Error:', error));
 });
+
+
+
+

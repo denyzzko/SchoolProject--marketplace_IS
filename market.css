@@ -113,3 +113,73 @@
     text-decoration: none;
     cursor: pointer;
 }
+
+.grid-item {
+    display: grid;
+    grid-template-rows: 2fr 1fr 2fr; /* Rozdělení na horní, střední a dolní část */
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    height: 220px;
+}
+
+.grid-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.grid-item .top-section {
+    background-color: #a8a8a8;
+    border-radius: 8px 8px 0 0;
+    margin: 0 0 -5px 0; /* Negativní spodní margin, aby překryl mezeru */
+}
+
+.grid-item .middle-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    background-color: #d8d8d8;
+    border-top: 2px solid #000;
+    border-bottom: 2px solid #000;
+    font-size: 16px;
+    text-align: center;
+    margin: 5px 0px; /* Zúžení čar na okrajích */
+
+}
+
+.grid-item .bottom-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Rozdělení atributů na dvě části */
+    align-items: center;
+    gap: 5px;
+}
+
+.bottom-section p {
+    margin: 0;
+}
+
+.bottom-section .actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px; /* Přidáme odsazení nad tlačítkem */
+}
+
+.bottom-section .button {
+    background-color: #ddd;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px; /* Větší padding pro lepší vzhled */
+    font-size: 14px;
+    cursor: pointer;
+    
+}
+
+.bottom-section .button:hover {
+    background-color: #bbb;
+}
+
