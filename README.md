@@ -5,4 +5,4 @@ customer:
 borec@gmail.com borec
 
 farmer: 
-farmar@borec.com farmar
+farmer@borec.com farmer
