@@ -1,0 +1,316 @@
+/* Centered main layout with padding */
+.main-layout {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    gap: 20px;
+    margin: 20px auto;
+    max-width: 1200px; /* Maximální šířka pro desktopové zobrazení */
+    padding: 0 20px; /* Levé a pravé odsazení */
+}
+
+/* Sidebar styling */
+.left-sidebar {
+    background-color: #f1f1f1;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-btn {
+    background-color: #ddd;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    padding: 10px;
+    margin: 5px 0;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    width: 100%;
+    transition: background-color 0.3s;
+}
+
+.sidebar-btn:hover {
+    background-color: #bbb;
+}
+
+/* Offers styling */
+.market-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 300px)); /* Fixed column width */
+    gap: 20px;
+}
+
+.grid-item {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s, visibility 0.3s, opacity 0.3s ease;
+    min-height: 220px; /* Nastav výšku dle designu */
+}
+
+.grid-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.offer-title, .price, .button-container {
+    margin: 5px 0;
+}
+
+.button-container button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.button-container button:hover {
+    background-color: #0056b3;
+}
+
+/* Modal styling */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 8px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.grid-item {
+    display: grid;
+    grid-template-rows: 2fr 1fr 2fr; /* Rozdělení na horní, střední a dolní část */
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    height: 220px;
+}
+
+.grid-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.grid-item .top-section {
+    background-color: #a8a8a8;
+    border-radius: 8px 8px 0 0;
+    margin: 0 0 -5px 0; /* Negativní spodní margin, aby překryl mezeru */
+}
+
+.grid-item .middle-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    background-color: #d8d8d8;
+    border-top: 2px solid #000;
+    border-bottom: 2px solid #000;
+    font-size: 16px;
+    text-align: center;
+    margin: 5px 0px; /* Zúžení čar na okrajích */
+
+}
+
+.grid-item .bottom-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Rozdělení atributů na dvě části */
+    align-items: center;
+    gap: 5px;
+}
+
+.bottom-section p {
+    margin: 0;
+}
+
+.bottom-section .actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px; /* Přidáme odsazení nad tlačítkem */
+}
+
+.bottom-section .button {
+    background-color: #ddd;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px; /* Větší padding pro lepší vzhled */
+    font-size: 14px;
+    cursor: pointer;
+    
+}
+
+.bottom-section .button:hover {
+    background-color: #bbb;
+}
+
+
+.search-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px; /* Přidáme padding kolem baru */
+    background-color: #f1f1f1; /* Lehké pozadí pro kontrast */
+    border: 1px solid #ddd; /* Jemný okraj */
+    border-radius: 8px; /* Zaoblené rohy */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Jemný stín */
+    max-width: 800px; /* Maximální šířka pro lepší vzhled */
+    margin: 20px auto; /* Centrovat bar na stránce */
+}
+
+.search-bar input {
+    flex: 1; /* Umožní flexibilní šířku */
+    padding: 12px 15px; /* Větší padding pro příjemnější užití */
+    border: 1px solid #ccc; /* Decentní okraj */
+    border-radius: 4px; /* Zaoblené rohy */
+    font-size: 16px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); /* Jemný vnitřní stín */
+    margin-right: 10px; /* Mezera mezi vstupem a tlačítkem */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Animace při interakci */
+}
+
+.search-bar input:focus {
+    outline: none; /* Odebrání standardního modrého obrysu */
+    border-color: #007bff; /* Zvýraznění při focusu */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Zvýrazněný stín */
+}
+
+.search-bar button {
+    background-color: #333; /* Stejná barva jako log-reg-buttons v navbaru */
+    color: white; /* Barva textu bílá */
+    border: 1px solid white; /* Bílý rámeček */
+    border-radius: 5px; /* Zaoblené rohy */
+    padding: 10px 20px; /* Stejný padding */
+    font-size: 16px; /* Shodná velikost písma */
+    cursor: pointer; /* Změna kurzoru na pointer */
+    transition: background-color 0.3s ease; /* Animace při hoveru */
+}
+
+.search-bar button:hover {
+    background-color: #575757; /* Stejná barva jako hover efekt v navbaru */
+}
+
+
+.search-bar button:active {
+    transform: translateY(1px); /* Jemná změna při kliknutí */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Návrat na původní stín */
+}
+
+
+/* Modal styling */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 100; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #f4f4f4;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%; /* Could be more or less, depending on screen size */
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.modal-content label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.modal-content input,
+.modal-content select {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.modal-content .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.modal-content .close:hover,
+.modal-content .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Button styling */
+.modal-content button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #222222; /* Same as navbar button */
+    color: white;
+    border: 1px solid white;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.modal-content button:hover {
+    background-color: #575757; /* Same hover effect */
+}

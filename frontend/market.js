@@ -101,5 +101,38 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 
+// Search button click event
+document.getElementById('search-button').addEventListener('click', function () {
+    const searchTerm = document.getElementById('search-input').value.toLowerCase();
+    const offers = document.querySelectorAll('.grid-item');
+
+    offers.forEach(offer => {
+        const offerText = offer.textContent.toLowerCase();
+        if (offerText.includes(searchTerm)) {
+            offer.style.display = 'grid'; // Restore original display
+        } else {
+            offer.style.display = 'none'; // Hide non-matching offers
+        }
+    });
+});
+
+// Search when the Enter key is pressed
+document.getElementById('search-input').addEventListener('keyup', function (event) {
+    if (event.key === 'Enter') { // Kontrola, zda byla stisknuta klávesa Enter
+        const searchTerm = this.value.toLowerCase();
+        const offers = document.querySelectorAll('.grid-item');
+
+        offers.forEach(offer => {
+            const offerText = offer.textContent.toLowerCase();
+            if (offerText.includes(searchTerm)) {
+                offer.style.display = 'grid'; // Restore original display
+            } else {
+                offer.style.display = 'none'; // Hide non-matching offers
+            }
+        });
+    }
+});
+
+
 
 

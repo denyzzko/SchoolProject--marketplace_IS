@@ -24,6 +24,12 @@
         </nav>
     </div>
 
+    <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search offers..." />
+        <button id="search-button">Search</button>
+    </div>
+    
+
     <!-- Main Content -->
     <div class="main-layout">
         <!-- Left Sidebar -->
@@ -55,9 +61,12 @@
                     <option value="selfpick">Self-pick</option>
                 </select><br><br>
 
-                <label for="price">Price:</label>
-                <input type="number" id="price" name="price" step="0.01" required><br><br>
+                <label for="price_item">Price per Item:</label>
+                <input type="number" id="price_item" name="price_item" step="0.01"><br><br>
 
+                <label for="price_kg">Price per Kg:</label>
+                <input type="number" id="price_kg" name="price_kg" step="0.01"><br><br>
+                
                 <label for="quantity">Quantity:</label>
                 <input type="number" id="quantity" name="quantity" required><br><br>
 
@@ -75,12 +84,6 @@
 
                 <label for="date_of_harvest">Date of Harvest:</label>
                 <input type="date" id="date_of_harvest" name="date_of_harvest" required><br><br>
-
-                <label for="price_item">Price per Item:</label>
-                <input type="number" id="price_item" name="price_item" step="0.01"><br><br>
-
-                <label for="price_kg">Price per Kg:</label>
-                <input type="number" id="price_kg" name="price_kg" step="0.01"><br><br>
 
                 <button type="button" id="submitOfferForm">Create Offer</button>
             </form>
