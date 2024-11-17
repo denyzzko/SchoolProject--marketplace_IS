@@ -40,7 +40,7 @@
 /* Offers styling */
 .market-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 300px)); /* Fixed column width */
     gap: 20px;
 }
 
@@ -50,7 +50,8 @@
     border-radius: 8px;
     padding: 15px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s, visibility 0.3s, opacity 0.3s ease;
+    min-height: 220px; /* Nastav výšku dle designu */
 }
 
 .grid-item:hover {
@@ -183,3 +184,133 @@
     background-color: #bbb;
 }
 
+
+.search-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px; /* Přidáme padding kolem baru */
+    background-color: #f1f1f1; /* Lehké pozadí pro kontrast */
+    border: 1px solid #ddd; /* Jemný okraj */
+    border-radius: 8px; /* Zaoblené rohy */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Jemný stín */
+    max-width: 800px; /* Maximální šířka pro lepší vzhled */
+    margin: 20px auto; /* Centrovat bar na stránce */
+}
+
+.search-bar input {
+    flex: 1; /* Umožní flexibilní šířku */
+    padding: 12px 15px; /* Větší padding pro příjemnější užití */
+    border: 1px solid #ccc; /* Decentní okraj */
+    border-radius: 4px; /* Zaoblené rohy */
+    font-size: 16px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); /* Jemný vnitřní stín */
+    margin-right: 10px; /* Mezera mezi vstupem a tlačítkem */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Animace při interakci */
+}
+
+.search-bar input:focus {
+    outline: none; /* Odebrání standardního modrého obrysu */
+    border-color: #007bff; /* Zvýraznění při focusu */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Zvýrazněný stín */
+}
+
+.search-bar button {
+    background-color: #333; /* Stejná barva jako log-reg-buttons v navbaru */
+    color: white; /* Barva textu bílá */
+    border: 1px solid white; /* Bílý rámeček */
+    border-radius: 5px; /* Zaoblené rohy */
+    padding: 10px 20px; /* Stejný padding */
+    font-size: 16px; /* Shodná velikost písma */
+    cursor: pointer; /* Změna kurzoru na pointer */
+    transition: background-color 0.3s ease; /* Animace při hoveru */
+}
+
+.search-bar button:hover {
+    background-color: #575757; /* Stejná barva jako hover efekt v navbaru */
+}
+
+
+.search-bar button:active {
+    transform: translateY(1px); /* Jemná změna při kliknutí */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Návrat na původní stín */
+}
+
+
+/* Modal styling */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 100; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #f4f4f4;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%; /* Could be more or less, depending on screen size */
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.modal-content label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.modal-content input,
+.modal-content select {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.modal-content .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.modal-content .close:hover,
+.modal-content .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Button styling */
+.modal-content button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #222222; /* Same as navbar button */
+    color: white;
+    border: 1px solid white;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.modal-content button:hover {
+    background-color: #575757; /* Same hover effect */
+}
