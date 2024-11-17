@@ -18,6 +18,15 @@ p {
     margin-top: 50px;
 }
 
+.box {
+    text-align: center;
+    margin-top: 50px;
+    margin-left: 50px;
+    margin-right: 50px;
+    background-color: #8a8888;
+    border-radius: 1000;
+}
+
 /* responses*/
 #response {
     margin-top: 20px;
@@ -151,6 +160,92 @@ p {
 
 .dropdown.show {
     display: block;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+table, th, td {
+    border: 1px solid black;
+}
+th, td {
+    padding: 10px;
+    text-align: center;
+}
+th {
+    background-color: #f0f0f0;
+}
+.btn {
+    padding: 5px 10px;
+    font-size: 14px;
+    color: #ffffff;
+    background-color: #00532a;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    z-index: 1000;
+}
+.popup-header {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.popup textarea {
+    width: 100%;
+    height: 100px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+.popup .send-btn {
+    padding: 5px 10px;
+    font-size: 14px;
+    color: #ffffff;
+    background-color: #28a745;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.popup .send-btn:hover {
+    background-color: #218838;
+}
+.popup .close-btn {
+    padding: 5px 10px;
+    font-size: 14px;
+    color: #ffffff;
+    background-color: #dc3545;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.popup .close-btn:hover {
+    background-color: #c82333;
+}
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
 }
 
 
