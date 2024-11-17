@@ -37,7 +37,7 @@ function loadNavbar() {
                         <img src="/assets/images/profile_icon.png" alt="Profile" class="profile-icon" onclick="toggleDropdown()">
                         <div class="dropdown" id="profileDropdown">
                             <a href="my_profile.html">My Profile</a>
-                            <a href="my_offers.html">My Offers</a>
+                            <a href="my_orders.html">My Orders</a>
                             <a href="#" onclick="logout()">Logout</a>
                         </div>
                     `;
@@ -56,7 +56,7 @@ function loadNavbar() {
                         <img src="/assets/images/profile_icon.png" alt="Profile" class="profile-icon" onclick="toggleDropdown()">
                         <div class="dropdown" id="profileDropdown">
                             <a href="my_profile.html">My Profile</a>
-                            <a href="my_offers.html">My Offers</a>
+                            <a href="my_orders.html">My Orders</a>
                             <a href="#" onclick="logout()">Logout</a>
                         </div>
                     `;
