@@ -2,6 +2,7 @@
 include 'db.php';
 session_start();
 
+// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['error' => 'User not logged in']);
     exit;
@@ -9,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $session_user_id = $_SESSION['user_id'];
 
-$sql = "SELECT o.date, o.order_id, u.name AS farmer_name, c.name AS category_name, o.quantity, off.price
+$sql = "SELECT o.order_id, o.date, u.name AS farmer_name, c.name AS category_name, o.quantity, off.type, off.price
         FROM Ordr o
         JOIN Offer off ON o.offer_id = off.offer_id
         JOIN Usr u ON off.user_id = u.user_id
@@ -18,19 +19,22 @@ $sql = "SELECT o.date, o.order_id, u.name AS farmer_name, c.name AS category_nam
 
 $stmt = $conn->prepare($sql);
 if (!$stmt) {
-    echo json_encode(['error' => 'SQL prepare error: ' . $conn->error]);
+    error_log('SQL prepare error: ' . $conn->error);
+    echo json_encode(['error' => 'Server error, please try again later.']);
     exit;
 }
 
 $stmt->bind_param("i", $session_user_id);
 if (!$stmt->execute()) {
-    echo json_encode(['error' => 'SQL execute error: ' . $stmt->error]);
+    error_log('SQL execute error: ' . $stmt->error);
+    echo json_encode(['error' => 'Server error, please try again later.']);
     exit;
 }
 
 $result = $stmt->get_result();
 if (!$result) {
-    echo json_encode(['error' => 'SQL result error: ' . $stmt->error]);
+    error_log('SQL result error: ' . $stmt->error);
+    echo json_encode(['error' => 'Server error, please try again later.']);
     exit;
 }
 

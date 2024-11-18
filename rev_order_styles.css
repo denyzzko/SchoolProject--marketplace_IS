@@ -1,0 +1,7 @@
+.main_order-container{
+    grid-template-columns: 1fr 4fr;
+    gap: 20px;
+    margin: 20px auto;
+    max-width: 1200px; /* Maximální šířka pro desktopové zobrazení */
+    padding: 0 20px; /* Levé a pravé odsazení */
+}

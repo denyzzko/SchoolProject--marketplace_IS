@@ -1,25 +1,36 @@
-// Function to fetch data from the backend and populate the table
+// JavaScript to load orders and display them in the desired layout
+
 function loadOrders() {
     fetch('../backend/my_orders.php')
         .then(response => response.json())
         .then(data => {
-            const tableBody = document.getElementById('order-table-body');
-            tableBody.innerHTML = '';
+            const orderContainer = document.getElementById('order-container');
+            orderContainer.innerHTML = ''; // Clear container before adding new orders
             data.forEach(order => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${order.date}</td>
-                    <td>${order.order_id}</td>
-                    <td>${order.farmer_name}</td>
-                    <td>${order.category_name}</td>
-                    <td>${order.quantity}</td>
-                    <td>${order.price} Kč</td>
-                    <td><button class='btn' onclick="openPopup(${order.order_id}, '${order.category_name}', '${order.farmer_name}')">Review</button></td>
+                const orderBox = document.createElement('div');
+                orderBox.className = 'grid-item';
+                orderBox.innerHTML = `
+                    <div class="top-section"></div>
+                    <div class="middle-section">${order.type === 'sale' ? 'Sale' : 'Selfpick'}</div>
+                    <div class="bottom-section">
+                        <div>
+                            <p><strong>Name:</strong> ${order.category_name}</p>
+                            <p><strong>Farmer:</strong> ${order.farmer_name}</p>
+                            <p>Price:${order.price} CZK</p>
+                            <p>Date:${order.date}</p>
+                        </div>
+                        <div>
+                            <p><strong>Bought:</strong> ${order.quantity}</p>
+                            <div class="actions">
+                                <button class="button" onclick="openPopup(${order.order_id}, '${order.category_name}', '${order.farmer_name}')">Review</button>
+                            </div>
+                        </div>
+                    </div>
                 `;
-                tableBody.appendChild(row);
+                orderContainer.appendChild(orderBox);
             });
         })
-        .catch(error => console.error('Error fetching orders:', error));
+        .catch(error => console.error('Error:', error));
 }
 
 // Function to open the review popup
@@ -67,20 +78,23 @@ function sendReview() {
     })
     .then(response => response.json())
     .then(data => {
+        console.log(data); // Log the complete response
         if (data.success) {
             closePopup();
         } else {
-            alert('There was an error saving your review. Please try again.');
+            alert('There was an error saving your review: ' + (data.message || 'Unknown error.'));
         }
     })
+    
     .catch(error => {
         console.error('Error saving review:', error);
-        alert('There was an error saving your review. Please try again.');
+        alert('There was an error saving your review2. Please try again.');
     });
 }
 
 // Load orders when the page is loaded
-window.onload = loadOrders;
+document.addEventListener('DOMContentLoaded', loadOrders);
+
 
 // Adding the rating slider to the popup
 document.addEventListener('DOMContentLoaded', () => {
