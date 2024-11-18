@@ -18,21 +18,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // email exists so verify password
         $row = $result->fetch_assoc();
         if (password_verify($password, $row["password"])) {
-            // password correct so set session and redirect
+            // password correct so set session
             $_SESSION["user_id"] = $row["user_id"];
             $_SESSION["role"] = $row["role"];
             $_SESSION["name"] = $row["name"];
 
-            header("Location: ../index.html");
+            echo json_encode(["status" => "success"]);
             exit();
         } else {
-            echo "Invalid password!";
+            echo json_encode(["status" => "error", "message" => "Invalid password!"]);
         }
     } else {
-        echo "No user found with this email!";
+        echo json_encode(["status" => "error", "message" => "No user found with this email!"]);
     }
 
-    // close statement and connectio
+    // close statement and connection
     $stmt->close();
     $conn->close();
 }

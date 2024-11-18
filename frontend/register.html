@@ -4,28 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
+    <link rel="stylesheet" href="../login_register_styles.css">
 </head>
 <body>
-    <h2>Register</h2>
-    <form method="POST" action="../backend/register.php">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required><br><br>
+    <div class="login_register-container">
+        <form method="POST" action="../backend/register.php">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br><br>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required><br><br>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br><br>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br><br>
 
-        <label for="role">Role:</label>
-        <select id="role" name="role" required>
-            <option value="customer">Customer</option>
-            <option value="farmer">Farmer</option>
-            <option value="moderator">Moderator</option>
-            <option value="admin">Admin</option>
-        </select><br><br>
+            <label for="role">Role:</label>
+            <select id="role" name="role" required>
+                <option value="customer">Customer</option>
+                <option value="farmer">Farmer</option>
+                <option value="moderator">Moderator</option>
+                <option value="admin">Admin</option>
+            </select><br><br>
 
-        <button type="submit">Register</button>
-    </form>
+            <button type="submit">Register</button>
+        </form>
+    </div>
 </body>
 </html>
