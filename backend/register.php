@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = htmlspecialchars(trim($_POST["name"]));
     $email = htmlspecialchars(trim($_POST["email"]));
     $password = password_hash(trim($_POST["password"]), PASSWORD_BCRYPT);
-    $role = htmlspecialchars(trim($_POST["role"]));
+    $role = "registered";
 
     // check if email already exists in the database
     $sql = "SELECT * FROM Usr WHERE email = ?";

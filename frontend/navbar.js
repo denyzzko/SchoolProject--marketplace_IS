@@ -22,7 +22,26 @@ function loadNavbar() {
 
             if (data.loggedIn) {
                 // logged in
-                if (data.role === "customer") {
+                if (data.role === "registered") {
+                    // registered specific
+                    navLinks.innerHTML = `
+                        <a href="../frontend/category_proposal.html">Category Proposal</a>
+                        <a href="../frontend/market.html">Market</a>
+                        <a href="../frontend/my_events.html">My Events</a>
+                    `;
+                    profile.innerHTML = `
+                        <div class="profile-info">
+                            <p><strong>${data.name}</strong></p>
+                            <p>${data.role}</p>
+                        </div>
+                        <img src="/assets/images/profile_icon.png" alt="Profile" class="profile-icon" onclick="toggleDropdown()">
+                        <div class="dropdown" id="profileDropdown">
+                            <a href="my_profile.html">My Profile</a>
+                            <a href="#" onclick="logout()">Logout</a>
+                        </div>
+                    `;
+                }
+                else if (data.role === "customer") {
                     // customer specific
                     navLinks.innerHTML = `
                         <a href="../frontend/category_proposal.html">Category Proposal</a>
@@ -69,13 +88,15 @@ function loadNavbar() {
 
             } else {
                 // not logged in
+                navLinks.innerHTML = `
+                    <a href="../frontend/market.html">Market</a>
+                `;
                 profile.innerHTML = `
                     <div class="log-reg-buttons">
                         <button onclick="window.location.href='../frontend/register.html'">Register</button>
                         <button onclick="window.location.href='../frontend/login.html'">Login</button>
                     </div>
                 `;
-                responseElement.textContent = "You are not logged in. Please login or register.";
             }
         })
         .catch(error => {
