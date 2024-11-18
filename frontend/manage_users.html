@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../manage_users_styles.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <div id="navbar-container">
+        <nav class="navbar">
+            <div class="logo">
+                <h1>Zelni Trh Jebingos</h1>
+            </div>
+            <div id="nav-links" class="nav-links">
+                <!-- Will be populated by JS -->
+            </div>
+            <div id="profile" class="profile">
+                <!-- Will be populated -->
+            </div>
+        </nav>
+    </div>
+
+     <!-- Main Content -->
+     <div class="manage-users-container">
+        
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" id="search-user" placeholder="Enter user email you are looking for ...">
+            <button onclick="searchUser()">Search</button>
+        </div>
+
+        <div id="error-message" class="error-message"></div>
+        <div id="success-message" class="success-message"></div>
+
+        <!-- User Info Section -->
+        <form id="user-info" class="user-info" style="display: none;">
+            <h2>User Information</h2>
+            <label for="user-name">Name:</label>
+            <input type="text" id="user-name">
+
+            <label for="user-email">Email:</label>
+            <input type="email" id="user-email">
+
+            <label for="user-role">Role:</label>
+            <select id="user-role">
+                <option value="admin">Admin</option>
+                <option value="moderator">Moderator</option>
+                <option value="farmer">Farmer</option>
+                <option value="customer">Customer</option>
+            </select>
+
+            <button type="button" onclick="updateUser()">Update</button>
+            <button type="button" class= "button2" onclick="deleteUser()">Delete Account</button>
+        </form>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../frontend/navbar.js"></script>
+    <script src="../frontend/manage_users.js"></script>
+
+</body>
+</html>

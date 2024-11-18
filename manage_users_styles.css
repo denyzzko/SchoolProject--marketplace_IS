@@ -1,0 +1,123 @@
+/* Container for managing users */
+.manage-users-container {
+    background-color: #fff;
+    padding: 40px 50px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 90%; /* Adjust width to fit inside the layout */
+    max-width: 600px; /* Keep it centered and limited in width */
+    margin: 20px auto; /* Center the container vertically and horizontally */
+    margin-top: 70px;
+}
+
+/* Search bar styling */
+.manage-users-container .search-bar {
+    display: flex;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.manage-users-container .search-bar input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.manage-users-container .search-bar button {
+    background-color: #222222;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.manage-users-container .search-bar button:hover {
+    background-color: #575757;
+}
+
+/* Error message styling */
+.error-message {
+    margin: 10px;
+    font-size: 15px;
+    color: red;
+    text-align: center;
+}
+
+/* success message styling */
+.success-message {
+    margin: 10px;
+    font-size: 15px;
+    color: green;
+    text-align: center;
+}
+
+/* User information section styling */
+.user-info {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.user-info h2 {
+    margin-bottom: 20px;
+    font-size: 20px;
+    color: #333;
+}
+
+.user-info label {
+    text-align: left;
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+}
+
+.user-info select,
+.user-info input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.user-info button {
+    background-color: #222222;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.user-info button.button2 {
+    background-color: rgb(255, 68, 68);
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.user-info button:hover {
+    background-color: #575757;
+}
+
+.user-info button.button2:hover {
+    background-color: rgb(255, 159, 159);
+}
