@@ -30,6 +30,7 @@
     </div>
     
 
+    
     <!-- Main Content -->
     <div class="main-layout">
         <!-- Left Sidebar -->
@@ -45,6 +46,31 @@
             <!-- Offers will be dynamically loaded here -->
         </main>
     </div>
+
+    <!-- Offer Detail Sidebar -->
+    <div id="offer-detail-sidebar" class="offer-detail-sidebar">
+        <div class="sidebar-header">
+            <span id="close-sidebar" class="close-sidebar">&times;</span>
+            <h2>Offer Details</h2>
+        </div>
+        <div class="sidebar-content">
+            <!-- Offer details will be dynamically loaded here -->
+            <p><strong>Category:</strong> <span id="offer-category"></span></p>
+            <p><strong>Type:</strong> <span id="offer-type"></span></p>
+            <p><strong>Origin:</strong> <span id="offer-origin"></span></p>
+            <p><strong>Date of Harvest:</strong> <span id="offer-date-of-harvest"></span></p>
+            <p><strong>Available Quantity:</strong> <span id="offer-available-quantity"></span></p>
+            <p><strong>Price per Item:</strong> <span id="offer-price-item"></span> CZK</p>
+            <p><strong>Price per Kg:</strong> <span id="offer-price-kg"></span> CZK</p>
+
+            <label for="order-quantity">Enter Quantity:</label>
+            <input type="number" id="order-quantity" name="order-quantity" min="1" value="1">
+            <p><strong>Total Price:</strong> <span id="total-price">0</span> CZK</p>
+
+            <button id="place-order-button">Place Order</button>
+        </div>
+    </div>
+
 
     <!-- Form Modal for Creating Offer -->
     <div id="createOfferModal" class="modal">

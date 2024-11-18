@@ -94,6 +94,17 @@ window.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                 `;
+                offerBox.addEventListener('click', function () {
+                    const sidebar = document.getElementById('offer-detail-sidebar');
+                    if (sidebar.classList.contains('open')) {
+                        // Panel je otevřený, jen aktualizujte informace
+                        openOfferSidebar(offer.offer_id);
+                    } else {
+                        // Panel není otevřený, otevřete ho a načtěte informace
+                        openOfferSidebar(offer.offer_id);
+                        sidebar.classList.add('open');
+                    }
+                });
                 marketContainer.appendChild(offerBox);
             });
         })
@@ -134,5 +145,125 @@ document.getElementById('search-input').addEventListener('keyup', function (even
 });
 
 
+
+
+let currentOfferId = null;
+
+function openOfferSidebar(offerId) {
+    currentOfferId = offerId;
+    // Fetch offer details from the backend
+    fetch(`../backend/get_offer_details.php?offer_id=${offerId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status !== 'error') {
+                // Populate the sidebar with offer details
+                document.getElementById('offer-category').innerText = data.category_name;
+                document.getElementById('offer-type').innerText = data.type;
+                document.getElementById('offer-origin').innerText = data.origin;
+                document.getElementById('offer-date-of-harvest').innerText = data.date_of_harvest;
+                document.getElementById('offer-available-quantity').innerText = data.quantity;
+                document.getElementById('offer-price-item').innerText = data.price_item || 'N/A';
+                document.getElementById('offer-price-kg').innerText = data.price_kg || 'N/A';
+
+                // Reset quantity input and total price
+                const orderQuantityInput = document.getElementById('order-quantity');
+                orderQuantityInput.value = 1;
+                updateTotalPrice();
+
+                // Show the sidebar
+                document.getElementById('offer-detail-sidebar').classList.add('open');
+            } else {
+                alert('Error fetching offer details.');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+document.getElementById('close-sidebar').addEventListener('click', function() {
+    document.getElementById('offer-detail-sidebar').classList.remove('open');
+});
+
+function updateTotalPrice() {
+    const quantityInput = document.getElementById('order-quantity');
+    const quantity = parseInt(quantityInput.value);
+
+    if (isNaN(quantity) || quantity <= 0) {
+        quantityInput.value = 1; // Reset to default valid value
+        return;
+    }
+
+    const pricePerItem = parseFloat(document.getElementById('offer-price-item').innerText) || 0;
+    const pricePerKg = parseFloat(document.getElementById('offer-price-kg').innerText) || 0;
+    const offerType = document.getElementById('offer-type').innerText;
+    let totalPrice = 0;
+
+    if (offerType === 'sale' && pricePerItem > 0) {
+        totalPrice = (quantity * pricePerItem).toFixed(2);
+    } else if (offerType === 'selfpick' && pricePerKg > 0) {
+        totalPrice = (quantity * pricePerKg).toFixed(2);
+    }
+
+    document.getElementById('total-price').innerText = totalPrice;
+}
+
+
+document.getElementById('order-quantity').addEventListener('input', updateTotalPrice);
+
+
+document.getElementById('place-order-button').addEventListener('click', function() {
+    const quantity = parseInt(document.getElementById('order-quantity').value);
+    const availableQuantity = parseInt(document.getElementById('offer-available-quantity').innerText);
+
+    if (quantity > availableQuantity) {
+        alert('Requested quantity exceeds available quantity.');
+        return;
+    }
+
+    // Send order details to backend
+    fetch('../backend/place_order.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ offer_id: currentOfferId, quantity: quantity })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert('Order placed successfully!');
+                // Update the available quantity
+                document.getElementById('offer-available-quantity').innerText = availableQuantity - quantity;
+                // Close the sidebar
+                document.getElementById('offer-detail-sidebar').classList.remove('open');
+                // Optionally, refresh the offers or update the specific offer box
+            } else {
+                alert('Error placing order: ' + data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+});
+
+let isClickInsideSidebar = false; // Indikátor kliknutí uvnitř panelu
+
+// Detekce zahájení kliknutí uvnitř panelu
+document.getElementById('offer-detail-sidebar').addEventListener('mousedown', function () {
+    isClickInsideSidebar = true;
+});
+
+// Detekce ukončení kliknutí
+window.addEventListener('mouseup', function (event) {
+    const sidebar = document.getElementById('offer-detail-sidebar');
+    const marketContainer = document.getElementById('market-container');
+
+    // Pokud kliknete mimo panel a mimo nabídky
+    if (!sidebar.contains(event.target) && !marketContainer.contains(event.target)) {
+        if (!isClickInsideSidebar) {
+            sidebar.classList.remove('open');
+        }
+    }
+
+    // Reset indikátoru
+    isClickInsideSidebar = false;
+});
 
 
