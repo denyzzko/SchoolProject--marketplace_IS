@@ -314,3 +314,69 @@
 .modal-content button:hover {
     background-color: #575757; /* Same hover effect */
 }
+
+
+/* Offer Detail Sidebar */
+.offer-detail-sidebar {
+    position: fixed;
+    top: 0;
+    right: -78%; /* Hidden by default */
+    width: 20%;
+    height: 100%;
+    background-color: #fff;
+    overflow-y: auto;
+    transition: right 0.3s ease-in-out;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.3);
+    z-index: 1000;
+    padding: 20px;
+}
+
+.offer-detail-sidebar.open {
+    right: 0;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.close-sidebar {
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-sidebar:hover {
+    color: #f00;
+}
+
+.sidebar-content p {
+    margin: 10px 0;
+}
+
+.sidebar-content label {
+    display: block;
+    margin-top: 20px;
+}
+
+#order-quantity {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    box-sizing: border-box;
+}
+
+#place-order-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #222222;
+    color: white;
+    border: 1px solid white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#place-order-button:hover {
+    background-color: #575757;
+}
