@@ -7,7 +7,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $user_id = $_SESSION["user_id"];
     $category_id = $_POST["category_id"];
     $type = $_POST["type"];
-    $price = $_POST["price"];
     $quantity = $_POST["quantity"];
     $origin = $_POST["origin"];
     $date_of_harvest = $_POST["date_of_harvest"];
@@ -40,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // Potvrdit transakci
         $conn->commit();
 
-        echo json_encode(["status" => "success", "message" => "Offer created successfully."]);
+        echo json_encode(["status" => "success", "message" => "Offer created successfully.", "offer_id" => $offer_id]);
     } catch (Exception $e) {
         // Vrátit transakci
         $conn->rollback();

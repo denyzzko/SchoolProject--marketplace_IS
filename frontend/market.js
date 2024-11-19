@@ -8,23 +8,24 @@ fetch('../backend/index.php')
     })
     .catch(error => console.error('Error:', error));
 
-// Funkce pro otevření modálního okna
+// Funkce pro otevření bočního panelu pro vytvoření nabídky
 document.getElementById('create-offer-btn').addEventListener('click', function() {
-    document.getElementById('createOfferModal').style.display = 'block';
+    document.getElementById('create-offer-sidebar').classList.add('open');
 });
 
-// Funkce pro zavření modálního okna
-document.querySelector('.close').addEventListener('click', function() {
-    document.getElementById('createOfferModal').style.display = 'none';
+// Funkce pro zavření bočního panelu pro vytvoření nabídky
+document.getElementById('close-create-offer-sidebar').addEventListener('click', function() {
+    document.getElementById('create-offer-sidebar').classList.remove('open');
 });
 
-// Zavřít modální okno při kliknutí mimo obsah
+// Zavřít panel při kliknutí mimo obsah
 window.onclick = function(event) {
-    const modal = document.getElementById('createOfferModal');
-    if (event.target == modal) {
-        modal.style.display = 'none';
+    const sidebar = document.getElementById('create-offer-sidebar');
+    if (!sidebar.contains(event.target) && !event.target.matches('#create-offer-btn')) {
+        sidebar.classList.remove('open');
     }
 };
+
 
 // Odeslání formuláře pro vytvoření nabídky - pouze tlačítko uvnitř modálu
 document.getElementById('submitOfferForm').addEventListener('click', function () {
@@ -47,24 +48,40 @@ document.getElementById('submitOfferForm').addEventListener('click', function ()
     .catch(error => console.error('Error:', error));
 });
 
-// Funkce pro dynamické přidání nabídky do tržiště
+// Function to dynamically add an offer to the market
 function addOfferToMarket(data) {
     const marketContainer = document.getElementById('market-container');
     const offerBox = document.createElement('div');
     offerBox.className = 'grid-item';
     offerBox.innerHTML = `
-        <div class="offer-title">Category ID: ${data.get('category_id')}</div>
-        <p><strong>Type:</strong> ${data.get('type')}</p>
-        <p><strong>Price:</strong> <span class="price">${data.get('price')} Kč</span></p>
-        <p><strong>Quantity:</strong> ${data.get('quantity')}</p>
-        <p><strong>Origin:</strong> ${data.get('origin')}</p>
-        <p><strong>Date of Harvest:</strong> ${data.get('date_of_harvest')}</p>
-        <div class="button-container">
-            <button>View Details</button>
+        <div class="top-section"></div>
+        <div class="middle-section">${data.get('type') === 'sale' ? 'Sale' : 'Selfpick'}</div>
+        <div class="bottom-section">
+            <div>
+                <p><strong>Name:</strong> ${data.get('category_id')}</p>
+                <p><strong>Farmer:</strong> You</p>
+                <p>${data.get('price_item')} CZK</p>
+                <p>${data.get('price_kg')} CZK/kg</p>
+            </div>
+            <div>
+                <p><strong>Remains:</strong> ${data.get('quantity')}</p>
+                <div class="actions">
+                    <button class="button">Compare Price</button>
+                </div>
+            </div>
         </div>
     `;
-    marketContainer.appendChild(offerBox);
+
+    // Add event listener to open offer details when clicked
+    offerBox.addEventListener('click', function () {
+        openOfferSidebar(data.get('offer_id'));
+    });
+    
+
+    // Insert the new offer at the beginning
+    marketContainer.insertBefore(offerBox, marketContainer.firstChild);
 }
+
 
 // Načtení existujících nabídek z databáze
 window.addEventListener('DOMContentLoaded', () => {
@@ -264,6 +281,30 @@ window.addEventListener('mouseup', function (event) {
 
     // Reset indikátoru
     isClickInsideSidebar = false;
+});
+
+
+// Handle form submission from the create offer sidebar
+document.getElementById('submitOfferFormSidebar').addEventListener('click', function () {
+    const formData = new FormData(document.getElementById('create-offer-form'));
+
+    fetch('../backend/create_offer.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert(data.message);
+            document.getElementById('create-offer-sidebar').classList.remove('open');
+            formData.append('offer_id', data.offer_id); // Append the offer ID to formData
+            addOfferToMarket(formData); // Add the new offer to the market
+        } else {
+            alert(data.message);
+        }
+    })
+    
+    .catch(error => console.error('Error:', error));
 });
 
 

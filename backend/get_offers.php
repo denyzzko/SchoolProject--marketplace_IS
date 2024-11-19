@@ -16,6 +16,8 @@ if ($result->num_rows > 0) {
     }
 }
 
+$offers = array_reverse($offers);
+
 echo json_encode($offers);
 $conn->close();
 ?>

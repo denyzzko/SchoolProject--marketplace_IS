@@ -47,6 +47,52 @@
         </main>
     </div>
 
+    <!-- Create Offer Sidebar -->
+    <div id="create-offer-sidebar" class="offer-detail-sidebar">
+        <div class="sidebar-header">
+            <span id="close-create-offer-sidebar" class="close-sidebar">&times;</span>
+            <h2>Create Offer</h2>
+        </div>
+        <div class="sidebar-content">
+            <form id="create-offer-form">
+                <label for="category_id">Category ID:</label>
+                <input type="number" id="category_id" name="category_id" required><br><br>
+
+                <label for="type">Type:</label>
+                <select id="type" name="type" required>
+                    <option value="sale">Sale</option>
+                    <option value="selfpick">Self-pick</option>
+                </select><br><br>
+
+                <label for="price_item">Price per Item:</label>
+                <input type="number" id="price_item" name="price_item" step="0.01"><br><br>
+
+                <label for="price_kg">Price per Kg:</label>
+                <input type="number" id="price_kg" name="price_kg" step="0.01"><br><br>
+                
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" name="quantity" required><br><br>
+
+                <label for="origin">Origin:</label>
+                <select id="origin" name="origin" required>
+                    <option value="Czech Republic">Czech Republic</option>
+                    <option value="Spain">Spain</option>
+                    <option value="England">England</option>
+                    <option value="Portugal">Portugal</option>
+                    <option value="USA">USA</option>
+                    <option value="Germany">Germany</option>
+                    <option value="Poland">Poland</option>
+                    <option value="Belgium">Belgium</option>
+                </select><br><br>
+
+                <label for="date_of_harvest">Date of Harvest:</label>
+                <input type="date" id="date_of_harvest" name="date_of_harvest" required><br><br>
+
+                <button type="button" id="submitOfferFormSidebar">Create Offer</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Offer Detail Sidebar -->
     <div id="offer-detail-sidebar" class="offer-detail-sidebar">
         <div class="sidebar-header">
