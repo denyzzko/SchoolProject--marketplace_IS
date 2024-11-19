@@ -1,37 +1,66 @@
 // JavaScript to load orders and display them in the desired layout
 
+// Function to load orders and display them in the desired layout
 function loadOrders() {
     fetch('../backend/my_orders.php')
         .then(response => response.json())
         .then(data => {
-            const orderContainer = document.getElementById('order-container');
-            orderContainer.innerHTML = ''; // Clear container before adding new orders
-            data.forEach(order => {
-                const orderBox = document.createElement('div');
-                orderBox.className = 'grid-item';
-                orderBox.innerHTML = `
-                    <div class="top-section"></div>
-                    <div class="middle-section">${order.type === 'sale' ? 'Sale' : 'Selfpick'}</div>
-                    <div class="bottom-section">
-                        <div>
-                            <p><strong>Name:</strong> ${order.category_name}</p>
-                            <p><strong>Farmer:</strong> ${order.farmer_name}</p>
-                            <p>Price:${order.price} CZK</p>
-                            <p>Date:${order.date}</p>
-                        </div>
-                        <div>
-                            <p><strong>Bought:</strong> ${order.quantity}</p>
-                            <div class="actions">
-                                <button class="button" onclick="openPopup(${order.order_id}, '${order.category_name}', '${order.farmer_name}')">Review</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                orderContainer.appendChild(orderBox);
-            });
+            renderOrders(data); // Render the orders with the given data
         })
         .catch(error => console.error('Error:', error));
 }
+
+// Function to render the orders in the container
+function renderOrders(orders) {
+    const orderContainer = document.getElementById('order-container');
+    orderContainer.innerHTML = ''; // Clear container before adding new orders
+    orders.forEach(order => {
+        const orderBox = document.createElement('div');
+        orderBox.className = 'order-item';
+        orderBox.innerHTML = `
+            <div class="order-details">
+                <div>
+                    <p><strong>Name:</strong> ${order.category_name}</p>
+                    <p><strong>Farmer:</strong> ${order.farmer_name}</p>
+                    <p>${order.price_item} CZK  </p><p>${order.price_kg} CZK/kg</p>
+                    <p><strong>Bought:</strong> ${order.quantity}</p>
+                    <p><strong>Type:</strong>${order.type === 'sale' ? 'Sale' : 'Selfpick'}</p>
+                    <p><strong>Date:</strong>${order.date}</p>
+                    <div class="actions">
+                        <button class="order-button" onclick="openPopup(${order.order_id}, '${order.category_name}', '${order.farmer_name}')">Review</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        orderContainer.appendChild(orderBox);
+    });
+}
+
+// Function to sort orders based on selected criteria
+function sortOrders(criteria) {
+    fetch('../backend/my_orders.php')
+        .then(response => response.json())
+        .then(data => {
+            if (criteria === 'category-az') {
+                data.sort((a, b) => a.category_name.localeCompare(b.category_name));
+            } else if (criteria === 'category-za') {
+                data.sort((a, b) => b.category_name.localeCompare(a.category_name));
+            } else if (criteria === 'date-newest') {
+                data.sort((a, b) => new Date(b.date) - new Date(a.date));
+            } else if (criteria === 'date-oldest') {
+                data.sort((a, b) => new Date(a.date) - new Date(b.date));
+            }
+            renderOrders(data); // Render the sorted orders
+
+            // Update active button
+            document.querySelectorAll('.filter-button').forEach(button => button.classList.remove('active'));
+            document.getElementById(`sort-${criteria}`).classList.add('active');
+        })
+        .catch(error => console.error('Error sorting orders:', error));
+}
+
+// Load orders when the page is loaded
+document.addEventListener('DOMContentLoaded', loadOrders);
 
 // Function to open the review popup
 function openPopup(orderId, categoryName, farmerName) {

@@ -27,7 +27,15 @@
 
     <!-- Content Section -->    
     <div class="main_order-container">
-    <div id="order-container" class="orderm-container">
+        <div class="filter-sort">
+            <div class="filter-buttons">
+                <button onclick="sortOrders('category-az')" id="sort-category-az" class="filter-button">Category A-Z</button>
+                <button onclick="sortOrders('category-za')" id="sort-category-za" class="filter-button">Category Z-A</button>
+                <button onclick="sortOrders('date-newest')" id="sort-date-newest" class="filter-button">Date Newest to Oldest</button>
+                <button onclick="sortOrders('date-oldest')" id="sort-date-oldest" class="filter-button">Date Oldest to Newest</button>
+            </div>
+        </div>
+    <div id="order-container" class="order-container">
         <!-- Orders will be populated by JS -->
     </div>
     </div>

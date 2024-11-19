@@ -50,6 +50,10 @@ function sortReviews(criteria) {
                 data.sort((a, b) => a.rating - b.rating);
             } else if (criteria === 'date') {
                 data.sort((a, b) => new Date(b.date) - new Date(a.date));
+            } else if (criteria === 'category-az') {
+                data.sort((a, b) => a.category_name.localeCompare(b.category_name));
+            } else if (criteria === 'category-za') {
+                data.sort((a, b) => b.category_name.localeCompare(a.category_name));
             }
             renderReviews(data);
 
