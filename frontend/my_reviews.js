@@ -11,6 +11,7 @@ function loadReviews() {
 
 // Function to render reviews based on data
 function renderReviews(reviews) {
+    console.log('Rendering reviews, count:', reviews.length);  // Debug log
     const container = document.getElementById('review-container');
     container.innerHTML = '';
     reviews.forEach(review => {
@@ -22,8 +23,7 @@ function renderReviews(reviews) {
 
         item.innerHTML = `
             <div class="review-content">
-                <p><strong>Name:</strong>${review.category_name}</p>
-                <p><strong>Date:</strong> ${review.date}</p>
+                <p><strong>Name:</strong> ${review.category_name}</p>
                 <p><strong>Rating:</strong> <span class="rating">${stars}</span></p>
                 <p><strong>Comment:</strong> <span class="comment">${review.comment}</span></p>
             </div>

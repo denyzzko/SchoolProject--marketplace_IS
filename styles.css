@@ -312,18 +312,10 @@ th {
 }
 
 .filter-button.active {
-    background-color: #007bff;
+    background-color: #4b5258;
     color: white;
-    border-color: #007bff;
+    border-color: #4b5258;
     font-weight: bold;
-}
-
-.order-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    margin-top: 20px;
-    width: 100%;
 }
 .order-item {
     background-color: #ffffff;

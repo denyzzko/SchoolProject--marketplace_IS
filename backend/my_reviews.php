@@ -11,10 +11,9 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 // Get the reviews for offers made by the logged-in user
-$sql = "SELECT c.name AS category_name, r.rating, r.comment, d.date
+$sql = "SELECT DISTINCT c.name AS category_name, r.rating, r.comment
         FROM Review r
         JOIN Offer o ON r.offer_id = o.offer_id
-        JOIN Ordr d ON r.offer_id = d.offer_id
         JOIN Category c ON o.category_id = c.category_id
         WHERE o.user_id = ?";
 

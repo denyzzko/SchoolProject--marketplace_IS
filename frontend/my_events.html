@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Events</title>
     <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../rev_order_styles.css">
 </head>
 <body>
-
     <!-- Navigation Bar -->
     <div id="navbar-container">
         <nav class="navbar">
             <div class="logo">
-                <h1>Zelni Trh Jebingos</h1>
+                <h1>Zelný trh</h1>
             </div>
             <div id="nav-links" class="nav-links">
                 <!-- Will be populated by JS -->
@@ -23,13 +23,15 @@
         </nav>
     </div>
 
-    <!-- Content Section -->
-    <div class="container">
-        <h1>This is My Events</h1>
+    <!-- Content Section -->    
+    <div class="main_event-container">
+        <div id="event-container" class="event-container">
+            <!-- Events will be populated here by JS -->
+        </div>
     </div>
 
-    <!-- Load the navbar.js script -->
+    <!-- Load scripts -->
     <script src="navbar.js"></script>
-
+    <script src="my_events.js"></script>
 </body>
 </html>
