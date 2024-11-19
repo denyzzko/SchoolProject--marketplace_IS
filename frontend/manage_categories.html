@@ -26,7 +26,7 @@
 
     <!-- Main Content -->
     <div class="category-container">
-        <h1>Propose for a new category</h1>
+        <h1>Manage categories</h1>
 
         <!-- Back Button -->
         <button id="back-button" class="back-button" style="display: none;" onclick="goBack()">Back</button>
@@ -39,7 +39,7 @@
         <!-- Add Category Form -->
         <div id="add-category-container" class="add-category-container" style="display: none;">
             <input type="text" id="new-category-name" name="proposal" placeholder="Enter new category name">
-            <button class="submit-button" onclick="submitCategoryProposal()">Submit</button>
+            <button class="submit-button" onclick="addCategory()">Add</button>
             <button class="cancel-button" onclick="cancelAddCategory()">Cancel</button>
         </div>
 
@@ -50,7 +50,7 @@
 
     <!-- Scripts -->
     <script src="../frontend/navbar.js"></script>
-    <script src="../frontend/category_proposal.js"></script>
+    <script src="../frontend/manage_categories.js"></script>
 
 </body>
 </html>
