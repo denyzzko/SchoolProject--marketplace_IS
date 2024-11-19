@@ -99,6 +99,24 @@ function loadNavbar() {
                         </div>
                     `;
                 }
+                else if (data.role === "moderator") {
+                    // moderator specific
+                    navLinks.innerHTML = `
+                        <a href="../frontend/manage_proposals.html">Proposals</a>
+                        <a href="../frontend/manage_categories.html">Categories</a>
+                    `;
+                    profile.innerHTML = `
+                        <div class="profile-info">
+                            <p><strong>${data.name}</strong></p>
+                            <p>${data.role}</p>
+                        </div>
+                        <img src="/assets/images/profile_icon.png" alt="Profile" class="profile-icon" onclick="toggleDropdown()">
+                        <div class="dropdown" id="profileDropdown">
+                            <a href="my_profile.html">My Profile</a>
+                            <a href="#" onclick="logout()">Logout</a>
+                        </div>
+                    `;
+                }
 
                 // activate the current page link
                 activateCurrentPageLink();
