@@ -3,10 +3,10 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
     margin: 0;
-    display: flex; /* Enable flexbox */
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
-    height: 100vh; /* Full viewport height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 .login_register-container {
     background-color: #fff;
@@ -68,6 +68,6 @@ body {
 .login-error {
     margin-top: 10px;
     font-size: 15px;
-    color: red; /* Highlight error messages in red */
+    color: red;
     text-align: center;
 }

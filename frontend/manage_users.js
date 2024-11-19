@@ -1,4 +1,4 @@
-// Display messages
+// Display success or error messages
 function displayMessage(element, message, type) {
     element.textContent = message;
     element.style.color = type === "success" ? "green" : "red";
@@ -20,7 +20,7 @@ function searchUser() {
         .then(response => response.json())
         .then(data => {
             if (data.status === "success") {
-                // Populate user information
+                // Populate user information so it is pre-filled
                 userInfoElement.style.display = 'block';
                 document.getElementById('user-name').value = data.user.name;
                 document.getElementById('user-email').value = data.user.email;

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Category Proposal</title>
     <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../categories_styles.css">
 </head>
 <body>
 
@@ -23,13 +24,33 @@
         </nav>
     </div>
 
-    <!-- Content Section -->
-    <div class="container">
-        <h1>This is Category Proposal</h1>
+    <!-- Main Content -->
+    <div class="category-container">
+        <h1>Propose for a new category</h1>
+
+        <!-- Back Button -->
+        <button id="back-button" class="back-button" style="display: none;" onclick="goBack()">Back</button>
+
+        <!-- Categories List -->
+        <div id="categories-list" class="categories-list">
+            <!-- Categories will be dynamically populated -->
+        </div>
+
+        <!-- Add Category Form -->
+        <div id="add-category-container" class="add-category-container" style="display: none;">
+            <input type="text" id="new-category-name" name="proposal" placeholder="Enter new category name">
+            <button onclick="submitCategoryProposal()">Submit</button>
+            <button onclick="cancelAddCategory()">Cancel</button>
+        </div>
+
+        <!-- Messages -->
+        <div id="error-message" class="error-message"></div>
+        <div id="success-message" class="success-message"></div>
     </div>
 
-    <!-- Load the navbar.js script -->
-    <script src="navbar.js"></script>
+    <!-- Scripts -->
+    <script src="../frontend/navbar.js"></script>
+    <script src="../frontend/categories.js"></script>
 
 </body>
 </html>

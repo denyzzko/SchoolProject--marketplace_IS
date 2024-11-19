@@ -3,15 +3,16 @@ include 'db.php';
 header('Content-Type: application/json');
 session_start();
 
+// Prevent unauthorized access
 if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "admin") {
     echo json_encode(["status" => "error", "message" => "You are not authorized to perform this action."]);
     exit();
 }
 
-// Get action and handle accordingly
+// Get action
 $data = json_decode(file_get_contents('php://input'), true);
 $action = $_GET['action'] ?? $data['action'];
-
+// Get user info
 if ($action === "search") {
     if (!isset($_GET['email'])) {
         echo json_encode(["status" => "error", "message" => "Email is required."]);
@@ -33,6 +34,7 @@ if ($action === "search") {
     }
 
     $stmt->close();
+// Update user info
 } elseif ($action === "update") {
     if (!isset($data['email'], $data['name'], $data['role'])) {
         echo json_encode(["status" => "error", "message" => "All fields are required."]);
@@ -54,6 +56,7 @@ if ($action === "search") {
     }
 
     $stmt->close();
+// Delete user
 } elseif ($action === "delete") {
     if (!isset($data['email'])) {
         echo json_encode(["status" => "error", "message" => "Email is required."]);

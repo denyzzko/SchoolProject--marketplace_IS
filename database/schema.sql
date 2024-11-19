@@ -14,7 +14,7 @@ CREATE TABLE Usr (
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(100) NOT NULL,
-    role ENUM('admin', 'moderator', 'farmer', 'customer') NOT NULL
+    role ENUM('admin', 'moderator', 'farmer', 'customer', 'registered') NOT NULL
 );
 
 CREATE TABLE Category (
@@ -79,7 +79,9 @@ CREATE TABLE SelfPickingEvent (
 CREATE TABLE CategoryProposal (
     proposal_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
+    parent_category_id INT NULL,
     proposal TEXT NOT NULL,
     status ENUM('pending', 'approved', 'rejected') NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES Usr(user_id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES Usr(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (parent_category_id) REFERENCES Category(category_id) ON DELETE SET NULL
 );

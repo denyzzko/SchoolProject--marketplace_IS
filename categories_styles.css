@@ -1,0 +1,105 @@
+/* Container for category proposal */
+.category-container {
+    background-color: #fff;
+    padding: 40px 50px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 50px auto;
+    margin-top: 150px;
+}
+
+/* Style for regular category buttons */
+.categories-list .category-button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #ecebeb;
+    color: black;
+    cursor: pointer;
+    text-align: left;
+}
+
+.categories-list .category-button:hover {
+    background-color: #575757;
+    color: white;
+}
+
+/* Style for the "Add New Category Here" button */
+.categories-list .add-category-button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    font-size: 16px;
+    font-weight: bold;
+    border: 2px dashed #222222;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    color: #222222;
+    cursor: pointer;
+    text-align: center;
+}
+
+.categories-list .add-category-button:hover {
+    background-color: #dfdfdf;
+    border-color: #575757;
+}
+
+/* Back button */
+.back-button {
+    background-color: #222222;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.back-button:hover {
+    background-color: #575757;
+}
+
+/* Add Category Form */
+.add-category-container input {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%;
+}
+
+.add-category-container button {
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #222222;
+    color: white;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.add-category-container button:hover {
+    background-color: #575757;
+}
+
+/* Error and success messages */
+.error-message {
+    color: red;
+    margin-top: 10px;
+}
+
+.success-message {
+    color: green;
+    margin-top: 10px;
+}
