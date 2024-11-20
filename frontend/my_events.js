@@ -13,7 +13,7 @@ function loadEvents() {
             }
 
             if (data.length === 0) {
-                eventContainer.innerHTML = '<p>You are not registered for any self-picking events.</p>';
+                eventContainer.innerHTML = `<div class=border-main><div class="border-item"><h8>You are not registered for any self-picking events.</h8></div></div>`;
                 return;
             }
 
@@ -26,7 +26,7 @@ function loadEvents() {
                         <p><strong>From:</strong> ${event.start_date}</p>
                         <p><strong>To:</strong> ${event.end_date}</p>
                         <p><strong>Category Name:</strong> ${event.category_name}</p>
-                        <button class="event-button" onclick="cancelOrder('${event.order_id}')">Cancel Order</button>
+                        <button class="event-button" onclick="cancelOrder('${event.order_id}')">Cancel</button>
                     </div>
                 `;
                 eventContainer.appendChild(eventBox);

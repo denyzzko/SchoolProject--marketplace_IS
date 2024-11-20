@@ -21,6 +21,11 @@
     margin-top: 20px;
     padding-bottom: 10px;
 }
+h8{
+    font-size: 30px;
+    align-self: center;
+    font-weight: bold;
+}
 
 .main_event-container {
     display: grid;
@@ -177,3 +182,23 @@
     bottom: 15px;
     font-size: 1em;
 }
+
+.border-item {
+    width: 900px;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border: 3px solid #7b8d7b;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-self: center;
+}
+.border-main{
+    display: grid;
+    gap: 20px;
+    margin: 20px auto;
+    max-width: 1190px; /* Maximální šířka pro desktopové zobrazení */
+    padding: 0 20px; /* Levé a pravé odsazení */
+}    
