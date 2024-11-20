@@ -21,6 +21,7 @@ CREATE TABLE Category (
     category_id INT AUTO_INCREMENT PRIMARY KEY,
     parent_category INT,
     name VARCHAR(100) NOT NULL,
+    image_path VARCHAR(255),
     CONSTRAINT fk_category_parent
         FOREIGN KEY (parent_category)
         REFERENCES Category(category_id)
