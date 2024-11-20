@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../profile_styles.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <div id="navbar-container">
+        <nav class="navbar">
+            <div class="logo">
+                <h1>black_market</h1>
+            </div>
+            <div id="nav-links" class="nav-links">
+                <!-- Will be populated by JS -->
+            </div>
+            <div id="profile" class="profile">
+                <!-- Will be populated -->
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="profile-container">
+        <img src="../assets/images/profile_icon_black.png" alt="Profile Picture" class="profile-picture">
+        <p><strong><span id="role"></span></strong></p>
+        <div class="user-info">
+            <p><strong>Name:</strong> <span id="name"></span></p>
+            <p><strong>Email:</strong> <span id="email"></span></p>
+        </div>
+        <button id="edit-button" class="edit-button" onclick="editProfile()">Edit</button>
+        
+        <!-- Edit Form -->
+        <form id="edit-form" class="edit-form" style="display: none;">
+            <label for="edit-name">Name:</label>
+            <input type="text" id="edit-name" placeholder="Enter new name">
+            <label for="edit-email">Email:</label>
+            <input type="email" id="edit-email" placeholder="Enter new email">
+            <button class="save-button" type="button" onclick="saveProfile()">Save</button>
+            <button class="cancel-button" type="button" onclick="cancelEdit()">Cancel</button>
+        </form>
+
+        <div id="message" class="message"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../frontend/navbar.js"></script>
+    <script src="../frontend/my_profile.js"></script>
+
+</body>
+</html>
