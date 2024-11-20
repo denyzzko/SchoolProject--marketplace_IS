@@ -44,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     if ($stmt->execute()) {
         echo json_encode(['status' => 'success', 'message' => 'Profile updated successfully.']);
+        $_SESSION["name"] = $name;
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Failed to update profile.']);
     }
