@@ -32,7 +32,7 @@ function renderProposals(proposals) {
         proposalElement.innerHTML = `
             <p><strong>Proposed category:</strong> ${proposal.full_path}</p>
             <p><strong>Proposed by:</strong> ${proposal.email}</p>
-            <button class="approve-button" onclick="approveProposal(${proposal.proposal_id}, '${proposal.parent_category_id}', '${proposal.proposal}')">Approve</button>
+            <button class="approve-button" onclick="approveProposal(${proposal.proposal_id}, ${proposal.parent_category_id}, '${proposal.proposal}')">Approve</button>
             <button class="reject-button" onclick="rejectProposal(${proposal.proposal_id})">Reject</button>
         `;
 
@@ -54,7 +54,12 @@ function approveProposal(proposalId, parentCategoryId, proposalName) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ proposal_id: proposalId, action: 'approve', parent_category_id: parentCategoryId, proposal: proposalName }),
+        body: JSON.stringify({ 
+            proposal_id: proposalId, 
+            action: 'approve', 
+            parent_category_id: parentCategoryId,
+            proposal: proposalName 
+        }),
     })
         .then(response => response.json())
         .then(data => {
@@ -70,6 +75,7 @@ function approveProposal(proposalId, parentCategoryId, proposalName) {
             displayMessage('An unexpected error occurred.', "error");
         });
 }
+
 
 // Reject a proposal
 function rejectProposal(proposalId) {

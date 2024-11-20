@@ -53,6 +53,7 @@ while ($row = $result->fetch_assoc()) {
         "proposal_id" => $row['proposal_id'],
         "proposal" => $row['proposal'],
         "full_path" => $fullPath,
+        "parent_category_id" => $row['parent_category_id'],
         "status" => $row['status'],
         "email" => $row['email'],
     ];

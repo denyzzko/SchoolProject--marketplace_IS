@@ -25,8 +25,8 @@ if ($action === 'approve') {
     $parentCategoryId = $data['parent_category_id'] ?? null;
     $proposalName = $data['proposal'] ?? null;
 
-    if (!$parentCategoryId || !$proposalName) {
-        echo json_encode(["status" => "error", "message" => "Missing category details for approval."]);
+    if (!$proposalName) {
+        echo json_encode(["status" => "error", "message" => "Category name is missing in proposal."]);
         exit();
     }
 
