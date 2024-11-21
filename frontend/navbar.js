@@ -86,6 +86,7 @@ function loadNavbar() {
                     // farmer specific
                     navLinks.innerHTML = `
                         <a href="../frontend/manage_users.html">Manage Users</a>
+                        <a href="../frontend/create_users.html">Create Users</a>
                     `;
                     profile.innerHTML = `
                         <div class="profile-info">

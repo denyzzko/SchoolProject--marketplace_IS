@@ -1,0 +1,65 @@
+.create-users-container {
+    background-color: #fff;
+    padding: 40px 50px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    margin: 20px auto;
+    margin-top: 150px;
+}
+
+.create-users-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.create-users-container form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.create-users-container form input,
+.create-users-container form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.create-users-container button {
+    background-color: #222222;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 80%;
+    margin: 0 auto;
+    display: block;
+}
+
+.create-users-container button:hover {
+    background-color: #575757;
+}
+
+.error-message,
+.success-message {
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.error-message {
+    color: red;
+}
+
+.success-message {
+    color: green;
+}
