@@ -12,7 +12,7 @@
     <div id="navbar-container">
         <nav class="navbar">
             <div class="logo">
-                <h1>Zelný trh</h1>
+                <h1>black_market</h1>
             </div>
             <div id="nav-links" class="nav-links">
                 <!-- Will be populated by JS -->
@@ -25,6 +25,13 @@
 
     <!-- Content Section -->    
     <div class="main_event-container">
+        <div id="popup_cancel-overlay" class="popup_cancel-overlay" style="display: none;">
+            <div class="popup_cancel">
+                <p><strong>Do you really want to cancel this event?</strong></p>
+                <button class="popup_save-button" onclick="confirmCancel(true)">Yes</button>
+                <button class="popup_cancel-button" onclick="confirmCancel(false)">No</button>
+            </div>
+        </div>
         <div id="event-container" class="event-container">
             <!-- Events will be populated here by JS -->
         </div>

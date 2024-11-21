@@ -25,7 +25,7 @@ function loadEvents() {
                         <p><strong>Location:</strong> ${event.location}</p>
                         <p><strong>From:</strong> ${event.start_date}</p>
                         <p><strong>To:</strong> ${event.end_date}</p>
-                        <p><strong>Category Name:</strong> ${event.category_name}</p>
+                        <p><strong>Name:</strong> ${event.category_name}</p>
                         <button class="event-button" onclick="cancelOrder('${event.order_id}')">Cancel</button>
                     </div>
                 `;
@@ -33,39 +33,43 @@ function loadEvents() {
             });
         })
         .catch(error => {
-            console.error('Error fetching events:', error);
             const eventContainer = document.getElementById('event-container');
             eventContainer.innerHTML = '<p>Failed to load events. Please try again later.</p>';
         });
 }
 
-function cancelOrder(orderId) {
-    if (!confirm('Are you sure you want to cancel this order?')) {
-        return;
-    }
+let currentOrderId = null;
 
-    // Prepare data for POST request
-    const formData = new FormData();
-    formData.append('order_id', orderId);
+        function cancelOrder(orderId) {
+            // Show the custom popup and store the order ID
+            currentOrderId = orderId;
+            document.getElementById('popup_cancel-overlay').style.display = 'flex';
+        }
 
-    // Send request to delete the order
-    fetch('../backend/cancel_order.php', {
-        method: 'POST',
-        body: formData,
-    })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Response data:', data); // Log response for debugging
-            if (data.success) {
-                alert('Order successfully cancelled.');
-                loadEvents(); // Reload events after successful deletion
-            } else {
-                alert('Failed to cancel order: ' + data.message);
-                console.error('Error details:', data.message);
+        function confirmCancel(isConfirmed) {
+            // Hide the popup
+            document.getElementById('popup_cancel-overlay').style.display = 'none';
+
+            if (isConfirmed && currentOrderId !== null) {
+                // Prepare data for POST request
+                const formData = new FormData();
+                formData.append('order_id', currentOrderId);
+
+                // Send request to delete the order
+                fetch('../backend/cancel_order.php', {
+                    method: 'POST',
+                    body: formData,
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            loadEvents(); // Reload events after successful deletion
+                        } else {
+                            alert('Failed to cancel order: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        alert('There was an error cancelling the order. Please try again later.');
+                    });
             }
-        })
-        .catch(error => {
-            console.error('Error cancelling order:', error);
-            alert('There was an error cancelling the order. Please try again later.');
-        });
-}
+        }

@@ -200,7 +200,7 @@ th {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 300px;
+    width: 400px;
     z-index: 1000;
 }
 .popup-header {
@@ -223,7 +223,7 @@ th {
     cursor: pointer;
 }
 .popup .send-btn:hover {
-    background-color: #218838;
+    background-color: #146827;
 }
 .popup .close-btn {
     padding: 5px 10px;

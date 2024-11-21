@@ -116,8 +116,7 @@ function sendReview() {
     })
     
     .catch(error => {
-        console.error('Error saving review:', error);
-        alert('There was an error saving your review2. Please try again.');
+        alert('There was an error saving your review. Please try again.');
     });
 }
 

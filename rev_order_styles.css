@@ -202,3 +202,53 @@ h8{
     max-width: 1190px; /* Maximální šířka pro desktopové zobrazení */
     padding: 0 20px; /* Levé a pravé odsazení */
 }    
+
+.popup_cancel-overlay {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+}
+
+.popup_cancel {
+    background: white;
+    padding: 20px;
+    row-gap: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    border-radius: 15px;
+}
+
+.popup_save-button {
+    padding: 5px 25px;
+    font-size: 16px;
+    border: 2px solid #222222;
+    border-radius: 5px;
+    background-color: #222222;
+    color: white;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.popup_save-button:hover {
+    background-color: #575757;
+    border-color: #575757;
+}
+
+.popup_cancel-button {
+    padding: 5px 25px;
+    font-size: 16px;
+    border: 2px solid #222222;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    color: #222222;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.popup_cancel-button:hover {
+    background-color: #dfdfdf;
+}
