@@ -25,6 +25,13 @@
 
     <!-- Content Section -->    
     <div class="main_event-container">
+        <div class="filter-sort">
+            <div class="filter-buttons">
+                <button onclick="sortOrders('closest')" id="sort-closest" class="filter-button">Closest</button>
+                <button onclick="sortOrders('category-az')" id="sort-category-az" class="filter-button">Category A-Z</button>
+                <button onclick="sortOrders('category-za')" id="sort-category-za" class="filter-button">Category Z-A</button>
+            </div>
+        </div>
         <div id="popup_cancel-overlay" class="popup_cancel-overlay" style="display: none;">
             <div class="popup_cancel">
                 <p><strong>Do you really want to cancel this event?</strong></p>

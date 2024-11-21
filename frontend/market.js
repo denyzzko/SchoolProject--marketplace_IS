@@ -307,4 +307,18 @@ document.getElementById('submitOfferFormSidebar').addEventListener('click', func
     .catch(error => console.error('Error:', error));
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    // Make a call to delete expired offers
+    fetch('../backend/delete_expired_events.php')
+        .then(response => response.text())
+        .then(data => {
+            console.log(data); // Log the response for debugging purposes
+        })
+        .catch(error => {
+            console.error('Error deleting expired offers:', error);
+        });
+
+    // Load events after deleting expired ones
+    loadEvents();
+});
 
