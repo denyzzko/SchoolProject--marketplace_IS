@@ -197,6 +197,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Jemný stín */
     max-width: 800px; /* Maximální šířka pro lepší vzhled */
     margin: 20px auto; /* Centrovat bar na stránce */
+    margin-top: 115px;
 }
 
 .search-bar input {
