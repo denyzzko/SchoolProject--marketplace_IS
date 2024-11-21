@@ -1,7 +1,7 @@
 <?php
 include 'db.php';
 header('Content-Type: application/json');
-session_start();
+include 'session_start.php';
 
 // Prevent unauthorized access
 if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "admin") {

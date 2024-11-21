@@ -1,5 +1,5 @@
 <?php
-session_start();
+include 'session_start.php';
 
 // content type as JSON
 header('Content-Type: application/json');
