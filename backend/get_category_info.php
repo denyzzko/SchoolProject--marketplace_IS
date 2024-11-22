@@ -1,6 +1,8 @@
 <?php
 include 'db.php';
 
+$categoryId = $_GET['category_id'];
+
 // Funkce pro získání úplného názvu kategorie a image_path
 function getFullCategoryInfo($categoryId, $conn) {
     $nameParts = [];
@@ -43,30 +45,7 @@ function getFullCategoryInfo($categoryId, $conn) {
 }
 
 
-// Načtení nabídek
-$sql = "SELECT Offer.*, 
-               Attribute.price_item, Attribute.price_kg, Attribute.quantity AS attribute_quantity,
-               SelfPickingEvent.location, SelfPickingEvent.start_date,
-               Usr.name AS farmer_name, 
-               Category.category_id AS category_id
-        FROM Offer 
-        LEFT JOIN Attribute ON Offer.offer_id = Attribute.offer_id
-        LEFT JOIN SelfPickingEvent ON Offer.offer_id = SelfPickingEvent.offer_id
-        JOIN Usr ON Offer.user_id = Usr.user_id
-        JOIN Category ON Offer.category_id = Category.category_id";
-
-$result = $conn->query($sql);
-
-$offers = [];
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $categoryInfo = getFullCategoryInfo($row['category_id'], $conn);
-        $row['full_category_name'] = $categoryInfo['full_category_name'];
-        $row['image_path'] = $categoryInfo['image_path'];
-        $offers[] = $row;
-    }
-}
-
-echo json_encode($offers);
+$categoryInfo = getFullCategoryInfo($categoryId, $conn);
+echo json_encode($categoryInfo);
 $conn->close();
 ?>
