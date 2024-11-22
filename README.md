@@ -1,8 +1,11 @@
 1. php -S localhost:8000
 3. http://localhost:8000/index.html
 
-customer:
-borec@gmail.com borec
+moderator:
+moderator@moderator.com moderator
 
 farmer: 
-farmer@borec.com farmer
+farmer@farmer.com farmer
+
+admin:
+admin@admin.com admin
