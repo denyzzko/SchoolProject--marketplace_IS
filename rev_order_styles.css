@@ -184,7 +184,8 @@ h8{
 .order-details p:nth-child(2),
 .order-details p:nth-child(5),
 .order-details p:nth-child(6), /* Type */
-.order-details p:nth-child(7) /* Date */
+.order-details p:nth-child(7),
+.order-details p:nth-child(8) /* Date */
 {
     font-weight: normal; /* Make date and type not bold */
 }

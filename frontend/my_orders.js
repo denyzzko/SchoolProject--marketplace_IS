@@ -26,6 +26,7 @@ function renderOrders(orders) {
                     <p><strong>Bought:</strong> ${order.quantity}</p>
                     <p><strong>Type:</strong>${order.type === 'sale' ? 'Sale' : 'Selfpick'}</p>
                     <p><strong>Date:</strong>${order.date}</p>
+                    <p><strong>Status:</strong>${order.status}</p>
                     <div class="actions">
                         <button class="order-button" onclick="openPopup(${order.order_id}, '${order.category_name}', '${order.farmer_name}')">Review</button>
                     </div>
