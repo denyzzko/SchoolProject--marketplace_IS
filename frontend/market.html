@@ -55,41 +55,56 @@
         </div>
         <div class="sidebar-content">
             <form id="create-offer-form">
-                <label for="category_id">Category ID:</label>
-                <input type="number" id="category_id" name="category_id" required><br><br>
-
-                <label for="type">Type:</label>
-                <select id="type" name="type" required>
-                    <option value="sale">Sale</option>
-                    <option value="selfpick">Self-pick</option>
-                </select><br><br>
-
-                <label for="price_item">Price per Item:</label>
-                <input type="number" id="price_item" name="price_item" step="0.01"><br><br>
-
-                <label for="price_kg">Price per Kg:</label>
-                <input type="number" id="price_kg" name="price_kg" step="0.01"><br><br>
-                
-                <label for="quantity">Quantity:</label>
-                <input type="number" id="quantity" name="quantity" required><br><br>
-
-                <label for="origin">Origin:</label>
-                <select id="origin" name="origin" required>
-                    <option value="Czech Republic">Czech Republic</option>
-                    <option value="Spain">Spain</option>
-                    <option value="England">England</option>
-                    <option value="Portugal">Portugal</option>
-                    <option value="USA">USA</option>
-                    <option value="Germany">Germany</option>
-                    <option value="Poland">Poland</option>
-                    <option value="Belgium">Belgium</option>
-                </select><br><br>
-
-                <label for="date_of_harvest">Date of Harvest:</label>
-                <input type="date" id="date_of_harvest" name="date_of_harvest" required><br><br>
-
-                <button type="button" id="submitOfferFormSidebar">Create Offer</button>
-            </form>
+                <div id="category-selection">
+                    <!-- Category selection will be dynamically added here -->
+                </div>
+                <div id="form-fields" style="display: none;">
+                    <div id="type-selection" style="display: none;">
+                        <label for="type">Type:</label>
+                        <select id="type" name="type" required>
+                            <option value="">Select Type</option>
+                            <option value="sale">Sale</option>
+                            <option value="selfpick">Self-pick</option>
+                        </select><br><br>
+                    </div>
+    
+                    <div id="sale-fields" style="display: none;">
+                        <label for="price_kg">Price per Kg:</label>
+                        <input type="number" id="price_kg" name="price_kg" step="0.01" required><br><br>
+    
+                        <label for="quantity">Quantity in Kgs:</label>
+                        <input type="number" id="quantity" name="quantity" required><br><br>
+    
+                        <label for="origin">Origin:</label>
+                        <select id="origin" name="origin" required>
+                            <option value="Czech Republic">Czech Republic</option>
+                            <option value="Spain">Spain</option>
+                            <option value="England">England</option>
+                            <option value="Portugal">Portugal</option>
+                            <option value="USA">USA</option>
+                            <option value="Germany">Germany</option>
+                            <option value="Poland">Poland</option>
+                            <option value="Belgium">Belgium</option>
+                        </select><br><br>
+    
+                        <label for="date_of_harvest">Date of Harvest:</label>
+                        <input type="date" id="date_of_harvest" name="date_of_harvest" required><br><br>
+                    </div>
+    
+                    <div id="selfpick-fields" style="display: none;">
+                        <label for="location">Location:</label>
+                        <input type="text" id="location" name="location" required><br><br>
+    
+                        <label for="start_date">Start Date:</label>
+                        <input type="date" id="start_date" name="start_date" required><br><br>
+    
+                        <label for="end_date">End Date:</label>
+                        <input type="date" id="end_date" name="end_date" required><br><br>
+                    </div>
+    
+                    <button type="button" id="submitOfferFormSidebar">Create Offer</button>
+                </div>
+            </form>            
         </div>
     </div>
 
@@ -106,7 +121,6 @@
             <p><strong>Origin:</strong> <span id="offer-origin"></span></p>
             <p><strong>Date of Harvest:</strong> <span id="offer-date-of-harvest"></span></p>
             <p><strong>Available Quantity:</strong> <span id="offer-available-quantity"></span></p>
-            <p><strong>Price per Item:</strong> <span id="offer-price-item"></span> CZK</p>
             <p><strong>Price per Kg:</strong> <span id="offer-price-kg"></span> CZK</p>
 
             <label for="order-quantity">Enter Quantity:</label>
@@ -132,9 +146,6 @@
                     <option value="sale">Sale</option>
                     <option value="selfpick">Self-pick</option>
                 </select><br><br>
-
-                <label for="price_item">Price per Item:</label>
-                <input type="number" id="price_item" name="price_item" step="0.01"><br><br>
 
                 <label for="price_kg">Price per Kg:</label>
                 <input type="number" id="price_kg" name="price_kg" step="0.01"><br><br>

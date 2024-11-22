@@ -17,7 +17,7 @@ document.querySelector("form").addEventListener("submit", function (event) {
                 errorDiv.style.color = "red";
             } else if (data.status === "success") {
                 // Redirect on successful login
-                window.location.href = "../index.html";
+                window.location.href = "../frontend/market.html";
             }
         })
         .catch((error) => {
