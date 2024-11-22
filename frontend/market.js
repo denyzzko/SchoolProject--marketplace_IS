@@ -463,7 +463,35 @@ function openOfferSidebar(offerId) {
                     <p><strong>Farmer:</strong> ${data.farmer_name}</p>
                 `;
 
-                if (offerType === 'sale') {
+                if (offerType === 'selfpick') {
+                    contentHtml += `
+                        <p><strong>Location:</strong> ${data.location}</p>
+                        <p><strong>Start Date:</strong> ${data.start_date}</p>
+                        <p><strong>End Date:</strong> ${data.end_date}</p>
+                    `;
+
+                    // Fetch registration status
+                    fetch(`../backend/check_event_registration.php?offer_id=${offerId}`)
+                        .then(response => response.json())
+                        .then(registrationData => {
+                            if (registrationData.registered) {
+                                contentHtml += `<button id="follow-button" disabled>Already Registered</button>`;
+                            } else {
+                                contentHtml += `<button id="follow-button">Add to My Events</button>`;
+                            }
+
+                            // Set the content after the button has been added
+                            sidebarContent.innerHTML = contentHtml;
+
+                            // Add event listener if not registered
+                            if (!registrationData.registered) {
+                                document.getElementById('follow-button').addEventListener('click', function() {
+                                    registerForEvent();
+                                });
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                } else if (offerType === 'sale') {
                     contentHtml += `
                         <p><strong>Origin:</strong> ${data.origin}</p>
                         <p><strong>Date of Harvest:</strong> ${data.date_of_harvest}</p>
@@ -476,19 +504,11 @@ function openOfferSidebar(offerId) {
 
                         <button id="place-order-button">Place Order</button>
                     `;
-                } else if (offerType === 'selfpick') {
-                    contentHtml += `
-                        <p><strong>Location:</strong> ${data.location}</p>
-                        <p><strong>Start Date:</strong> ${data.start_date}</p>
-                        <p><strong>End Date:</strong> ${data.end_date}</p>
-                        <button id="follow-button">Add to My Events</button>
-                    `;
-                }
 
-                sidebarContent.innerHTML = contentHtml;
+                    // Set the content for 'sale' offers
+                    sidebarContent.innerHTML = contentHtml;
 
-                // Set up event listeners for 'sale' offers
-                if (offerType === 'sale') {
+                    // Set up event listeners for 'sale' offers
                     const orderQuantityInput = document.getElementById('order-quantity');
                     updateTotalPrice(data.price_kg);
 
@@ -509,6 +529,7 @@ function openOfferSidebar(offerId) {
         })
         .catch(error => console.error('Error:', error));
 }
+
 
 function updateTotalPrice(pricePerKg) {
     const quantityInput = document.getElementById('order-quantity');
@@ -577,3 +598,38 @@ window.addEventListener('mouseup', function (event) {
     // Reset indicator
     isClickInsideSidebar = false;
 });
+
+function registerForEvent() {
+    // Send request to backend to register for the event
+    fetch('../backend/register_for_event.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ offer_id: currentOfferId })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Response from server:', data);
+        if (data.status === 'success') {
+            alert('Successfully registered for the event!');
+            document.getElementById('offer-detail-sidebar').classList.remove('open');
+            const followButton = document.getElementById('follow-button');
+            if (followButton) {
+                followButton.innerText = 'Already Registered';
+                followButton.disabled = true;
+            }
+        } else {
+            alert('Error registering for event: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error occurred:', error);
+        alert('Failed to register for the event. Please try again later.');
+    });
+}    
+
+
