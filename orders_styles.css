@@ -1,0 +1,83 @@
+.orders-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 20px auto;
+    margin-top: 150px;
+}
+
+.orders-container h1 {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.order-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 15px 50px;
+    margin-bottom: 15px;
+}
+
+.order-details {
+    flex: 3; /* Allocate more space to details */
+    margin-left: 5px; /* Reduced margin between details */
+    font-size: 16px; /* Slightly larger font for better readability */
+    line-height: 0.5; /* Adjust line height for tighter spacing */
+}
+
+.order-actions {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px; /* Add space between buttons */
+    margin-right: 5px;
+}
+
+.accept-button {
+    width: 100px; /* Set consistent button width */
+    text-align: center;
+    background-color: #222222;
+    color: white;
+    padding: 10px;
+    border: 2px solid #222222;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.accept-button:hover {
+    background-color: #218838;
+}
+
+.reject-button {
+    width: 100px; /* Set consistent button width */
+    text-align: center;
+    background-color: #f9f9f9;
+    color: #222222;
+    padding: 10px;
+    border: 2px solid #222222;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.reject-button:hover {
+    background-color: #c82333;
+}
+
+.error-message {
+    color: red;
+    margin: 10px;
+    text-align: center;
+}
+
+.success-message {
+    color: green;
+    margin: 10px;
+    text-align: center;
+}
