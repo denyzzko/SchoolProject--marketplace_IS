@@ -56,7 +56,7 @@ CREATE TABLE Ordr (
     offer_id INT NOT NULL,
     quantity INT NOT NULL,
     date DATE NOT NULL,
-    status ENUM('pending', 'confirmed', 'shipped', 'delivered') NOT NULL,
+    status ENUM('pending', 'confirmed', 'rejected') NOT NULL,
     FOREIGN KEY (user_id) REFERENCES Usr(user_id) ON DELETE CASCADE,
     FOREIGN KEY (offer_id) REFERENCES Offer(offer_id) ON DELETE CASCADE
 );
