@@ -1,23 +1,38 @@
-// Dynamically check role and show/hide buttons for farmers
+// Kontrola uživatelského stavu při načtení stránky
+let isUserLoggedIn = false;
+let userRole = null;
+
 fetch('../backend/index.php')
     .then(response => response.json())
     .then(data => {
-        if (data.loggedIn && data.role === 'farmer') {
-            document.getElementById('create-offer-btn').style.display = 'block';
-            document.getElementById('my-offers-btn').disabled = false;
+        if (data.loggedIn) {
+            isUserLoggedIn = true;
+            userRole = data.role;
+
+            // Umožnit přístup k "My Offers" jen registrovaným farmářům
+            if (userRole === 'farmer') {
+                document.getElementById('my-offers-btn').disabled = false;
+            }
         } else {
-            document.getElementById('create-offer-btn').style.display = 'none';
-            document.getElementById('my-offers-btn').disabled = true;
+            // Non-registered user
+            isUserLoggedIn = false;
         }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => console.error('Error fetching user state:', error));
 
-// Function to open the Create Offer sidebar
-document.getElementById('create-offer-btn').addEventListener('click', function() {
-    document.getElementById('create-offer-sidebar').classList.add('open');
-    resetCreateOfferSidebar(); // Reset the sidebar to its initial state
-    initCategorySelection(); // Initialize category selection
+// Přidat event listener pro tlačítko "Create Offer"
+document.getElementById('create-offer-btn').addEventListener('click', function () {
+    if (!isUserLoggedIn) {
+        // Pokud není uživatel přihlášen, přesměrovat na login.html
+        window.location.href = '../frontend/login.html';
+    } else {
+        // Pokud je uživatel přihlášen, otevřít Create Offer sidebar
+        document.getElementById('create-offer-sidebar').classList.add('open');
+        resetCreateOfferSidebar();
+        initCategorySelection();
+    }
 });
+
 
 // Function to close the Create Offer sidebar
 document.getElementById('close-create-offer-sidebar').addEventListener('click', function() {
