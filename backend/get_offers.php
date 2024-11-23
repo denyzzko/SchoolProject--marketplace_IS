@@ -1,49 +1,65 @@
 <?php
 include 'db.php';
 
-// Funkce pro získání úplného názvu kategorie a image_path
-function getFullCategoryInfo($categoryId, $conn) {
-    $nameParts = [];
-    $currentId = $categoryId;
-    $image_path = '';
-
-    while ($currentId) {
-        $sql = "SELECT name, parent_category, image_path FROM Category WHERE category_id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $currentId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($row = $result->fetch_assoc()) {
-            // Přidáme název kategorie na začátek pole
-            array_unshift($nameParts, $row['name']);
-
-            // Uložíme image_path, pokud ještě nemáme
-            if (!$image_path && !empty($row['image_path'])) {
-                $image_path = $row['image_path'];
-            }
-
-            $currentId = $row['parent_category'];
-        } else {
-            break;
-        }
-
-        $stmt->close();
-    }
-
-    // Odstraníme kořenovou kategorii
-    if (count($nameParts) > 1) {
-        array_shift($nameParts); // Odstraní první prvek (kořenovou kategorii)
-    }
-
-    // Sestavíme název kategorie bez kořenové kategorie
-    $name = implode(' ', $nameParts);
-
-    return ['full_category_name' => $name, 'image_path' => $image_path];
+if (!$conn) {
+    die(json_encode(['status' => 'error', 'message' => 'Database connection not established.']));
 }
 
+// Get filter parameters
+$type = isset($_GET['type']) ? $_GET['type'] : null;
+$price_min = isset($_GET['price_min']) ? $_GET['price_min'] : null;
+$price_max = isset($_GET['price_max']) ? $_GET['price_max'] : null;
+$category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 
-// Načtení nabídek
+$params = [];
+$paramTypes = '';
+$whereClauses = [];
+
+// Build the WHERE clauses
+if ($type) {
+    $whereClauses[] = "Offer.type = ?";
+    $params[] = $type;
+    $paramTypes .= 's';
+}
+
+if ($price_min) {
+    $whereClauses[] = "Attribute.price_kg >= ?";
+    $params[] = $price_min;
+    $paramTypes .= 'd';
+}
+
+if ($price_max) {
+    $whereClauses[] = "Attribute.price_kg <= ?";
+    $params[] = $price_max;
+    $paramTypes .= 'd';
+}
+
+if ($category_id) {
+    // Include offers in the selected category and its subcategories
+    // Get all descendant category IDs
+    function getDescendantCategoryIds($parentId, $conn) {
+        $ids = [$parentId];
+        $sql = "SELECT category_id FROM Category WHERE parent_category = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $parentId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $childId = $row['category_id'];
+            $ids = array_merge($ids, getDescendantCategoryIds($childId, $conn));
+        }
+        $stmt->close();
+        return $ids;
+    }
+
+    $categoryIds = getDescendantCategoryIds($category_id, $conn);
+    $placeholders = implode(',', array_fill(0, count($categoryIds), '?'));
+    $whereClauses[] = "Offer.category_id IN ($placeholders)";
+    $params = array_merge($params, $categoryIds);
+    $paramTypes .= str_repeat('i', count($categoryIds));
+}
+
+// Build the SQL query
 $sql = "SELECT Offer.*, 
                Attribute.price_item, Attribute.price_kg, Attribute.quantity AS attribute_quantity,
                SelfPickingEvent.location, SelfPickingEvent.start_date,
@@ -55,10 +71,67 @@ $sql = "SELECT Offer.*,
         JOIN Usr ON Offer.user_id = Usr.user_id
         JOIN Category ON Offer.category_id = Category.category_id";
 
-$result = $conn->query($sql);
+if (count($whereClauses) > 0) {
+    $sql .= ' WHERE ' . implode(' AND ', $whereClauses);
+}
+
+$stmt = $conn->prepare($sql);
+
+if ($stmt === false) {
+    die(json_encode(['status' => 'error', 'message' => 'SQL prepare failed: ' . $conn->error]));
+}
+
+// Bind parameters
+if (count($params) > 0) {
+    $stmt->bind_param($paramTypes, ...$params);
+}
+
+$stmt->execute();
+$result = $stmt->get_result();
 
 $offers = [];
-if ($result->num_rows > 0) {
+if ($result && $result->num_rows > 0) {
+    // Ensure getFullCategoryInfo is defined
+    function getFullCategoryInfo($categoryId, $conn) {
+        $nameParts = [];
+        $currentId = $categoryId;
+        $image_path = '';
+
+        while ($currentId) {
+            $sql = "SELECT name, parent_category, image_path FROM Category WHERE category_id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $currentId);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($row = $result->fetch_assoc()) {
+                // Add category name to the beginning of the array
+                array_unshift($nameParts, $row['name']);
+
+                // Save image_path if not already set
+                if (!$image_path && !empty($row['image_path'])) {
+                    $image_path = $row['image_path'];
+                }
+
+                $currentId = $row['parent_category'];
+            } else {
+                break;
+            }
+
+            $stmt->close();
+        }
+
+        // Remove root category
+        if (count($nameParts) > 1) {
+            array_shift($nameParts);
+        }
+
+        // Build the category name without the root
+        $name = implode(' ', $nameParts);
+
+        return ['full_category_name' => $name, 'image_path' => $image_path];
+    }
+
     while ($row = $result->fetch_assoc()) {
         $categoryInfo = getFullCategoryInfo($row['category_id'], $conn);
         $row['full_category_name'] = $categoryInfo['full_category_name'];
@@ -67,9 +140,11 @@ if ($result->num_rows > 0) {
     }
 }
 
-// Reverze pole nabídek (od nejnovějších po nejstarší)
+// Reverse the offers array (from newest to oldest)
 $offers = array_reverse($offers);
 
 echo json_encode($offers);
+
+$stmt->close();
 $conn->close();
 ?>

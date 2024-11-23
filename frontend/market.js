@@ -73,7 +73,7 @@ function initCategorySelection() {
     categorySelectionDiv.innerHTML = ''; // Clear any existing content
 
     // Fetch top-level categories
-    fetch('../backend/get_categories.php')
+    fetch('../backend/categories.php')
         .then(response => response.json())
         .then(categories => {
             if (categories.length > 0) {
@@ -122,7 +122,7 @@ function onCategoryChange(event) {
 
     if (selectedCategoryId) {
         // Check if this category has subcategories
-        fetch(`../backend/get_categories.php?parent_category_id=${selectedCategoryId}`)
+        fetch(`../backend/categories.php?parent_category_id=${selectedCategoryId}`)
             .then(response => response.json())
             .then(subcategories => {
                 if (subcategories.length > 0) {
@@ -363,6 +363,204 @@ function addOfferToMarket(formData) {
         })
         .catch(error => console.error('Error:', error));
 }
+// Initialize Filter Category Selection
+window.addEventListener('DOMContentLoaded', () => {
+    initFilterCategorySelection();
+    loadOffers(); // Loads offers initially
+});
+
+function initFilterCategorySelection() {
+    const categorySelectionDiv = document.getElementById('filter-category-selection');
+    if (!categorySelectionDiv) {
+        console.error('Category selection element not found');
+        return;
+    }
+
+    categorySelectionDiv.innerHTML = ''; // Clear any existing content
+
+    // Fetch top-level categories
+    fetch('../backend/categories.php')
+        .then(response => response.json())
+        .then(categories => {
+            if (categories.length > 0) {
+                // Create a select element
+                const select = document.createElement('select');
+                select.id = 'filter-category-select-0';
+                select.dataset.level = 0;
+
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = 'Select Category';
+                select.appendChild(defaultOption);
+
+                categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category.category_id;
+                    option.textContent = category.name;
+                    select.appendChild(option);
+                });
+
+                categorySelectionDiv.appendChild(select);
+
+                // Add event listener for change
+                select.addEventListener('change', onFilterCategoryChange);
+            } else {
+                console.error('No top-level categories found.');
+            }
+        })
+        .catch(error => console.error('Error fetching categories:', error));
+}
+
+function onFilterCategoryChange(event) {
+    const select = event.target;
+    const selectedCategoryId = select.value;
+    const level = parseInt(select.dataset.level);
+
+    // Remove any subcategory selects beyond this level
+    const categorySelectionDiv = document.getElementById('filter-category-selection');
+    const selects = categorySelectionDiv.querySelectorAll('select');
+    selects.forEach(s => {
+        if (parseInt(s.dataset.level) > level) {
+            s.parentNode.removeChild(s);
+        }
+    });
+
+    if (selectedCategoryId) {
+        // Check if this category has subcategories
+        fetch(`../backend/categories.php?parent_id=${selectedCategoryId}`)
+            .then(response => response.json())
+            .then(subcategories => {
+                if (subcategories.length > 0) {
+                    // Create a new select for subcategories
+                    const subcategorySelect = document.createElement('select');
+                    subcategorySelect.id = `filter-category-select-${level + 1}`;
+                    subcategorySelect.dataset.level = level + 1;
+
+                    const defaultOption = document.createElement('option');
+                    defaultOption.value = '';
+                    defaultOption.textContent = 'Select Subcategory';
+                    subcategorySelect.appendChild(defaultOption);
+
+                    subcategories.forEach(subcategory => {
+                        const option = document.createElement('option');
+                        option.value = subcategory.category_id;
+                        option.textContent = subcategory.name;
+                        subcategorySelect.appendChild(option);
+                    });
+
+                    categorySelectionDiv.appendChild(subcategorySelect);
+
+                    // Add event listener
+                    subcategorySelect.addEventListener('change', onFilterCategoryChange);
+                }
+            })
+            .catch(error => console.error('Error fetching subcategories:', error));
+    }
+}
+
+document.getElementById('apply-filters-button').addEventListener('click', function() {
+    applyFilters();
+});
+
+function applyFilters() {
+    // Get the filter values
+    const type = document.getElementById('filter-type').value;
+    const priceMin = document.getElementById('filter-price-min').value;
+    const priceMax = document.getElementById('filter-price-max').value;
+
+    // Get the selected category ID
+    const categorySelectionDiv = document.getElementById('filter-category-selection');
+    const selects = categorySelectionDiv.querySelectorAll('select');
+    let selectedCategoryId = null;
+    selects.forEach(select => {
+        if (select.value) {
+            selectedCategoryId = select.value;
+        }
+    });
+
+    // Build the query parameters
+    let queryParams = [];
+    if (type) {
+        queryParams.push(`type=${encodeURIComponent(type)}`);
+    }
+    if (priceMin) {
+        queryParams.push(`price_min=${encodeURIComponent(priceMin)}`);
+    }
+    if (priceMax) {
+        queryParams.push(`price_max=${encodeURIComponent(priceMax)}`);
+    }
+    if (selectedCategoryId) {
+        queryParams.push(`category_id=${encodeURIComponent(selectedCategoryId)}`);
+    }
+
+    const queryString = queryParams.length > 0 ? '?' + queryParams.join('&') : '';
+
+    // Fetch the offers with filters applied
+    fetch(`../backend/get_offers.php${queryString}`)
+        .then(response => response.json())
+        .then(data => {
+            const marketContainer = document.getElementById('market-container');
+            marketContainer.innerHTML = ''; // Clear content before adding new offers
+            data.forEach(offer => {
+                const offerBox = document.createElement('div');
+                offerBox.className = 'grid-item';
+
+                let offerContent = '';
+
+                // Use image_path from offer data
+                const imagePath = offer.image_path ? `/${offer.image_path}` : '/assets/images/default.png';
+
+                if (offer.type === 'sale') {
+                    offerContent = `
+                        <div class="top-section">
+                            <img src="${imagePath}" alt="${offer.full_category_name}">
+                        </div>
+                        <div class="middle-section">Sale</div>
+                        <div class="bottom-section">
+                            <div>
+                                <p><strong>${offer.full_category_name}</strong></p>
+                                <p>${offer.farmer_name}</p>
+                                <p>${offer.price_kg} CZK/kg</p>
+                                <p>Remains: ${offer.attribute_quantity} kg</p>
+                            </div>
+                            <div class="actions">
+                                <button class="button">Compare Price</button>
+                            </div>
+                        </div>
+                    `;
+                } else if (offer.type === 'selfpick') {
+                    offerContent = `
+                        <div class="top-section">
+                            <img src="${imagePath}" alt="${offer.full_category_name}">
+                        </div>
+                        <div class="middle-section">Self-pick</div>
+                        <div class="bottom-section">
+                            <div>
+                                <p><strong>${offer.full_category_name}</strong></p>
+                                <p>${offer.farmer_name}</p>
+                                <p>${offer.price_kg} CZK/kg</p>
+                                <p>Available: ${offer.attribute_quantity}</p>
+                            </div>
+                            <div class="actions">
+                                <button class="button">Details</button>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                offerBox.innerHTML = offerContent;
+
+                // Add event listener to open offer details
+                offerBox.addEventListener('click', function () {
+                    openOfferSidebar(offer.offer_id);
+                });
+
+                marketContainer.appendChild(offerBox);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+}
+
 
 // Load existing offers from the database
 window.addEventListener('DOMContentLoaded', () => {

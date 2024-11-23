@@ -22,7 +22,7 @@ function renderOrders(orders) {
                 <div>
                     <p><strong>Name:</strong> ${order.category_name}</p>
                     <p><strong>Farmer:</strong> ${order.farmer_name}</p>
-                    <p>${order.price_item} CZK  </p><p>${order.price_kg} CZK/kg</p>
+                    </p><p>${order.price_kg} CZK/kg</p>
                     <p><strong>Bought:</strong> ${order.quantity}</p>
                     <p><strong>Type:</strong>${order.type === 'sale' ? 'Sale' : 'Selfpick'}</p>
                     <p><strong>Date:</strong>${order.date}</p>

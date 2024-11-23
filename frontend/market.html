@@ -6,6 +6,8 @@
     <title>Market</title>
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="../market.css">
+    <link rel="stylesheet" href="../filters.css">
+
 </head>
 <body>
 
@@ -35,11 +37,47 @@
     <div class="main-layout">
         <!-- Left Sidebar -->
         <aside class="left-sidebar">
+            <!-- Existing buttons -->
             <button class="sidebar-btn" id="create-offer-btn">Create Offer</button>
             <button class="sidebar-btn" id="my-offers-btn" disabled>My offers</button>
             <button class="sidebar-btn">View orders</button>
             <button class="sidebar-btn">View reviews</button>
+        
+            <!-- Filters -->
+            <div class="filters">
+                <h3>Filters</h3>
+                
+                <!-- Type Filter -->
+                <div class="filter-section">
+                    <label for="filter-type">Type:</label>
+                    <select id="filter-type">
+                        <option value="">All</option>
+                        <option value="sale">Sale</option>
+                        <option value="selfpick">Self-pick</option>
+                    </select>
+                </div>
+        
+                <!-- Price/kg Filter -->
+                <div class="filter-section">
+                    <label for="filter-price-min">Price/kg Min:</label>
+                    <input type="number" id="filter-price-min" step="0.01" min="0">
+                    <label for="filter-price-max">Price/kg Max:</label>
+                    <input type="number" id="filter-price-max" step="0.01" min="0">
+                </div>
+        
+                <!-- Category Filter -->
+                <div class="filter-section" id="filter-category-section">
+                    <label>Category:</label>
+                    <div id="filter-category-selection">
+                        <!-- Category dropdowns will be added here -->
+                    </div>
+                </div>
+        
+                <!-- Apply Filters Button -->
+                <button id="apply-filters-button">Apply Filters</button>
+            </div>
         </aside>
+        
 
         <!-- Market Offers -->
         <main id="market-container" class="market-container">
