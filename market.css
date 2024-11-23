@@ -1,6 +1,7 @@
 /* Centered main layout with padding */
 .main-layout {
     display: grid;
+    align-items: flex-start; /* Add this line */
     grid-template-columns: 1fr 4fr;
     gap: 20px;
     margin: 20px auto;

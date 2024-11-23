@@ -122,7 +122,7 @@ function onCategoryChange(event) {
 
     if (selectedCategoryId) {
         // Check if this category has subcategories
-        fetch(`../backend/categories.php?parent_category_id=${selectedCategoryId}`)
+        fetch(`../backend/categories.php?parent_id=${selectedCategoryId}`)
             .then(response => response.json())
             .then(subcategories => {
                 if (subcategories.length > 0) {
@@ -366,7 +366,6 @@ function addOfferToMarket(formData) {
 // Initialize Filter Category Selection
 window.addEventListener('DOMContentLoaded', () => {
     initFilterCategorySelection();
-    loadOffers(); // Loads offers initially
 });
 
 function initFilterCategorySelection() {
@@ -463,6 +462,8 @@ document.getElementById('apply-filters-button').addEventListener('click', functi
 });
 
 function applyFilters() {
+    const marketContainer = document.getElementById('market-container');
+    marketContainer.innerHTML = '';
     // Get the filter values
     const type = document.getElementById('filter-type').value;
     const priceMin = document.getElementById('filter-price-min').value;
@@ -501,65 +502,72 @@ function applyFilters() {
         .then(data => {
             const marketContainer = document.getElementById('market-container');
             marketContainer.innerHTML = ''; // Clear content before adding new offers
-            data.forEach(offer => {
-                const offerBox = document.createElement('div');
-                offerBox.className = 'grid-item';
 
-                let offerContent = '';
+            if (data.length === 0) {
+                // Handle empty results
+                marketContainer.innerHTML = '<p>No offers found for the selected filters.</p>';
+            } else {
+                data.forEach(offer => {
+                    const offerBox = document.createElement('div');
+                    offerBox.className = 'grid-item';
 
-                // Use image_path from offer data
-                const imagePath = offer.image_path ? `/${offer.image_path}` : '/assets/images/default.png';
+                    let offerContent = '';
 
-                if (offer.type === 'sale') {
-                    offerContent = `
-                        <div class="top-section">
-                            <img src="${imagePath}" alt="${offer.full_category_name}">
-                        </div>
-                        <div class="middle-section">Sale</div>
-                        <div class="bottom-section">
-                            <div>
-                                <p><strong>${offer.full_category_name}</strong></p>
-                                <p>${offer.farmer_name}</p>
-                                <p>${offer.price_kg} CZK/kg</p>
-                                <p>Remains: ${offer.attribute_quantity} kg</p>
+                    // Use image_path from offer data
+                    const imagePath = offer.image_path ? `/${offer.image_path}` : '/assets/images/default.png';
+
+                    if (offer.type === 'sale') {
+                        offerContent = `
+                            <div class="top-section">
+                                <img src="${imagePath}" alt="${offer.full_category_name}">
                             </div>
-                            <div class="actions">
-                                <button class="button">Compare Price</button>
+                            <div class="middle-section">Sale</div>
+                            <div class="bottom-section">
+                                <div>
+                                    <p><strong>${offer.full_category_name}</strong></p>
+                                    <p>${offer.farmer_name}</p>
+                                    <p>${offer.price_kg} CZK/kg</p>
+                                    <p>Remains: ${offer.attribute_quantity} kg</p>
+                                </div>
+                                <div class="actions">
+                                    <button class="button">Compare Price</button>
+                                </div>
                             </div>
-                        </div>
-                    `;
-                } else if (offer.type === 'selfpick') {
-                    offerContent = `
-                        <div class="top-section">
-                            <img src="${imagePath}" alt="${offer.full_category_name}">
-                        </div>
-                        <div class="middle-section">Self-pick</div>
-                        <div class="bottom-section">
-                            <div>
-                                <p><strong>${offer.full_category_name}</strong></p>
-                                <p>${offer.farmer_name}</p>
-                                <p>${offer.price_kg} CZK/kg</p>
-                                <p>Available: ${offer.attribute_quantity}</p>
+                        `;
+                    } else if (offer.type === 'selfpick') {
+                        offerContent = `
+                            <div class="top-section">
+                                <img src="${imagePath}" alt="${offer.full_category_name}">
                             </div>
-                            <div class="actions">
-                                <button class="button">Details</button>
+                            <div class="middle-section">Self-pick</div>
+                            <div class="bottom-section">
+                                <div>
+                                    <p><strong>${offer.full_category_name}</strong></p>
+                                    <p>${offer.farmer_name}</p>
+                                    <p>${offer.price_kg} CZK/kg</p>
+                                    <p>Available: ${offer.attribute_quantity}</p>
+                                </div>
+                                <div class="actions">
+                                    <button class="button">Details</button>
+                                </div>
                             </div>
-                        </div>
-                    `;
-                }
+                        `;
+                    }
 
-                offerBox.innerHTML = offerContent;
+                    offerBox.innerHTML = offerContent;
 
-                // Add event listener to open offer details
-                offerBox.addEventListener('click', function () {
-                    openOfferSidebar(offer.offer_id);
+                    // Add event listener to open offer details
+                    offerBox.addEventListener('click', function () {
+                        openOfferSidebar(offer.offer_id);
+                    });
+
+                    marketContainer.appendChild(offerBox);
                 });
-
-                marketContainer.appendChild(offerBox);
-            });
+            }
         })
         .catch(error => console.error('Error:', error));
 }
+
 
 
 // Load existing offers from the database
