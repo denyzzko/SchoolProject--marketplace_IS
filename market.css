@@ -37,6 +37,11 @@
     background-color: #bbb;
 }
 
+.sidebar-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 /* Offers styling */
 .market-container {
     display: grid;
@@ -98,6 +103,7 @@
     width: 80%;
     max-width: 500px;
     border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .close {
@@ -180,7 +186,9 @@
     margin-top: 20px; /* Přidáme odsazení nad tlačítkem */
 }
 
-.bottom-section .button {
+.bottom-section .button,
+.bottom-section .edit-offer-button,
+.bottom-section .delete-offer-button {
     background-color: #ddd;
     color: #333;
     border: none;
@@ -188,13 +196,14 @@
     padding: 8px 12px; /* Větší padding pro lepší vzhled */
     font-size: 14px;
     cursor: pointer;
-    
+    margin-left: 5px;
 }
 
-.bottom-section .button:hover {
+.bottom-section .button:hover,
+.bottom-section .edit-offer-button:hover,
+.bottom-section .delete-offer-button:hover {
     background-color: #bbb;
 }
-
 
 .search-bar {
     display: flex;
@@ -243,90 +252,10 @@
     background-color: #575757; /* Stejná barva jako hover efekt v navbaru */
 }
 
-
 .search-bar button:active {
     transform: translateY(1px); /* Jemná změna při kliknutí */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Návrat na původní stín */
 }
-
-
-/* Modal styling */
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 100; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
-}
-
-.modal-content {
-    background-color: #f4f4f4;
-    margin: 15% auto; /* 15% from the top and centered */
-    padding: 20px;
-    border: 1px solid #888;
-    width: 50%; /* Could be more or less, depending on screen size */
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.modal-content h2 {
-    margin-bottom: 20px;
-    color: #333;
-}
-
-.modal-content label {
-    display: block;
-    margin: 10px 0 5px;
-    font-weight: bold;
-    color: #333;
-}
-
-.modal-content input,
-.modal-content select {
-    width: calc(100% - 20px);
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
-
-.modal-content .close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.modal-content .close:hover,
-.modal-content .close:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-/* Button styling */
-.modal-content button {
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    background-color: #222222; /* Same as navbar button */
-    color: white;
-    border: 1px solid white;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-.modal-content button:hover {
-    background-color: #575757; /* Same hover effect */
-}
-
 
 /* Offer Detail Sidebar */
 .offer-detail-sidebar {
@@ -361,7 +290,6 @@
     margin-bottom: 20px; /* Zvýší mezeru mezi nadpisem a formulářem */
 }
 
-
 .close-sidebar {
     font-size: 28px;
     font-weight: bold;
@@ -388,7 +316,9 @@
     box-sizing: border-box;
 }
 
-#place-order-button {
+#place-order-button,
+#follow-button,
+#submitEditOfferForm {
     margin-top: 20px;
     padding: 10px 20px;
     background-color: #222222;
@@ -398,10 +328,11 @@
     cursor: pointer;
 }
 
-#place-order-button:hover {
+#place-order-button:hover,
+#follow-button:hover,
+#submitEditOfferForm:hover {
     background-color: #575757;
 }
-
 
 /* Form Styling */
 #category-selection, #form-fields {
@@ -418,31 +349,38 @@
 
 #category-selection select, 
 #form-fields input, 
-#form-fields select {
+#form-fields select,
+#edit-offer-form input,
+#edit-offer-form select {
     padding: 10px;
     font-size: 14px;
     border: 1px solid #ccc;
     border-radius: 5px;
     transition: border-color 0.3s, box-shadow 0.3s;
+    width: 100%;
 }
 
 #category-selection select:focus, 
 #form-fields input:focus, 
-#form-fields select:focus {
+#form-fields select:focus,
+#edit-offer-form input:focus,
+#edit-offer-form select:focus {
     border-color: #007bff;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
     outline: none;
 }
 
 #form-fields label, 
-#category-selection label {
+#category-selection label,
+#edit-offer-form label {
     font-size: 14px;
     font-weight: bold;
     margin-bottom: 5px;
     color: #333;
 }
 
-#form-fields button {
+#form-fields button,
+#edit-offer-form button {
     background-color: #222222;
     color: white;
     padding: 10px 20px;
@@ -454,9 +392,7 @@
     transition: background-color 0.3s ease;
 }
 
-#form-fields button:hover {
+#form-fields button:hover,
+#edit-offer-form button:hover {
     background-color: #575757;
 }
-
-
-
