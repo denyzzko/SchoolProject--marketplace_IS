@@ -58,6 +58,7 @@ $sql = "SELECT Offer.*,
         JOIN Category ON Offer.category_id = Category.category_id
         WHERE Offer.user_id = ?";
 
+$sql .= " ORDER BY Offer.offer_id DESC";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -72,9 +73,6 @@ if ($result->num_rows > 0) {
         $offers[] = $row;
     }
 }
-
-// Reverze pole nabídek (od nejnovějších po nejstarší)
-$offers = array_reverse($offers);
 
 // Return the offers
 echo json_encode($offers);

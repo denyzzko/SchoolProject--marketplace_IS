@@ -74,7 +74,7 @@ $sql = "SELECT Offer.*,
 if (count($whereClauses) > 0) {
     $sql .= ' WHERE ' . implode(' AND ', $whereClauses);
 }
-
+$sql .= " ORDER BY Offer.offer_id DESC";
 $stmt = $conn->prepare($sql);
 
 if ($stmt === false) {
@@ -139,9 +139,6 @@ if ($result && $result->num_rows > 0) {
         $offers[] = $row;
     }
 }
-
-// Reverse the offers array (from newest to oldest)
-$offers = array_reverse($offers);
 
 echo json_encode($offers);
 
