@@ -787,6 +787,12 @@ function updateTotalPrice(pricePerKg) {
 }
 
 function placeOrder(availableQuantity) {
+    if (!isUserLoggedIn) {
+        // Redirect non-logged-in users to login page
+        window.location.href = '../frontend/login.html';
+        return;
+    }
+
     const quantity = parseInt(document.getElementById('order-quantity').value);
 
     if (quantity > availableQuantity) {
@@ -847,6 +853,11 @@ window.addEventListener('mouseup', function (event) {
 });
 
 function registerForEvent() {
+    if (!isUserLoggedIn) {
+        // Redirect non-logged-in users to login page
+        window.location.href = '../frontend/login.html';
+        return;
+    }
     // Send request to backend to register for the event
     fetch('../backend/register_for_event.php', {
         method: 'POST',
