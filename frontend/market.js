@@ -1,9 +1,13 @@
-// Dynamically check role and show "Create Offer" section for farmers
+// Dynamically check role and show/hide buttons for farmers
 fetch('../backend/index.php')
     .then(response => response.json())
     .then(data => {
         if (data.loggedIn && data.role === 'farmer') {
-            document.getElementById('create-offer-section').style.display = 'block';
+            document.getElementById('create-offer-btn').style.display = 'block';
+            document.getElementById('my-offers-btn').disabled = false;
+        } else {
+            document.getElementById('create-offer-btn').style.display = 'none';
+            document.getElementById('my-offers-btn').disabled = true;
         }
     })
     .catch(error => console.error('Error:', error));
@@ -275,7 +279,7 @@ document.getElementById('submitOfferFormSidebar').addEventListener('click', func
     .catch(error => console.error('Error:', error));
 });
 
-// Funkce pro dynamické přidání nabídky na tržiště
+// Function to dynamically add the new offer to the market
 function addOfferToMarket(formData) {
     const marketContainer = document.getElementById('market-container');
     const offerBox = document.createElement('div');
@@ -286,7 +290,7 @@ function addOfferToMarket(formData) {
     const type = formData.get('type');
     const categoryId = formData.get('category_id');
 
-    // Získání informací o kategorii pro získání názvu a image_path
+    // Get category info to retrieve name and image_path
     fetch(`../backend/get_category_info.php?category_id=${categoryId}`)
         .then(response => response.json())
         .then(categoryInfo => {
@@ -334,32 +338,31 @@ function addOfferToMarket(formData) {
 
             offerBox.innerHTML = offerContent;
 
-            // Přidání event listeneru pro otevření detailů nabídky
+            // Add event listener to open offer details
             offerBox.addEventListener('click', function () {
                 openOfferSidebar(formData.get('offer_id'));
             });
 
-            // Vložit novou nabídku na začátek
+            // Insert the new offer at the beginning
             marketContainer.insertBefore(offerBox, marketContainer.firstChild);
         })
         .catch(error => console.error('Error:', error));
 }
 
-
-// Načtení existujících nabídek z databáze
+// Load existing offers from the database
 window.addEventListener('DOMContentLoaded', () => {
     fetch('../backend/get_offers.php')
         .then(response => response.json())
         .then(data => {
             const marketContainer = document.getElementById('market-container');
-            marketContainer.innerHTML = ''; // Vyčistíme obsah před přidáním nových nabídek
+            marketContainer.innerHTML = ''; // Clear content before adding new offers
             data.forEach(offer => {
                 const offerBox = document.createElement('div');
                 offerBox.className = 'grid-item';
 
                 let offerContent = '';
 
-                // Použijeme image_path z dat nabídky
+                // Use image_path from offer data
                 const imagePath = offer.image_path ? `/${offer.image_path}` : '/assets/images/default.png';
 
                 if (offer.type === 'sale') {
@@ -402,7 +405,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 offerBox.innerHTML = offerContent;
 
-                // Přidání event listeneru pro otevření detailů nabídky
+                // Add event listener to open offer details
                 offerBox.addEventListener('click', function () {
                     openOfferSidebar(offer.offer_id);
                 });
@@ -413,10 +416,7 @@ window.addEventListener('DOMContentLoaded', () => {
         .catch(error => console.error('Error:', error));
 });
 
-
-
-
-// Search button click event
+// Search functionality
 document.getElementById('search-button').addEventListener('click', function () {
     const searchTerm = document.getElementById('search-input').value.toLowerCase();
     const offers = document.querySelectorAll('.grid-item');
@@ -477,7 +477,7 @@ function openOfferSidebar(offerId) {
                         <p><strong>Start Date:</strong> ${data.start_date}</p>
                         <p><strong>End Date:</strong> ${data.end_date}</p>
                         <p><strong>Price per Kg:</strong> ${data.price_kg} CZK</p>
-                        <p><strong>Maximum Registrations:</strong> ${data.attribute_quantity}</p>
+                        <p><strong>Available spaces:</strong> ${data.attribute_quantity}</p>
                     `;
 
                     // Fetch registration status
@@ -539,7 +539,6 @@ function openOfferSidebar(offerId) {
         })
         .catch(error => console.error('Error:', error));
 }
-
 
 function updateTotalPrice(pricePerKg) {
     const quantityInput = document.getElementById('order-quantity');
@@ -640,6 +639,234 @@ function registerForEvent() {
         console.error('Error occurred:', error);
         alert('Failed to register for the event. Please try again later.');
     });
-}    
+}
 
+// Event listener for "My Offers" button
+document.getElementById('my-offers-btn').addEventListener('click', function() {
+    displayMyOffers();
+});
 
+// Function to display farmer's own offers
+function displayMyOffers() {
+    fetch('../backend/get_my_offers.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'error') {
+                alert(data.message);
+                return;
+            }
+            // Clear the market container
+            const marketContainer = document.getElementById('market-container');
+            marketContainer.innerHTML = '';
+
+            data.forEach(offer => {
+                // Create offer boxes similar to the ones in the market, but with edit and delete options
+                const offerBox = document.createElement('div');
+                offerBox.className = 'grid-item';
+
+                let offerContent = '';
+                const imagePath = offer.image_path ? `/${offer.image_path}` : '/assets/images/default.png';
+
+                if (offer.type === 'sale') {
+                    offerContent = `
+                        <div class="top-section">
+                            <img src="${imagePath}" alt="${offer.full_category_name}">
+                        </div>
+                        <div class="middle-section">Sale</div>
+                        <div class="bottom-section">
+                            <div>
+                                <p><strong>${offer.full_category_name}</strong></p>
+                                <p>${offer.farmer_name}</p>
+                                <p>${offer.price_kg} CZK/kg</p>
+                                <p>Available: ${offer.attribute_quantity}</p>
+                            </div>
+                            <div class="actions">
+                                <button class="edit-offer-button" data-offer-id="${offer.offer_id}">Edit</button>
+                                <button class="delete-offer-button" data-offer-id="${offer.offer_id}">Delete</button>
+                            </div>
+                        </div>
+                    `;
+                } else if (offer.type === 'selfpick') {
+                    offerContent = `
+                        <div class="top-section">
+                            <img src="${imagePath}" alt="${offer.full_category_name}">
+                        </div>
+                        <div class="middle-section">Self-pick</div>
+                        <div class="bottom-section">
+                            <div>
+                                <p><strong>${offer.full_category_name}</strong></p>
+                                <p>${offer.farmer_name}</p>
+                                <p>${offer.price_kg} CZK/kg</p>
+                                <p>Available: ${offer.attribute_quantity}</p>
+                            </div>
+                            <div class="actions">
+                                <button class="edit-offer-button" data-offer-id="${offer.offer_id}">Edit</button>
+                                <button class="delete-offer-button" data-offer-id="${offer.offer_id}">Delete</button>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                offerBox.innerHTML = offerContent;
+
+                // Add event listeners for edit and delete buttons
+                offerBox.querySelector('.edit-offer-button').addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    const offerId = event.target.dataset.offerId;
+                    openEditOfferSidebar(offerId);
+                });
+
+                offerBox.querySelector('.delete-offer-button').addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    const offerId = event.target.dataset.offerId;
+                    deleteOffer(offerId);
+                });
+
+                marketContainer.appendChild(offerBox);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// Function to open the Edit Offer sidebar
+function openEditOfferSidebar(offerId) {
+    // Fetch offer details
+    fetch(`../backend/get_offer_details.php?offer_id=${offerId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status !== 'error') {
+                // Open the edit-offer-sidebar
+                const sidebar = document.getElementById('edit-offer-sidebar');
+                sidebar.classList.add('open');
+
+                // Clear previous content
+                const sidebarContent = sidebar.querySelector('.sidebar-content');
+                sidebarContent.innerHTML = '';
+
+                // Create the form dynamically, pre-filled with offer details
+                const form = document.createElement('form');
+                form.id = 'edit-offer-form';
+
+                // Build the form similar to the create-offer-form, but with values pre-filled
+                // Also include a hidden input for offer_id
+                let formContent = '';
+
+                // Since we have two types, sale and selfpick, we need to handle both
+                formContent += `<input type="hidden" name="offer_id" value="${offerId}">`;
+
+                // Category is not editable
+                formContent += `<p><strong>Category:</strong> ${data.category_name}</p>`;
+
+                formContent += `
+                    <label for="type">Type:</label>
+                    <input type="text" id="type" name="type" value="${data.type}" readonly><br><br>
+                `;
+
+                if (data.type === 'sale') {
+                    formContent += `
+                        <label for="price_kg">Price per Kg:</label>
+                        <input type="number" id="price_kg" name="price_kg" step="0.01" value="${data.price_kg}" required><br><br>
+        
+                        <label for="quantity">Quantity in Kgs:</label>
+                        <input type="number" id="quantity" name="quantity" value="${data.attribute_quantity}" required><br><br>
+        
+                        <label for="origin">Origin:</label>
+                        <select id="origin" name="origin" required>
+                            <option value="Czech Republic" ${data.origin === 'Czech Republic' ? 'selected' : ''}>Czech Republic</option>
+                            <option value="Spain" ${data.origin === 'Spain' ? 'selected' : ''}>Spain</option>
+                            <option value="England" ${data.origin === 'England' ? 'selected' : ''}>England</option>
+                            <option value="Portugal" ${data.origin === 'Portugal' ? 'selected' : ''}>Portugal</option>
+                            <option value="USA" ${data.origin === 'USA' ? 'selected' : ''}>USA</option>
+                            <option value="Germany" ${data.origin === 'Germany' ? 'selected' : ''}>Germany</option>
+                            <option value="Poland" ${data.origin === 'Poland' ? 'selected' : ''}>Poland</option>
+                            <option value="Belgium" ${data.origin === 'Belgium' ? 'selected' : ''}>Belgium</option>
+                        </select><br><br>
+        
+                        <label for="date_of_harvest">Date of Harvest:</label>
+                        <input type="date" id="date_of_harvest" name="date_of_harvest" value="${data.date_of_harvest}" required><br><br>
+                    `;
+                } else if (data.type === 'selfpick') {
+                    formContent += `
+                        <label for="location">Location:</label>
+                        <input type="text" id="location" name="location" value="${data.location}" required><br><br>
+                    
+                        <label for="start_date">Start Date:</label>
+                        <input type="date" id="start_date" name="start_date" value="${data.start_date}" required><br><br>
+                    
+                        <label for="end_date">End Date:</label>
+                        <input type="date" id="end_date" name="end_date" value="${data.end_date}" required><br><br>
+                    
+                        <label for="price_kg">Price per Kg:</label>
+                        <input type="number" id="price_kg" name="price_kg" step="0.01" value="${data.price_kg}" required><br><br>
+                    
+                        <label for="quantity">Maximum Number of Registrations:</label>
+                        <input type="number" id="quantity" name="quantity" value="${data.attribute_quantity}" required><br><br>
+                    `;
+                }
+
+                formContent += `<button type="button" id="submitEditOfferForm">Save Changes</button>`;
+
+                form.innerHTML = formContent;
+                sidebarContent.appendChild(form);
+
+                // Add event listener to submit button
+                document.getElementById('submitEditOfferForm').addEventListener('click', function() {
+                    submitEditOfferForm();
+                });
+
+                // Add event listener to close button
+                document.getElementById('close-edit-offer-sidebar').addEventListener('click', function() {
+                    sidebar.classList.remove('open');
+                });
+            } else {
+                alert('Error fetching offer details.');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// Function to submit the edited offer
+function submitEditOfferForm() {
+    const form = document.getElementById('edit-offer-form');
+    const formData = new FormData(form);
+
+    fetch('../backend/update_offer.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('Offer updated successfully!');
+            // Close the sidebar
+            document.getElementById('edit-offer-sidebar').classList.remove('open');
+            // Refresh the My Offers view
+            displayMyOffers();
+        } else {
+            alert('Error updating offer: ' + data.message);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+// Function to delete an offer
+function deleteOffer(offerId) {
+    if (confirm('Are you sure you want to delete this offer?')) {
+        fetch('../backend/delete_offer.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ offer_id: offerId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert('Offer deleted successfully!');
+                // Refresh the My Offers view
+                displayMyOffers();
+            } else {
+                alert('Error deleting offer: ' + data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+}
