@@ -9,7 +9,11 @@ fetch('../backend/index.php')
             isUserLoggedIn = true;
             userRole = data.role;
 
-            // Umožnit přístup k "My Offers" jen registrovaným farmářům
+            // Enable "Create Offer" button for farmers and customers
+            if (userRole === 'farmer' || userRole === 'customer') {
+                document.getElementById('create-offer-btn').disabled = false;
+            }
+            // Enable "My Offers" button only for farmers
             if (userRole === 'farmer') {
                 document.getElementById('my-offers-btn').disabled = false;
             }
@@ -22,6 +26,8 @@ fetch('../backend/index.php')
 
 // Přidat event listener pro tlačítko "Create Offer"
 document.getElementById('create-offer-btn').addEventListener('click', function () {
+    if (this.disabled) return; // Prevent action if button is disabled
+
     if (!isUserLoggedIn) {
         // Pokud není uživatel přihlášen, přesměrovat na login.html
         window.location.href = '../frontend/login.html';
@@ -797,9 +803,14 @@ function placeOrder(availableQuantity) {
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            alert('Order placed successfully!');
+            alert(data.message);
             // Close the sidebar
             document.getElementById('offer-detail-sidebar').classList.remove('open');
+            // **Add this code to handle role change**
+            if (data.roleChanged) {
+                // Reload the page to update navbar and other elements
+                location.reload();
+            }
             // Optionally, refresh the offers or update the specific offer box
         } else {
             alert('Error placing order: ' + data.message);
@@ -851,13 +862,20 @@ function registerForEvent() {
     .then(data => {
         console.log('Response from server:', data);
         if (data.status === 'success') {
-            alert('Successfully registered for the event!');
+            alert(data.message);
             document.getElementById('offer-detail-sidebar').classList.remove('open');
             const followButton = document.getElementById('follow-button');
             if (followButton) {
                 followButton.innerText = 'Already Registered';
                 followButton.disabled = true;
             }
+
+            // **Add this code to handle role change**
+            if (data.roleChanged) {
+                // Reload the page to update navbar and other elements
+                location.reload();
+            }
+
         } else {
             alert('Error registering for event: ' + data.message);
         }
@@ -868,8 +886,10 @@ function registerForEvent() {
     });
 }
 
+
 // Event listener for "My Offers" button
 document.getElementById('my-offers-btn').addEventListener('click', function() {
+    if (this.disabled) return; // Prevent action if button is disabled
     displayMyOffers();
 });
 
