@@ -11,7 +11,6 @@ function loadReviews() {
 
 // Function to render reviews based on data
 function renderReviews(reviews) {
-    console.log('Rendering reviews, count:', reviews.length);  // Debug log
     const container = document.getElementById('review-container');
     container.innerHTML = '';
     reviews.forEach(review => {
@@ -57,7 +56,6 @@ function sortReviews(criteria) {
             }
             renderReviews(data);
 
-            // Update active button
             document.querySelectorAll('.filter-button').forEach(button => button.classList.remove('active'));
             document.getElementById(`sort-${criteria}`).classList.add('active');
         })

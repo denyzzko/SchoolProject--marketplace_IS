@@ -1,11 +1,9 @@
-// JavaScript to load orders and display them in the desired layout
-
 // Function to load orders and display them in the desired layout
 function loadOrders() {
     fetch('../backend/my_orders.php')
         .then(response => response.json())
         .then(data => {
-            renderOrders(data); // Render the orders with the given data
+            renderOrders(data);
         })
         .catch(error => console.error('Error:', error));
 }
@@ -13,7 +11,7 @@ function loadOrders() {
 // Function to render the orders in the container
 function renderOrders(orders) {
     const orderContainer = document.getElementById('order-container');
-    orderContainer.innerHTML = ''; // Clear container before adding new orders
+    orderContainer.innerHTML = '';
     orders.forEach(order => {
         const orderBox = document.createElement('div');
         orderBox.className = 'order-item';
@@ -108,7 +106,6 @@ function sendReview() {
     })
     .then(response => response.json())
     .then(data => {
-        console.log(data); // Log the complete response
         if (data.success) {
             closePopup();
         } else {

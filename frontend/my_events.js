@@ -1,12 +1,10 @@
-document.addEventListener('DOMContentLoaded', loadEvents);
-
-let eventsData = []; // Global variable to store fetched events
+// Loads the events that the user is registered for by fetching data from the server
 function loadEvents() {
     fetch('../backend/my_events.php')
         .then(response => response.json())
         .then(data => {
             const eventContainer = document.getElementById('event-container');
-            eventContainer.innerHTML = ''; // Clear container before adding new events
+            eventContainer.innerHTML = '';
 
             if (data.error) {
                 eventContainer.innerHTML = `<p>${data.error}</p>`;
@@ -17,11 +15,7 @@ function loadEvents() {
                 eventContainer.innerHTML = `<div class="border-main"><div class="border-item"><h8>You are not registered for any self-picking events.</h8></div></div>`;
                 return;
             }
-
-            // Store the fetched data in the global variable
             eventsData = data;
-
-            // Display events
             displayEvents(eventsData);
         })
         .catch(error => {
@@ -30,9 +24,10 @@ function loadEvents() {
         });
 }
 
+// Displays the list of events in the event container element
 function displayEvents(events) {
     const eventContainer = document.getElementById('event-container');
-    eventContainer.innerHTML = ''; // Clear existing events
+    eventContainer.innerHTML = '';
 
     events.forEach(event => {
         const eventBox = document.createElement('div');
@@ -50,14 +45,12 @@ function displayEvents(events) {
     });
 }
 
+// Sorts the list of events based on the specified sorting type and updates the display
 function sortOrders(sortType) {
-    // Remove the 'active' class from all filter buttons
     document.querySelectorAll('.filter-button').forEach(button => button.classList.remove('active'));
-
-    // Add 'active' class to the clicked button
     document.getElementById(`sort-${sortType}`).classList.add('active');
 
-    let sortedEvents = [...eventsData]; // Create a copy to sort
+    let sortedEvents = [...eventsData]; 
 
     switch (sortType) {
         case 'closest':
@@ -71,28 +64,25 @@ function sortOrders(sortType) {
             break;
     }
 
-    // Display sorted events
     displayEvents(sortedEvents);
 }
 
 let currentOrderId = null;
 
+// Initiates the cancellation process for an event by showing a confirmation popup
 function cancelOrder(orderId) {
-    // Show the custom popup and store the order ID
     currentOrderId = orderId;
     document.getElementById('popup_cancel-overlay').style.display = 'flex';
 }
 
+// Handles the user's confirmation or cancellation of the event cancellation request
 function confirmCancel(isConfirmed) {
-    // Hide the popup
     document.getElementById('popup_cancel-overlay').style.display = 'none';
 
     if (isConfirmed && currentOrderId !== null) {
-        // Prepare data for POST request
         const formData = new FormData();
         formData.append('order_id', currentOrderId);
 
-        // Send request to delete the order
         fetch('../backend/cancel_order.php', {
             method: 'POST',
             body: formData,
@@ -100,7 +90,7 @@ function confirmCancel(isConfirmed) {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    loadEvents(); // Reload events after successful deletion
+                    loadEvents();
                 } else {
                     alert('Failed to cancel order: ' + data.message);
                 }
