@@ -242,8 +242,10 @@ document.getElementById('submitOfferFormSidebar').addEventListener('click', func
         const location = document.getElementById('location').value;
         const start_date = document.getElementById('start_date').value;
         const end_date = document.getElementById('end_date').value;
-
-        if (!location || !start_date || !end_date) {
+        const price_kg = document.getElementById('selfpick_price_kg').value;
+        const quantity = document.getElementById('selfpick_quantity').value;
+        
+        if (!location || !start_date || !end_date || !price_kg || !quantity) {
             alert('Please fill in all self-pick fields.');
             return;
         }
@@ -251,6 +253,8 @@ document.getElementById('submitOfferFormSidebar').addEventListener('click', func
         formData.append('location', location);
         formData.append('start_date', start_date);
         formData.append('end_date', end_date);
+        formData.append('price_kg', price_kg);
+        formData.append('quantity', quantity);
     }
 
     fetch('../backend/create_offer.php', {
@@ -301,7 +305,7 @@ function addOfferToMarket(formData) {
                             <p><strong>${fullCategoryName}</strong></p>
                             <p>You</p>
                             <p>${formData.get('price_kg')} CZK/kg</p>
-                            <p>Remains: ${formData.get('quantity')} kg</p>
+                            <p>Available: ${formData.get('quantity')}</p>
                         </div>
                         <div class="actions">
                             <button class="button">Compare Price</button>
@@ -318,6 +322,8 @@ function addOfferToMarket(formData) {
                         <div>
                             <p><strong>${fullCategoryName}</strong></p>
                             <p>You</p>
+                            <p>${formData.get('price_kg')} CZK/kg</p>
+                            <p>Available: ${formData.get('quantity')}</p>
                         </div>
                         <div class="actions">
                             <button class="button">Follow</button>
@@ -384,6 +390,8 @@ window.addEventListener('DOMContentLoaded', () => {
                             <div>
                                 <p><strong>${offer.full_category_name}</strong></p>
                                 <p>${offer.farmer_name}</p>
+                                <p>${offer.price_kg} CZK/kg</p>
+                                <p>Available: ${offer.attribute_quantity}</p>
                             </div>
                             <div class="actions">
                                 <button class="button">Details</button>
@@ -468,6 +476,8 @@ function openOfferSidebar(offerId) {
                         <p><strong>Location:</strong> ${data.location}</p>
                         <p><strong>Start Date:</strong> ${data.start_date}</p>
                         <p><strong>End Date:</strong> ${data.end_date}</p>
+                        <p><strong>Price per Kg:</strong> ${data.price_kg} CZK</p>
+                        <p><strong>Maximum Registrations:</strong> ${data.attribute_quantity}</p>
                     `;
 
                     // Fetch registration status

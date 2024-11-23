@@ -94,13 +94,20 @@
                     <div id="selfpick-fields" style="display: none;">
                         <label for="location">Location:</label>
                         <input type="text" id="location" name="location" required><br><br>
-    
+                    
                         <label for="start_date">Start Date:</label>
                         <input type="date" id="start_date" name="start_date" required><br><br>
-    
+                    
                         <label for="end_date">End Date:</label>
                         <input type="date" id="end_date" name="end_date" required><br><br>
+                    
+                        <label for="selfpick_price_kg">Price per Kg:</label>
+                        <input type="number" id="selfpick_price_kg" name="price_kg" step="0.01" required><br><br>
+                    
+                        <label for="selfpick_quantity">Maximum Number of Registrations:</label>
+                        <input type="number" id="selfpick_quantity" name="quantity" required><br><br>
                     </div>
+                                    
     
                     <button type="button" id="submitOfferFormSidebar">Create Offer</button>
                 </div>
