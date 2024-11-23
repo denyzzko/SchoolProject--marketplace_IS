@@ -66,7 +66,7 @@ function loadNavbar() {
                         <a href="../frontend/category_proposal.html">Category Proposal</a>
                         <a href="../frontend/market.html">Market</a>
                         <a href="../frontend/my_events.html">My Events</a>
-                        <a href="../frontend/orders.html">Orders</a>
+                        <a href="../frontend/orders.html">Manage Orders</a>
                     `;
                     profile.innerHTML = `
                         <div class="profile-info">
