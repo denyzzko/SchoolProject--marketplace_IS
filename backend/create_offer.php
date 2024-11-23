@@ -87,7 +87,30 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // Commit transaction
         $conn->commit();
 
-        echo json_encode(["status" => "success", "message" => "Offer created successfully.", "offer_id" => $offer_id]);
+        $roleChanged = false;
+        if ($_SESSION['role'] === 'customer') {
+            $sql_update_role = "UPDATE Usr SET role = 'farmer' WHERE user_id = ?";
+            $stmt_update_role = $conn->prepare($sql_update_role);
+            $stmt_update_role->bind_param("i", $user_id);
+            $stmt_update_role->execute();
+            $stmt_update_role->close();
+
+            // Update session role
+            $_SESSION['role'] = 'farmer';
+
+            $message = "Offer created successfully. You have now become a farmer.";
+            $roleChanged = true;
+        } else {
+            $message = "Offer created successfully.";
+        }
+
+        // Send JSON response with roleChanged flag
+        echo json_encode([
+            "status" => "success",
+            "message" => $message,
+            "offer_id" => $offer_id,
+            "roleChanged" => $roleChanged
+        ]);
     } catch (Exception $e) {
         // Rollback transaction
         $conn->rollback();
