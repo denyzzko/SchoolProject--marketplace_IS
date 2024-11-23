@@ -287,6 +287,12 @@ document.getElementById('submitOfferFormSidebar').addEventListener('click', func
             document.getElementById('create-offer-sidebar').classList.remove('open');
             formData.append('offer_id', data.offer_id); // Append the offer ID to formData
             addOfferToMarket(formData); // Add the new offer to the market
+
+            // **Add this code to handle role change**
+            if (data.roleChanged) {
+                // Reload the page to update navbar and other elements
+                location.reload();
+            }
         } else {
             alert(data.message);
         }
