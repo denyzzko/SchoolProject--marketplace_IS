@@ -339,7 +339,7 @@ function addOfferToMarket(formData) {
                             <p>Remains: ${formData.get('quantity')} kg</p>
                         </div>
                         <div class="actions">
-                            <button class="button">Compare Price</button>
+                            <button class="button">More offers</button>
                         </div>
                     </div>
                 `;
@@ -537,7 +537,7 @@ function applyFilters() {
                             <div class="bottom-section">
                                 <div>
                                     <p><strong>${offer.full_category_name}</strong></p>
-                                    <p>${offer.farmer_name}</p>
+                                    <p><a href="view_reviews.html?farmer_id=${offer.farmer_id}" class="farmer-link">${offer.farmer_name}</a></p>
                                     <p>${offer.price_kg} CZK/kg</p>
                                     <p>Remains: ${offer.attribute_quantity} kg</p>
                                 </div>
@@ -555,7 +555,7 @@ function applyFilters() {
                             <div class="bottom-section">
                                 <div>
                                     <p><strong>${offer.full_category_name}</strong></p>
-                                    <p>${offer.farmer_name}</p>
+                                    <p><a href="view_reviews.html?farmer_id=${offer.farmer_id}" class="farmer-link">${offer.farmer_name}</a></p>
                                     <p>${offer.price_kg} CZK/kg</p>
                                     <p>Available: ${offer.attribute_quantity}</p>
                                 </div>
@@ -607,7 +607,7 @@ window.addEventListener('DOMContentLoaded', () => {
                         <div class="bottom-section">
                             <div>
                                 <p><strong>${offer.full_category_name}</strong></p>
-                                <p>${offer.farmer_name}</p>
+                                <p><a href="view_reviews.html?farmer_id=${offer.farmer_id}" class="farmer-link">${offer.farmer_name}</a></p>
                                 <p>${offer.price_kg} CZK/kg</p>
                                 <p>Remains: ${offer.attribute_quantity} kg</p>
                             </div>
@@ -625,7 +625,7 @@ window.addEventListener('DOMContentLoaded', () => {
                         <div class="bottom-section">
                             <div>
                                 <p><strong>${offer.full_category_name}</strong></p>
-                                <p>${offer.farmer_name}</p>
+                                <p><a href="view_reviews.html?farmer_id=${offer.farmer_id}" class="farmer-link">${offer.farmer_name}</a></p>
                                 <p>${offer.price_kg} CZK/kg</p>
                                 <p>Available: ${offer.attribute_quantity}</p>
                             </div>
@@ -701,7 +701,7 @@ function openOfferSidebar(offerId) {
                 let contentHtml = `
                     <p><strong>Category:</strong> ${data.category_name}</p>
                     <p><strong>Type:</strong> ${offerType}</p>
-                    <p><strong>Farmer:</strong> ${data.farmer_name}</p>
+                    <p><strong>Farmer:</strong> <a href="view_reviews.html?farmer_id=${data.farmer_id}" class="farmer-link">${data.farmer_name}</a></p>
                 `;
 
                 if (offerType === 'selfpick') {
