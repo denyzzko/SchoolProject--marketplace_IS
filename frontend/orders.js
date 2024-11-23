@@ -32,7 +32,7 @@ function renderOrders(orders) {
     
         orderElement.innerHTML = `
             <div class="order-details">
-                <p><strong>Category:</strong> ${order.category_name}</p>
+                <p><strong>Product:</strong> ${order.category_name}</p>
                 <p><strong>Customer:</strong> ${order.customer_name}</p>
                 <p><strong>Quantity:</strong> ${order.quantity}</p>
             </div>
