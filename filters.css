@@ -45,7 +45,7 @@
 #apply-filters-button {
     width: 100%;
     padding: 12px 0;
-    background-color: #28a745; /* Green background */
+    background-color: #4b5258; /* Green background */
     color: #fff;
     font-size: 16px;
     font-weight: bold;
@@ -55,7 +55,7 @@
 }
 
 #apply-filters-button:hover {
-    background-color: #218838;
+    background-color: #202521;
 }
 
 .filter-section select:focus,
