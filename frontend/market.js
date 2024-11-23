@@ -537,12 +537,12 @@ function applyFilters() {
                             <div class="bottom-section">
                                 <div>
                                     <p><strong>${offer.full_category_name}</strong></p>
-                                    <p><a href="view_reviews.html?farmer_id=${offer.user_id}" class="farmer-link">${offer.farmer_name}</a></p>
+                                    <p>${offer.farmer_name}</p>
                                     <p>${offer.price_kg} CZK/kg</p>
                                     <p>Remains: ${offer.attribute_quantity} kg</p>
                                 </div>
                                 <div class="actions">
-                                    <button class="button">Compare Price</button>
+                                    <button class="button">More offers</button>
                                 </div>
                             </div>
                         `;
@@ -555,7 +555,7 @@ function applyFilters() {
                             <div class="bottom-section">
                                 <div>
                                     <p><strong>${offer.full_category_name}</strong></p>
-                                    <p><a href="view_reviews.html?farmer_id=${offer.user_id}" class="farmer-link">${offer.farmer_name}</a></p>
+                                    <p>${offer.farmer_name}</p>
                                     <p>${offer.price_kg} CZK/kg</p>
                                     <p>Available: ${offer.attribute_quantity}</p>
                                 </div>
@@ -607,12 +607,12 @@ window.addEventListener('DOMContentLoaded', () => {
                         <div class="bottom-section">
                             <div>
                                 <p><strong>${offer.full_category_name}</strong></p>
-                                <p><a href="view_reviews.html?farmer_id=${offer.user_id}" class="farmer-link">${offer.farmer_name}</a></p>
+                                <p>${offer.farmer_name}</p>
                                 <p>${offer.price_kg} CZK/kg</p>
                                 <p>Remains: ${offer.attribute_quantity} kg</p>
                             </div>
                             <div class="actions">
-                                <button class="button">Compare Price</button>
+                                <button class="button">More offers</button>
                             </div>
                         </div>
                     `;
@@ -625,7 +625,7 @@ window.addEventListener('DOMContentLoaded', () => {
                         <div class="bottom-section">
                             <div>
                                 <p><strong>${offer.full_category_name}</strong></p>
-                                <p><a href="view_reviews.html?farmer_id=${offer.user_id}" class="farmer-link">${offer.farmer_name}</a></p>
+                                <p>${offer.farmer_name}</p>
                                 <p>${offer.price_kg} CZK/kg</p>
                                 <p>Available: ${offer.attribute_quantity}</p>
                             </div>
