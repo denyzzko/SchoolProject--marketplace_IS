@@ -19,6 +19,7 @@ function loadEvents() {
             displayEvents(eventsData);
         })
         .catch(error => {
+            console.error('Error fetching events:', error);
             const eventContainer = document.getElementById('event-container');
             eventContainer.innerHTML = '<p>Failed to load events. Please try again later.</p>';
         });
@@ -100,3 +101,6 @@ function confirmCancel(isConfirmed) {
             });
     }
 }
+
+// Load events when the page is loaded
+document.addEventListener('DOMContentLoaded', loadEvents);
