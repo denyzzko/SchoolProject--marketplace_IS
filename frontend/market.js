@@ -324,7 +324,7 @@ function addOfferToMarket(formData) {
                             <p><strong>${fullCategoryName}</strong></p>
                             <p>You</p>
                             <p>${formData.get('price_kg')} CZK/kg</p>
-                            <p>Available: ${formData.get('quantity')}</p>
+                            <p>Remains: ${formData.get('quantity')} kg</p>
                         </div>
                         <div class="actions">
                             <button class="button">Compare Price</button>
@@ -693,7 +693,7 @@ function displayMyOffers() {
                                 <p><strong>${offer.full_category_name}</strong></p>
                                 <p>${offer.farmer_name}</p>
                                 <p>${offer.price_kg} CZK/kg</p>
-                                <p>Available: ${offer.attribute_quantity}</p>
+                                <p>Remains: ${offer.attribute_quantity} kg</p>
                             </div>
                             <div class="actions">
                                 <button class="edit-offer-button" data-offer-id="${offer.offer_id}">Edit</button>
