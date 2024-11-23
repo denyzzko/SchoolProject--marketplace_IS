@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviews</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../market.css">
+    <link rel="stylesheet" href="../rev_order_styles.css">    
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <div id="navbar-container">
+        <nav class="navbar">
+            <div class="logo">
+                <h1>Zelný trh</h1>
+            </div>
+            <div id="nav-links" class="nav-links">
+                <!-- Will be populated by JS -->
+            </div>
+            <div id="profile" class="profile">
+                <!-- Will be populated -->
+            </div>
+        </nav>
+    </div>
+
+    <!-- Content Section -->
+    <div class="main_order-container">
+        <!-- Average Rating Display -->
+        <div class="average-rating" id="average-rating">Average Rating: </div>
+
+        <!-- Filter and Sort Options -->
+        <div class="filter-sort">
+            <div class="filter-buttons">
+                <button onclick="sortReviews('date')" id="sort-date" class="filter-button active">Date</button>
+                <button onclick="sortReviews('rating-high')" id="sort-rating-high" class="filter-button">Highest Rating</button>
+                <button onclick="sortReviews('rating-low')" id="sort-rating-low" class="filter-button">Lowest Rating</button>
+            </div>
+        </div>
+        
+
+        <!-- Reviews Container -->
+        <div id="review-container"></div>
+    </div>
+
+    <!-- Load the navbar.js and reviews JS script -->
+    <script src="navbar.js"></script>
+    <script src="view_reviews.js"></script>
+    <script src="inactivity_logout.js"></script>
+</body>
+</html>

@@ -8,9 +8,15 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$user_id = $_SESSION['user_id'];
+// Check if farmer_id is provided
+if (!isset($_GET['farmer_id'])) {
+    echo json_encode(['success' => false, 'message' => 'Farmer ID not provided']);
+    exit;
+}
 
-// Get the reviews for offers made by the logged-in user
+$farmer_id = $_GET['farmer_id'];
+
+// Get all reviews for offers created by the specific farmer
 $sql = "SELECT DISTINCT r.rating, r.comment, o.category_id
         FROM Review r
         JOIN Offer o ON r.offer_id = o.offer_id
@@ -22,7 +28,7 @@ if (!$stmt) {
     exit;
 }
 
-$stmt->bind_param("i", $user_id);
+$stmt->bind_param("i", $farmer_id);
 if (!$stmt->execute()) {
     echo json_encode(['success' => false, 'message' => 'SQL execute error: ' . $stmt->error]);
     exit;
@@ -31,7 +37,7 @@ if (!$stmt->execute()) {
 $result = $stmt->get_result();
 $reviews = [];
 
-// Function to get full category info, excluding main categories "Fruit" and "Vegetable"
+// Function to get full category info, including concatenated category names if the category has no parent
 function getFullCategoryInfo($categoryId, $conn) {
     $sql = "SELECT name, parent_category FROM Category WHERE category_id = ?";
     $stmt = $conn->prepare($sql);
@@ -40,32 +46,21 @@ function getFullCategoryInfo($categoryId, $conn) {
     $result = $stmt->get_result();
 
     if ($row = $result->fetch_assoc()) {
-        // Skip main categories "Fruit" and "Vegetable"
-        if (in_array($row['name'], ['Fruit', 'Vegetable'])) {
-            return ''; // Skip main categories
-        }
-        
-        // If the category has no parent, return the name
         if (empty($row['parent_category'])) {
             return $row['name'];
-        }
-        
-        // Get the parent category name
-        $parentId = $row['parent_category'];
-        $parentStmt = $conn->prepare($sql);
-        $parentStmt->bind_param("i", $parentId);
-        $parentStmt->execute();
-        $parentResult = $parentStmt->get_result();
+        } else {
+            // Get parent category name
+            $parentId = $row['parent_category'];
+            $parentStmt = $conn->prepare($sql);
+            $parentStmt->bind_param("i", $parentId);
+            $parentStmt->execute();
+            $parentResult = $parentStmt->get_result();
 
-        if ($parentRow = $parentResult->fetch_assoc()) {
-            // If the parent category is "Fruit" or "Vegetable", return only the child name
-            if (in_array($parentRow['name'], ['Fruit', 'Vegetable'])) {
-                return $row['name'];
-            } else {
+            if ($parentRow = $parentResult->fetch_assoc()) {
                 return $parentRow['name'] . ' ' . $row['name'];
             }
+            $parentStmt->close();
         }
-        $parentStmt->close();
     }
 
     $stmt->close();
@@ -75,10 +70,7 @@ function getFullCategoryInfo($categoryId, $conn) {
 while ($row = $result->fetch_assoc()) {
     $categoryInfo = getFullCategoryInfo($row['category_id'], $conn);
     $row['full_category_name'] = $categoryInfo;
-    // Add the review only if the category is not empty
-    if (!empty($row['full_category_name'])) {
-        $reviews[] = $row;
-    }
+    $reviews[] = $row;
 }
 
 $stmt->close();
