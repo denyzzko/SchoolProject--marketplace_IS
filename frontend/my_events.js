@@ -1,44 +1,145 @@
-// Loads the events that the user is registered for by fetching data from the server
-function loadEvents() {
-    fetch('../backend/my_events.php')
+// Initialize Filter Category Selection
+window.addEventListener('DOMContentLoaded', () => {
+    initFilterCategorySelection();
+    loadEvents();
+});
+
+function initFilterCategorySelection() {
+    const categorySelectionDiv = document.getElementById('filter-category-selection');
+    if (!categorySelectionDiv) {
+        console.error('Category selection element not found');
+        return;
+    }
+
+    categorySelectionDiv.innerHTML = ''; // Clear any existing content
+
+    // Fetch top-level categories
+    fetch('../backend/categories.php')
         .then(response => response.json())
-        .then(data => {
-            const eventContainer = document.getElementById('event-container');
-            eventContainer.innerHTML = '';
+        .then(categories => {
+            if (categories.length > 0) {
+                // Create a select element
+                const select = document.createElement('select');
+                select.id = 'filter-category-select-0';
+                select.dataset.level = 0;
 
-            if (data.error) {
-                eventContainer.innerHTML = `<p>${data.error}</p>`;
-                return;
-            }
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = 'Select Category';
+                select.appendChild(defaultOption);
 
-            if (data.length === 0) {
-                eventContainer.innerHTML = `<div class="border-main"><div class="border-item"><h8>You are not registered for any self-picking events.</h8></div></div>`;
-                return;
+                categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category.category_id;
+                    option.textContent = category.name;
+                    select.appendChild(option);
+                });
+
+                categorySelectionDiv.appendChild(select);
+
+                // Add event listener for change
+                select.addEventListener('change', onFilterCategoryChange);
+            } else {
+                console.error('No top-level categories found.');
             }
-            eventsData = data;
-            displayEvents(eventsData);
         })
-        .catch(error => {
-            console.error('Error fetching events:', error);
-            const eventContainer = document.getElementById('event-container');
-            eventContainer.innerHTML = '<p>Failed to load events. Please try again later.</p>';
-        });
+        .catch(error => console.error('Error fetching categories:', error));
 }
 
-// Displays the list of events in the event container element
+function onFilterCategoryChange(event) {
+    const select = event.target;
+    const selectedCategoryId = select.value;
+    const level = parseInt(select.dataset.level);
+
+    // Remove any subcategory selects beyond this level
+    const categorySelectionDiv = document.getElementById('filter-category-selection');
+    const selects = categorySelectionDiv.querySelectorAll('select');
+    selects.forEach(s => {
+        if (parseInt(s.dataset.level) > level) {
+            s.parentNode.removeChild(s);
+        }
+    });
+
+    if (selectedCategoryId) {
+        // Check if this category has subcategories
+        fetch(`../backend/categories.php?parent_id=${selectedCategoryId}`)
+            .then(response => response.json())
+            .then(subcategories => {
+                if (subcategories.length > 0) {
+                    // Create a new select for subcategories
+                    const subcategorySelect = document.createElement('select');
+                    subcategorySelect.id = `filter-category-select-${level + 1}`;
+                    subcategorySelect.dataset.level = level + 1;
+
+                    const defaultOption = document.createElement('option');
+                    defaultOption.value = '';
+                    defaultOption.textContent = 'Select Subcategory';
+                    subcategorySelect.appendChild(defaultOption);
+
+                    subcategories.forEach(subcategory => {
+                        const option = document.createElement('option');
+                        option.value = subcategory.category_id;
+                        option.textContent = subcategory.name;
+                        subcategorySelect.appendChild(option);
+                    });
+
+                    categorySelectionDiv.appendChild(subcategorySelect);
+
+                    // Add event listener
+                    subcategorySelect.addEventListener('change', onFilterCategoryChange);
+                }
+            })
+            .catch(error => console.error('Error fetching subcategories:', error));
+    }
+}
+
+// Function to fetch events from the backend and display them as individual items
+function loadEvents() {
+    fetchEventsAndRender();
+}
+
+function fetchEventsAndRender() {
+    // Get the selected category ID
+    const categorySelectionDiv = document.getElementById('filter-category-selection');
+    const selects = categorySelectionDiv.querySelectorAll('select');
+    let selectedCategoryId = null;
+    selects.forEach(select => {
+        if (select.value) {
+            selectedCategoryId = select.value;
+        }
+    });
+
+    // Build the query parameters
+    let queryParams = [];
+    if (selectedCategoryId) {
+        queryParams.push(`category_id=${encodeURIComponent(selectedCategoryId)}`);
+    }
+
+    const queryString = queryParams.length > 0 ? '?' + queryParams.join('&') : '';
+
+    // Fetch the events with filters applied
+    fetch(`../backend/my_events.php${queryString}`)
+        .then(response => response.json())
+        .then(data => {
+            displayEvents(data);
+        })
+        .catch(error => console.error('Error fetching events:', error));
+}
+
+// Function to render events based on data
 function displayEvents(events) {
     const eventContainer = document.getElementById('event-container');
     eventContainer.innerHTML = '';
-
     events.forEach(event => {
         const eventBox = document.createElement('div');
-        eventBox.className = 'event-item';
+        eventBox.classList.add('event-item');
+        
         eventBox.innerHTML = `
             <div class="event-details">
                 <p><strong>Location:</strong> ${event.location}</p>
                 <p><strong>From:</strong> ${event.start_date}</p>
                 <p><strong>To:</strong> ${event.end_date}</p>
-                <p><strong>Name:</strong> ${event.category_name}</p>
+                <p><strong>Name:</strong> ${event.full_category_name}</p>
                 <button class="event-button" onclick="cancelOrder('${event.order_id}')">Cancel</button>
             </div>
         `;
@@ -46,61 +147,7 @@ function displayEvents(events) {
     });
 }
 
-// Sorts the list of events based on the specified sorting type and updates the display
-function sortOrders(sortType) {
-    document.querySelectorAll('.filter-button').forEach(button => button.classList.remove('active'));
-    document.getElementById(`sort-${sortType}`).classList.add('active');
-
-    let sortedEvents = [...eventsData]; 
-
-    switch (sortType) {
-        case 'closest':
-            sortedEvents.sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
-            break;
-        case 'category-az':
-            sortedEvents.sort((a, b) => a.category_name.localeCompare(b.category_name));
-            break;
-        case 'category-za':
-            sortedEvents.sort((a, b) => b.category_name.localeCompare(a.category_name));
-            break;
-    }
-
-    displayEvents(sortedEvents);
-}
-
-let currentOrderId = null;
-
-// Initiates the cancellation process for an event by showing a confirmation popup
-function cancelOrder(orderId) {
-    currentOrderId = orderId;
-    document.getElementById('popup_cancel-overlay').style.display = 'flex';
-}
-
-// Handles the user's confirmation or cancellation of the event cancellation request
-function confirmCancel(isConfirmed) {
-    document.getElementById('popup_cancel-overlay').style.display = 'none';
-
-    if (isConfirmed && currentOrderId !== null) {
-        const formData = new FormData();
-        formData.append('order_id', currentOrderId);
-
-        fetch('../backend/cancel_order.php', {
-            method: 'POST',
-            body: formData,
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    loadEvents();
-                } else {
-                    alert('Failed to cancel order: ' + data.message);
-                }
-            })
-            .catch(error => {
-                alert('There was an error cancelling the order. Please try again later.');
-            });
-    }
-}
-
-// Load events when the page is loaded
-document.addEventListener('DOMContentLoaded', loadEvents);
+// Event listener for applying category filter
+document.getElementById('apply-filters-button').addEventListener('click', function() {
+    fetchEventsAndRender();
+});

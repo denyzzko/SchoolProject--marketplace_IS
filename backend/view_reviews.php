@@ -37,7 +37,7 @@ if (!$stmt->execute()) {
 $result = $stmt->get_result();
 $reviews = [];
 
-// Function to get full category info, including concatenated category names if the category has no parent
+// Function to get full category info, excluding main categories "Fruit" and "Vegetable"
 function getFullCategoryInfo($categoryId, $conn) {
     $sql = "SELECT name, parent_category FROM Category WHERE category_id = ?";
     $stmt = $conn->prepare($sql);
@@ -46,31 +46,45 @@ function getFullCategoryInfo($categoryId, $conn) {
     $result = $stmt->get_result();
 
     if ($row = $result->fetch_assoc()) {
+        // Skip categories that have no parent (i.e., root categories)
+        if (is_null($row['parent_category'])) {
+            return ''; // Skip root categories
+        }
+        
+        // If the category has no parent, return the name
         if (empty($row['parent_category'])) {
             return $row['name'];
-        } else {
-            // Get parent category name
-            $parentId = $row['parent_category'];
-            $parentStmt = $conn->prepare($sql);
-            $parentStmt->bind_param("i", $parentId);
-            $parentStmt->execute();
-            $parentResult = $parentStmt->get_result();
+        }
+        
+        // Get the parent category name
+        $parentId = $row['parent_category'];
+        $parentStmt = $conn->prepare($sql);
+        $parentStmt->bind_param("i", $parentId);
+        $parentStmt->execute();
+        $parentResult = $parentStmt->get_result();
 
-            if ($parentRow = $parentResult->fetch_assoc()) {
+        if ($parentRow = $parentResult->fetch_assoc()) {
+            // If the parent category is "Fruit" or "Vegetable", return only the child name
+            if (in_array($parentRow['name'], ['Fruit', 'Vegetable'])) {
+                return $row['name'];
+            } else {
                 return $parentRow['name'] . ' ' . $row['name'];
             }
-            $parentStmt->close();
         }
+        $parentStmt->close();
     }
 
     $stmt->close();
-    return $row['name'];
+    return '';
 }
 
 while ($row = $result->fetch_assoc()) {
     $categoryInfo = getFullCategoryInfo($row['category_id'], $conn);
     $row['full_category_name'] = $categoryInfo;
-    $reviews[] = $row;
+    // Add the review only if the category is not empty
+    if (!empty($row['full_category_name'])) {
+        $reviews[] = $row;
+    }
 }
 
 $stmt->close();

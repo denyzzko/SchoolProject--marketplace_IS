@@ -58,11 +58,11 @@ function getFullCategoryInfo($categoryId, $conn) {
         $parentResult = $parentStmt->get_result();
 
         if ($parentRow = $parentResult->fetch_assoc()) {
-            // If the parent category is "Fruit" or "Vegetable", return only the child name
-            if (in_array($parentRow['name'], ['Fruit', 'Vegetable'])) {
-                return $row['name'];
-            } else {
+            // Skip main categories for the parent as well
+            if (!in_array($parentRow['name'], ['Fruit', 'Vegetable'])) {
                 return $parentRow['name'] . ' ' . $row['name'];
+            } else {
+                return $row['name'];
             }
         }
         $parentStmt->close();
@@ -75,7 +75,7 @@ function getFullCategoryInfo($categoryId, $conn) {
 while ($row = $result->fetch_assoc()) {
     $categoryInfo = getFullCategoryInfo($row['category_id'], $conn);
     $row['full_category_name'] = $categoryInfo;
-    // Add the review only if the category is not empty
+    // If full_category_name is empty, skip adding this review
     if (!empty($row['full_category_name'])) {
         $reviews[] = $row;
     }

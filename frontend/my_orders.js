@@ -18,7 +18,7 @@ function renderOrders(orders) {
         orderBox.innerHTML = `
             <div class="order-details">
                 <div>
-                    <p><strong>Name:</strong> ${order.category_name}</p>
+                    <p><strong>Name:</strong> ${order.full_category_name}</p>
                     <p><strong>Farmer:</strong> ${order.farmer_name}</p>
                     </p><p>${order.price_kg} CZK/kg</p>
                     <p><strong>Bought:</strong> ${order.quantity}</p>
@@ -26,7 +26,7 @@ function renderOrders(orders) {
                     <p><strong>Date:</strong>${order.date}</p>
                     <p><strong>Status:</strong>${order.status}</p>
                     <div class="actions">
-                        <button class="order-button" onclick="openPopup(${order.order_id}, '${order.category_name}', '${order.farmer_name}')">Review</button>
+                        <button class="order-button" onclick="openPopup(${order.order_id}, '${order.full_category_name}', '${order.farmer_name}')">Review</button>
                     </div>
                 </div>
             </div>
@@ -62,8 +62,8 @@ function sortOrders(criteria) {
 document.addEventListener('DOMContentLoaded', loadOrders);
 
 // Function to open the review popup
-function openPopup(orderId, categoryName, farmerName) {
-    document.getElementById('popup-header').textContent = `Review - ${categoryName} from ${farmerName}`;
+function openPopup(orderId, full_category_name, farmerName) {
+    document.getElementById('popup-header').textContent = `Review - ${full_category_name} from ${farmerName}`;
     document.getElementById('overlay').style.display = 'block';
     document.getElementById('review-popup').style.display = 'block';
 

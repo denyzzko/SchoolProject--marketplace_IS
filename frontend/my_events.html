@@ -6,6 +6,7 @@
     <title>My Events</title>
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="../rev_order_styles.css">
+    <link rel="stylesheet" href="../catfiltersrow.css">
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -25,13 +26,20 @@
 
     <!-- Content Section -->    
     <div class="main_event-container">
-        <div class="filter-sort">
-            <div class="filter-buttons">
-                <button onclick="sortOrders('closest')" id="sort-closest" class="filter-button">Closest</button>
-                <button onclick="sortOrders('category-az')" id="sort-category-az" class="filter-button">Category A-Z</button>
-                <button onclick="sortOrders('category-za')" id="sort-category-za" class="filter-button">Category Z-A</button>
+        <div class="filters">
+            <h3>Filters</h3>
+            <!-- Category Filter -->
+            <div class="filter-section" id="filter-category-section">
+                <label>Category:</label>
+                <div id="filter-category-selection">
+                    <!-- Category dropdowns will be added here -->
+                </div>
             </div>
+            <!-- Apply Filters Button -->
+            <button id="apply-filters-button">Apply Filters</button>
         </div>
+        
+
         <div id="popup_cancel-overlay" class="popup_cancel-overlay" style="display: none;">
             <div class="popup_cancel">
                 <p><strong>Do you really want to cancel this event?</strong></p>

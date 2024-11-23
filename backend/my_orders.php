@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $session_user_id = $_SESSION['user_id'];
 
-$sql = "SELECT o.order_id, o.date, o.status, u.name AS farmer_name, c.name AS category_name, o.quantity, off.type, a.price_item, a.price_kg
+$sql = "SELECT o.order_id, o.date, o.status, u.name AS farmer_name, c.category_id, o.quantity, off.type, a.price_item, a.price_kg
         FROM Ordr o
         JOIN Offer off ON o.offer_id = off.offer_id
         JOIN Usr u ON off.user_id = u.user_id
@@ -39,9 +39,55 @@ if (!$result) {
     exit;
 }
 
+// Function to get full category info, excluding main categories "Fruit" and "Vegetable"
+function getFullCategoryInfo($categoryId, $conn) {
+    $sql = "SELECT name, parent_category FROM Category WHERE category_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $categoryId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($row = $result->fetch_assoc()) {
+        // Skip categories that have no parent (i.e., root categories)
+        if (is_null($row['parent_category'])) {
+            return ''; // Skip root categories
+        }
+        
+        // If the category has no parent, return the name
+        if (empty($row['parent_category'])) {
+            return $row['name'];
+        }
+        
+        // Get the parent category name
+        $parentId = $row['parent_category'];
+        $parentStmt = $conn->prepare($sql);
+        $parentStmt->bind_param("i", $parentId);
+        $parentStmt->execute();
+        $parentResult = $parentStmt->get_result();
+
+        if ($parentRow = $parentResult->fetch_assoc()) {
+            // If the parent category is "Fruit" or "Vegetable", return only the child name
+            if (in_array($parentRow['name'], ['Fruit', 'Vegetable'])) {
+                return $row['name'];
+            } else {
+                return $parentRow['name'] . ' ' . $row['name'];
+            }
+        }
+        $parentStmt->close();
+    }
+
+    $stmt->close();
+    return '';
+}
+
 $orders = array();
 while ($row = $result->fetch_assoc()) {
-    $orders[] = $row;
+    $categoryInfo = getFullCategoryInfo($row['category_id'], $conn);
+    $row['full_category_name'] = $categoryInfo;
+    // Add the order only if the category is not empty
+    if (!empty($row['full_category_name'])) {
+        $orders[] = $row;
+    }
 }
 
 $stmt->close();
