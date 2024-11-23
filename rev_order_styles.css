@@ -263,3 +263,15 @@ h8{
 .popup_cancel-button:hover {
     background-color: #dfdfdf;
 }
+
+.status-pending {
+    color: #ff9800; /* Orange */
+}
+
+.status-confirmed {
+    color: #4caf50; /* Green */
+}
+
+.status-rejected {
+    color: #f44336; /* Red */
+}
