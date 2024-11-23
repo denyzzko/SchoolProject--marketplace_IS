@@ -1,6 +1,5 @@
 <?php
 include 'db.php';
-
 include 'session_start.php';
 
 if (!isset($_SESSION['user_id'])) {
@@ -41,8 +40,30 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("ii", $new_quantity, $offer_id);
 $stmt->execute();
 
-echo json_encode(['status' => 'success', 'message' => 'Order placed successfully.']);
+// **Add this code to change the user's role if they are 'registered'**
+$roleChanged = false;
+if ($_SESSION['role'] === 'registered') {
+    // Update the user's role in the database
+    $sql_update_role = "UPDATE Usr SET role = 'customer' WHERE user_id = ?";
+    $stmt_update_role = $conn->prepare($sql_update_role);
+    $stmt_update_role->bind_param("i", $user_id);
+    $stmt_update_role->execute();
+    $stmt_update_role->close();
 
+    // Update the session variable
+    $_SESSION['role'] = 'customer';
+
+    $message = 'Order placed successfully. You have now become a customer.';
+    $roleChanged = true;
+} else {
+    $message = 'Order placed successfully.';
+}
+
+// Close the statement and connection
 $stmt->close();
 $conn->close();
+
+// Return JSON response
+echo json_encode(['status' => 'success', 'message' => $message, 'roleChanged' => $roleChanged]);
+
 ?>

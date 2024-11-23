@@ -2,9 +2,9 @@
 include 'db.php';
 include 'session_start.php';
 
-header('Content-Type: application/json'); // Nastavení správné hlavičky
+header('Content-Type: application/json'); // Set the correct header
 
-// Kontrola, zda je uživatel přihlášen
+// Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['status' => 'error', 'message' => 'User not logged in']);
     exit;
@@ -20,7 +20,7 @@ if (!isset($input['offer_id'])) {
 
 $offer_id = $input['offer_id'];
 
-// Kontrola, zda je nabídka typu 'selfpick'
+// Check if the offer is of type 'selfpick'
 $sql = "SELECT type FROM Offer WHERE offer_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $offer_id);
@@ -38,7 +38,7 @@ if ($row['type'] !== 'selfpick') {
     exit;
 }
 
-// Kontrola, zda již uživatel není zaregistrován
+// Check if the user is already registered
 $sql = "SELECT * FROM Ordr WHERE user_id = ? AND offer_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("ii", $user_id, $offer_id);
@@ -50,16 +50,36 @@ if ($result->num_rows > 0) {
     exit;
 }
 
-// Vložení nové objednávky
+// Insert new order
 $sql = "INSERT INTO Ordr (user_id, offer_id, quantity, date, status) VALUES (?, ?, ?, ?, ?)";
 $stmt = $conn->prepare($sql);
-$quantity = 1; // Pro self-pick eventy
+$quantity = 1; // For self-pick events
 $date = date('Y-m-d');
 $status = 'confirmed';
 $stmt->bind_param("iiiss", $user_id, $offer_id, $quantity, $date, $status);
 
 if ($stmt->execute()) {
-    echo json_encode(['status' => 'success', 'message' => 'Successfully registered for the event']);
+    // **Add this code to change the user's role if they are 'registered'**
+    $roleChanged = false;
+    if ($_SESSION['role'] === 'registered') {
+        // Update the user's role in the database
+        $sql_update_role = "UPDATE Usr SET role = 'customer' WHERE user_id = ?";
+        $stmt_update_role = $conn->prepare($sql_update_role);
+        $stmt_update_role->bind_param("i", $user_id);
+        $stmt_update_role->execute();
+        $stmt_update_role->close();
+
+        // Update the session variable
+        $_SESSION['role'] = 'customer';
+
+        $message = 'Successfully registered for the event. You have now become a customer.';
+        $roleChanged = true;
+    } else {
+        $message = 'Successfully registered for the event.';
+    }
+
+    echo json_encode(['status' => 'success', 'message' => $message, 'roleChanged' => $roleChanged]);
+
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Failed to register for the event']);
 }
