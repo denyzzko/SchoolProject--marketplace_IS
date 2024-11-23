@@ -77,7 +77,6 @@ function loadNavbar() {
                         <div class="dropdown" id="profileDropdown">
                             <a href="my_profile.html">My Profile</a>
                             <a href="../frontend/my_orders.html">My Orders</a>
-                            <a href="../frontend/my_offers.html">My Offers</a>
                             <a href="../frontend/my_reviews.html">My Reviews</a>
                             <a href="#" onclick="logout()">Logout</a>
                         </div>
