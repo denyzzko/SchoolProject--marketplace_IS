@@ -67,6 +67,9 @@ if ($result->num_rows > 0) {
     }
 }
 
+// Reverze pole nabídek (od nejnovějších po nejstarší)
+$offers = array_reverse($offers);
+
 echo json_encode($offers);
 $conn->close();
 ?>

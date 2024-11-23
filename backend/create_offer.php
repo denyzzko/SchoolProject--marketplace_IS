@@ -53,8 +53,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $location = $_POST["location"];
             $start_date = $_POST["start_date"];
             $end_date = $_POST["end_date"];
+            $price_kg = $_POST["price_kg"];
+            $quantity = $_POST["quantity"];
 
-            if (empty($location) || empty($start_date) || empty($end_date)) {
+            if (empty($location) || empty($start_date) || empty($end_date) || empty($price_kg) || empty($quantity)) {
                 throw new Exception("Invalid input data for self-pick offer.");
             }
 
@@ -63,6 +65,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $stmt_selfpick = $conn->prepare($sql_selfpick);
             $stmt_selfpick->bind_param("isss", $offer_id, $location, $start_date, $end_date);
             $stmt_selfpick->execute();
+
+            // Static values for origin and date_of_harvest
+            $origin = 'Czech Republic'; // Statická hodnota pro origin
+            $date_of_harvest = '1900-01-01'; // Statické datum
+
+            // Insert into Attribute table
+            $sql_attribute = "INSERT INTO Attribute (offer_id, origin, date_of_harvest, price_kg, quantity) VALUES (?, ?, ?, ?, ?)";
+            $stmt_attribute = $conn->prepare($sql_attribute);
+            $stmt_attribute->bind_param("issdi", $offer_id, $origin, $date_of_harvest, $price_kg, $quantity);
+            $stmt_attribute->execute();
+
+            // Update Offer table with price and quantity
+            $price = $price_kg; // Assuming price in Offer table is price per kg
+            $sql_update_offer = "UPDATE Offer SET price = ?, quantity = ? WHERE offer_id = ?";
+            $stmt_update_offer = $conn->prepare($sql_update_offer);
+            $stmt_update_offer->bind_param("dii", $price, $quantity, $offer_id);
+            $stmt_update_offer->execute();
         }
 
         // Commit transaction

@@ -45,6 +45,7 @@ $sql = "SELECT Offer.*,
         INNER JOIN Usr ON Offer.user_id = Usr.user_id
         WHERE Offer.offer_id = ?";
 
+
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $offer_id);
 $stmt->execute();
