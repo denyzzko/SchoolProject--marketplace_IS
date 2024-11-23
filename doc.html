@@ -12,7 +12,7 @@
 <body>
 
 <!-- Zkontrolujte prosím nastavení kódování v hlavičce dokumentu 
-     podle pouľitého editoru -->
+     podle použitého editoru -->
 
 <h1>Zelní trh</h1> <!-- Nahradte názvem svého zadání -->
 
@@ -22,7 +22,11 @@
 	    <a href="mailto:xzelni06@stud.fit.vutbr.cz">xzelni06@stud.fit.vutbr.cz</a> -
 		popis činnosti v týmu
 		<ul style="list-style-type:none;">
-  			<li>- doslova nic</li>
+  			<li>- filtrování (nabídek, recenzí, objednávek, událostí)</li>
+			<li>- stránka recenzí(my_reviews)</li>
+			<li>- stránka objednávek(my_orders)</li>
+			<li>- stránka událostí(my_events)</li>
+
 		</ul>
 	</dd>
 	<dd>Denis Milistenfer <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
@@ -34,11 +38,11 @@
   			<li>- admin stránka</li>
 			<li>- moderátor stránka</li>
 			<li>- profilová stránka</li>
-			<li>- návrh nových kategorií uľívatelom</li>
+			<li>- návrh nových kategorií užívatelom</li>
 		</ul>
 		
 	</dd>
-  <dd>Tomáą Potouček <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+  <dd>Tomáš Potouček <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
 	    <a href="mailto:xautor03@stud.fit.vutbr.cz">xautor03@stud.fit.vutbr.cz</a> - 
 		popis činnosti v týmu
 		<ul style="list-style-type:none;">
@@ -49,24 +53,24 @@
 	<dd><a href="https://iiszelnitrh.funsite.cz/">https://iiszelnitrh.funsite.cz/</a></dd>
 </dl>
 
-<h2>Uľivatelé systému pro testování</h2>
-<p>Uveďte prosím existující zástupce <strong>vąech rolí uľivatelů</strong>.</p>
+<h2>Uživatelé systému pro testování</h2>
+<p>Uveďte prosím existující zástupce <strong>všech rolí uživatelů</strong>.</p>
 <table>
 <tbody><tr><th>Email</th><th>Heslo</th><th>Role</th></tr>
 <tr><td>admin@admin.com</td><td>admin</td><td>Administrátor</td></tr>
 <tr><td>moderator@moderator.com</td><td>moderator</td><td>Moderátor</td></tr>
 <tr><td>farmer@farmer.com</td><td>farmer</td><td>Farmár</td></tr>
 <tr><td>customer@customer.com</td><td>customer</td><td>Zákazník</td></tr>
-<tr><td>registered@registered.com</td><td>registered</td><td>Registrovaný uľivatel</td></tr>
+<tr><td>registered@registered.com</td><td>registered</td><td>Registrovaný uživatel</td></tr>
 </tbody></table>
 
 <h3>Video</h3>
 
-<p>Přiloľte odkaz na komentované video demostrující pouľití informačního systému. Zaměřte se na případy uľití definované zadáním (např. registrace uľivatele, správa uľivatelů a činnosti jednotlivých rolí). Video nahrajte například na VUT Google Drive, kde ho bude moľné přímo spustit z odkazu.</p> 
+<p>Přiložte odkaz na komentované video demostrující použití informačního systému. Zaměřte se na případy užití definované zadáním (např. registrace uživatele, správa uživatelů a činnosti jednotlivých rolí). Video nahrajte například na VUT Google Drive, kde ho bude možné přímo spustit z odkazu.</p> 
 
 <h2>Implementace</h2>
-<p>Stručná dokumentace k implementaci, která popisuje, které části projektu (např. PHP skripty) implementují jednotlivé případy pouľití.</p>
-<p>Správa uľivatelů adminom:</p>
+<p>Stručná dokumentace k implementaci, která popisuje, které části projektu (např. PHP skripty) implementují jednotlivé případy použití.</p>
+<p>Správa uživatelů adminom:</p>
 <ul style="list-style-type:none;">
 	<li>- create_users.html</li>
 	<li>- create_users.js</li>
@@ -121,28 +125,44 @@
 </ul>
 <p>Hodnotenie produktov:</p>
 <ul style="list-style-type:none;">
-	<li>- xxx</li>
+	<li>- my_orders.html</li>
+	<li>- my_orders.js</li>
+	<li>- save_review.php</li>
 </ul>
 <p>Filtrovanie produktov:</p>
 <ul style="list-style-type:none;">
-	<li>- xxx</li>
+	<li>- market.html</li>
+	<li>- market.js</li>
+	<li>- get_offers.php</li>
+</ul>
+<p>Obdržené hodnocení:</p>
+<ul style="list-style-type:none;">
+	<li>- my_reviews.html</li>
+	<li>- my_reviews.js</li>
+	<li>- my_reviews.php</li>
+</ul>
+<p>Zaregistrované události</p>
+<ul style="list-style-type:none;">
+	<li>- my_events.html</li>
+	<li>- my_events.js</li>
+	<li>- my_events.php</li>
 </ul>
 
 <h3>Databáze</h3>
 
-Zde vloľte grafické schéma relační databáze (tabulek v databázi).
+Zde vložte grafické schéma relační databáze (tabulek v databázi).
 
 <h2>Instalace</h2>
 
-Stručně popiąte: 
+Stručně popište: 
 <ul>
 <li>postup instalace na server,</li>
-<li>softwarové poľadavky (verze PHP apod.),</li>
+<li>softwarové požadavky (verze PHP apod.),</li>
 <li>jak rozbalit, konfigurovat, inicializovat databázi, ...</li>
 </ul>
 
 <h2>Známé problémy</h2>
-<p>Zde popiąte, které body zadání nejsou implementovány a z jakého důvodu. Např. &#8222;Z časových důvodů nebyla implementována správa uľivatelů.&#8221; Pomůľete tím zrychlit hodnocení, kdyľ neimplementované funkce nebudeme muset dlouze hledat.</p>
+<p>Zde popište, které body zadání nejsou implementovány a z jakého důvodu. Např. &#8222;Z časových důvodů nebyla implementována správa uživatelů.&#8221; Pomůžete tím zrychlit hodnocení, když neimplementované funkce nebudeme muset dlouze hledat.</p>
 
 
 
