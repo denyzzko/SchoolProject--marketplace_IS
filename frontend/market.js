@@ -297,7 +297,7 @@ document.getElementById('submitOfferFormSidebar').addEventListener('click', func
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            alert(data.message);
+            //alert(data.message);
             document.getElementById('create-offer-sidebar').classList.remove('open');
             formData.append('offer_id', data.offer_id); // Append the offer ID to formData
             addOfferToMarket(formData); // Add the new offer to the market
@@ -773,10 +773,10 @@ function openOfferSidebar(offerId) {
                     contentHtml += `
                         <p><strong>Origin:</strong> ${data.origin}</p>
                         <p><strong>Date of Harvest:</strong> ${data.date_of_harvest}</p>
-                        <p><strong>Available Quantity:</strong> ${data.attribute_quantity}</p>
+                        <p><strong>Available Quantity:</strong> ${data.attribute_quantity} kg</p>
                         <p><strong>Price per Kg:</strong> ${data.price_kg} CZK</p>
 
-                        <label for="order-quantity">Enter Quantity:</label>
+                        <label for="order-quantity">Enter Quantity (in kilograms):</label>
                         <input type="number" id="order-quantity" name="order-quantity" placeholder="Enter quantity..">
                         <p><strong>Total Price:</strong> <span id="total-price">0</span> CZK</p>
 
@@ -844,7 +844,7 @@ function placeOrder(availableQuantity) {
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            alert(data.message);
+            //alert(data.message);
             // Close the sidebar
             document.getElementById('offer-detail-sidebar').classList.remove('open');
             // **Add this code to handle role change**
@@ -908,7 +908,7 @@ function registerForEvent() {
     .then(data => {
         console.log('Response from server:', data);
         if (data.status === 'success') {
-            alert(data.message);
+            //alert(data.message);
             document.getElementById('offer-detail-sidebar').classList.remove('open');
             const followButton = document.getElementById('follow-button');
             if (followButton) {
@@ -945,7 +945,7 @@ function displayMyOffers() {
         .then(response => response.json())
         .then(data => {
             if (data.status === 'error') {
-                alert(data.message);
+                //alert(data.message);
                 return;
             }
             // Clear the market container
@@ -1138,7 +1138,7 @@ function submitEditOfferForm() {
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            alert('Offer updated successfully!');
+            //alert('Offer updated successfully!');
             // Close the sidebar
             document.getElementById('edit-offer-sidebar').classList.remove('open');
             // Refresh the My Offers view
@@ -1152,24 +1152,22 @@ function submitEditOfferForm() {
 
 // Function to delete an offer
 function deleteOffer(offerId) {
-    if (confirm('Are you sure you want to delete this offer?')) {
-        fetch('../backend/delete_offer.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ offer_id: offerId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                alert('Offer deleted successfully!');
-                // Refresh the My Offers view
-                displayMyOffers();
-            } else {
-                alert('Error deleting offer: ' + data.message);
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    }
+    fetch('../backend/delete_offer.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ offer_id: offerId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            //alert('Offer deleted successfully!');
+            // Refresh the My Offers view
+            displayMyOffers();
+        } else {
+            alert('Error deleting offer: ' + data.message);
+        }
+    })
+    .catch(error => console.error('Error:', error));
 }
 
 // Function to display offers from a specific farmer
