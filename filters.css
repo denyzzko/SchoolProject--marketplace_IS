@@ -1,30 +1,34 @@
-/* Styles for the Filters Section */
-.filters {
-    margin-top: 20px;
-    padding: 15px;
-    background-color: #f9f9f9; /* Light background color */
-    border: 1px solid #ddd;
-    border-radius: 8px;
-}
-
+/* Zarovnat nadpis 'Filters' na střed */
 .filters h3 {
+    text-align: center; /* Zarovnat nadpis do středu */
     margin-bottom: 15px;
     font-size: 20px;
-    color: #333; /* Heading color */
+    color: #333;
     border-bottom: 1px solid #ccc;
     padding-bottom: 8px;
 }
 
-.filter-section {
-    margin-bottom: 15px;
+/* Centrovat celý obsah filtrů kromě popisků */
+.filters {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #ddd;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centrovat obsah sekce */
 }
 
-.filter-section label {
-    display: block;
+/* Popisky nad vstupy necháme zarovnané vlevo */
+.filter-section {
+    width: 100%; /* Zajistí, že obsah bude plně vyplňovat rodiče */
+    text-align: left; /* Popisky zůstanou zarovnané vlevo */
+    margin-bottom: 15px;
     font-size: 14px;
-    color: #555;
-    margin-bottom: 5px;
 }
+
+
 
 .filter-section select,
 .filter-section input[type="number"] {
@@ -37,18 +41,22 @@
     background-color: #fff;
 }
 
+.filter-section select {
+    width: 93%; /* Nastavení šířky na 100 % rodičovského kontejneru */
+}
+
 .filter-section input[type="number"] {
 
     margin-bottom: 10px;
 }
 
+
 #apply-filters-button {
     width: 100%;
     padding: 12px 0;
-    background-color: #4b5258; /* Green background */
+    background-color: #333; /* Green background */
     color: #fff;
     font-size: 16px;
-    font-weight: bold;
     border: none;
     border-radius: 4px;
     cursor: pointer;
