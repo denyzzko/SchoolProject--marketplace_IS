@@ -50,15 +50,53 @@ if ($result->num_rows > 0) {
     exit;
 }
 
-// Insert new order
-$sql = "INSERT INTO Ordr (user_id, offer_id, quantity, date, status) VALUES (?, ?, ?, ?, ?)";
+// Check available spaces
+$sql = "SELECT quantity FROM Attribute WHERE offer_id = ?";
 $stmt = $conn->prepare($sql);
-$quantity = 1; // For self-pick events
-$date = date('Y-m-d');
-$status = 'confirmed';
-$stmt->bind_param("iiiss", $user_id, $offer_id, $quantity, $date, $status);
+$stmt->bind_param("i", $offer_id);
+$stmt->execute();
+$result = $stmt->get_result();
 
-if ($stmt->execute()) {
+if ($result->num_rows === 0) {
+    echo json_encode(['status' => 'error', 'message' => 'Attribute not found for this offer']);
+    exit;
+}
+
+$row = $result->fetch_assoc();
+$available_spaces = $row['quantity'];
+
+if ($available_spaces <= 0) {
+    echo json_encode(['status' => 'error', 'message' => 'No available spaces for this event']);
+    exit;
+}
+
+// Start transaction
+$conn->begin_transaction();
+
+try {
+    // Insert new order
+    $sql = "INSERT INTO Ordr (user_id, offer_id, quantity, date, status) VALUES (?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $quantity = 1; // For self-pick events
+    $date = date('Y-m-d');
+    $status = 'confirmed';
+    $stmt->bind_param("iiiss", $user_id, $offer_id, $quantity, $date, $status);
+    
+    if (!$stmt->execute()) {
+        throw new Exception('Failed to register for the event');
+    }
+
+    // Decrement available spaces
+    $sql = "UPDATE Attribute SET quantity = quantity - 1 WHERE offer_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $offer_id);
+    if (!$stmt->execute()) {
+        throw new Exception('Failed to update available spaces');
+    }
+
+    // Commit transaction
+    $conn->commit();
+
     // **Add this code to change the user's role if they are 'registered'**
     $roleChanged = false;
     if ($_SESSION['role'] === 'registered') {
@@ -80,8 +118,10 @@ if ($stmt->execute()) {
 
     echo json_encode(['status' => 'success', 'message' => $message, 'roleChanged' => $roleChanged]);
 
-} else {
-    echo json_encode(['status' => 'error', 'message' => 'Failed to register for the event']);
+} catch (Exception $e) {
+    // Rollback transaction
+    $conn->rollback();
+    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
 }
 
 $stmt->close();

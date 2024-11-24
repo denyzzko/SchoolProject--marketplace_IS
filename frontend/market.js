@@ -754,6 +754,8 @@ function openOfferSidebar(offerId) {
                         .then(registrationData => {
                             if (registrationData.registered) {
                                 contentHtml += `<button id="follow-button" disabled>Already Registered</button>`;
+                            } else if (parseInt(data.attribute_quantity) <= 0) {
+                                contentHtml += `<button id="follow-button" disabled>No Available Spaces</button>`;
                             } else {
                                 contentHtml += `<button id="follow-button">Add to My Events</button>`;
                             }
@@ -761,8 +763,8 @@ function openOfferSidebar(offerId) {
                             // Set the content after the button has been added
                             sidebarContent.innerHTML = contentHtml;
 
-                            // Add event listener if not registered
-                            if (!registrationData.registered) {
+                            // Add event listener if not registered and there are available spaces
+                            if (!registrationData.registered && parseInt(data.attribute_quantity) > 0) {
                                 document.getElementById('follow-button').addEventListener('click', function() {
                                     registerForEvent();
                                 });
@@ -807,6 +809,7 @@ function openOfferSidebar(offerId) {
         })
         .catch(error => console.error('Error:', error));
 }
+
 
 function updateTotalPrice(pricePerKg) {
     const quantityInput = document.getElementById('order-quantity');

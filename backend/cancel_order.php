@@ -20,6 +20,23 @@ $order_id = intval($_POST['order_id']);
 $conn->begin_transaction();
 
 try {
+    // Get the offer_id from the order
+    $getOrderSql = "SELECT offer_id FROM Ordr WHERE order_id = ?";
+    $stmt = $conn->prepare($getOrderSql);
+    if (!$stmt) {
+        throw new Exception('Failed to prepare select statement: ' . $conn->error);
+    }
+    $stmt->bind_param("i", $order_id);
+    if (!$stmt->execute()) {
+        throw new Exception('Failed to execute select statement: ' . $stmt->error);
+    }
+    $result = $stmt->get_result();
+    if ($result->num_rows === 0) {
+        throw new Exception('Order not found');
+    }
+    $row = $result->fetch_assoc();
+    $offer_id = $row['offer_id'];
+
     // Delete the order from the Ordr table
     $deleteOrderSql = "DELETE FROM Ordr WHERE order_id = ?";
     $stmt = $conn->prepare($deleteOrderSql);
@@ -32,10 +49,19 @@ try {
         throw new Exception('Failed to delete order: ' . $stmt->error);
     }
 
-    // Commit the transaction
-    if (!$conn->commit()) {
-        throw new Exception('Failed to commit transaction: ' . $conn->error);
+    // Increment available spaces in Attribute table
+    $updateAttributeSql = "UPDATE Attribute SET quantity = quantity + 1 WHERE offer_id = ?";
+    $stmt = $conn->prepare($updateAttributeSql);
+    if (!$stmt) {
+        throw new Exception('Failed to prepare update statement: ' . $conn->error);
     }
+    $stmt->bind_param("i", $offer_id);
+    if (!$stmt->execute()) {
+        throw new Exception('Failed to update available spaces: ' . $stmt->error);
+    }
+
+    // Commit the transaction
+    $conn->commit();
 
     echo json_encode(['success' => true]);
 } catch (Exception $e) {
