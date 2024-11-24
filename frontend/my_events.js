@@ -147,6 +147,36 @@ function displayEvents(events) {
     });
 }
 
+function cancelOrder(orderId) {
+    currentOrderId = orderId;
+    document.getElementById('popup_cancel-overlay').style.display = 'flex';
+}
+
+function confirmCancel(isConfirmed) {
+    document.getElementById('popup_cancel-overlay').style.display = 'none';
+
+    if (isConfirmed && currentOrderId !== null) {
+        const formData = new FormData();
+        formData.append('order_id', currentOrderId);
+
+        fetch('../backend/cancel_order.php', {
+            method: 'POST',
+            body: formData,
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    loadEvents();
+                } else {
+                    alert('Failed to cancel order: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('There was an error cancelling the order. Please try again later.');
+            });
+    }
+}
+
 // Event listener for applying category filter
 document.getElementById('apply-filters-button').addEventListener('click', function() {
     fetchEventsAndRender();
