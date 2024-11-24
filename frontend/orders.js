@@ -34,7 +34,7 @@ function renderOrders(orders) {
             <div class="order-details">
                 <p><strong>Product:</strong> ${order.category_name}</p>
                 <p><strong>Customer:</strong> ${order.customer_name}</p>
-                <p><strong>Quantity:</strong> ${order.quantity}</p>
+                <p><strong>Quantity:</strong> ${order.quantity} kg</p>
             </div>
             <div class="order-actions">
                 <button class="accept-button" onclick="handleOrder(${order.order_id}, 'accept')">Accept</button>

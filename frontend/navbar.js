@@ -119,6 +119,7 @@ function loadNavbar() {
                     `;
                 }
 
+                responseElement.textContent = `Hello ${data.name}, how are you today?`;
                 // activate the current page link
                 activateCurrentPageLink();
 
