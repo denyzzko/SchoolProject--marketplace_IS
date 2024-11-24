@@ -521,7 +521,7 @@ function applyFilters() {
                                     <p><strong>${offer.full_category_name}</strong></p>
                                     <p>${offer.farmer_name}</p>
                                     <p>${offer.price_kg} CZK/kg</p>
-                                    <p>Available: ${offer.attribute_quantity}</p>
+                                    <p>Available: ${Math.trunc(offer.attribute_quantity)}</p>
                                 </div>
                                 <div class="actions">
                                     <button class="button more-offers-button" data-farmer-id="${offer.farmer_id}">More offers</button>
@@ -604,7 +604,7 @@ window.addEventListener('DOMContentLoaded', () => {
                                 <p><strong>${offer.full_category_name}</strong></p>
                                 <p>${offer.farmer_name}</p>
                                 <p>${offer.price_kg} CZK/kg</p>
-                                <p>Available: ${offer.attribute_quantity}</p>
+                                <p>Available: ${Math.trunc(offer.attribute_quantity)}</p>
                             </div>
                             <div class="actions">
                                 <button class="button more-offers-button" data-farmer-id="${offer.farmer_id}">More offers</button>
@@ -754,14 +754,14 @@ function openOfferSidebar(offerId) {
 
 function updateTotalPrice(pricePerKg) {
     const quantityInput = document.getElementById('order-quantity');
-    const quantity = parseInt(quantityInput.value);
+    const quantity = parseFloat(quantityInput.value);
 
     if (isNaN(quantity)) {
         document.getElementById('total-price').innerText = '0';
         return;
     }
 
-    const totalPrice = (quantity * pricePerKg).toFixed(2);
+    const totalPrice = (quantity * pricePerKg).toFixed(3);
     document.getElementById('total-price').innerText = totalPrice;
 }
 
@@ -771,7 +771,7 @@ function placeOrder(availableQuantity) {
         return;
     }
 
-    const quantity = parseInt(document.getElementById('order-quantity').value);
+    const quantity = parseFloat(document.getElementById('order-quantity').value);
 
     if (quantity > availableQuantity) {
         alert('Requested quantity exceeds available quantity.');
@@ -922,7 +922,7 @@ function displayMyOffers() {
                                 <p><strong>${offer.full_category_name}</strong></p>
                                 <p>${offer.farmer_name}</p>
                                 <p>${offer.price_kg} CZK/kg</p>
-                                <p>Available: ${offer.attribute_quantity}</p>
+                                <p>Available: ${Math.trunc(offer.attribute_quantity)}</p>
                             </div>
                             <div class="actions">
                                 <button class="edit-offer-button" data-offer-id="${offer.offer_id}">Edit</button>
@@ -1130,7 +1130,7 @@ function showOffersFromFarmer(farmerId) {
                                     <p><strong>${offer.full_category_name}</strong></p>
                                     <p>${offer.farmer_name}</p>
                                     <p>${offer.price_kg} CZK/kg</p>
-                                    <p>Available: ${offer.attribute_quantity}</p>
+                                    <p>Available: ${Math.trunc(offer.attribute_quantity)}</p>
                                 </div>
                                 <div class="actions">
                                     <button class="button more-offers-button" data-farmer-id="${offer.farmer_id}">More offers</button>

@@ -28,13 +28,13 @@ if ($offer['quantity'] < $quantity) {
 
 $sql = "INSERT INTO Ordr (user_id, offer_id, quantity, date, status) VALUES (?, ?, ?, ?, ?)";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("iiiss", $user_id, $offer_id, $quantity, $date, $status);
+$stmt->bind_param("iidss", $user_id, $offer_id, $quantity, $date, $status);
 $stmt->execute();
 
 $new_quantity = $offer['quantity'] - $quantity;
 $sql = "UPDATE Attribute SET quantity = ? WHERE offer_id = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ii", $new_quantity, $offer_id);
+$stmt->bind_param("di", $new_quantity, $offer_id);
 $stmt->execute();
 
 $roleChanged = false;

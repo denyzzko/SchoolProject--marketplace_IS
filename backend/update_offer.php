@@ -34,12 +34,12 @@ try {
 
         $sql = "UPDATE Attribute SET price_kg = ?, quantity = ?, origin = ?, date_of_harvest = ? WHERE offer_id = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("dissi", $price_kg, $quantity, $origin, $date_of_harvest, $offer_id);
+        $stmt->bind_param("ddssi", $price_kg, $quantity, $origin, $date_of_harvest, $offer_id);
         $stmt->execute();
 
         $sql = "UPDATE Offer SET price = ?, quantity = ? WHERE offer_id = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("dii", $price_kg, $quantity, $offer_id);
+        $stmt->bind_param("ddi", $price_kg, $quantity, $offer_id);
         $stmt->execute();
 
         $conn->commit();
@@ -58,12 +58,12 @@ try {
 
         $sql = "UPDATE Attribute SET price_kg = ?, quantity = ? WHERE offer_id = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("dii", $price_kg, $quantity, $offer_id);
+        $stmt->bind_param("ddi", $price_kg, $quantity, $offer_id);
         $stmt->execute();
 
         $sql = "UPDATE Offer SET price = ?, quantity = ? WHERE offer_id = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("dii", $price_kg, $quantity, $offer_id);
+        $stmt->bind_param("ddi", $price_kg, $quantity, $offer_id);
         $stmt->execute();
 
         $conn->commit();

@@ -34,13 +34,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             $sql_attribute = "INSERT INTO Attribute (offer_id, origin, date_of_harvest, price_item, price_kg, quantity) VALUES (?, ?, ?, ?, ?, ?)";
             $stmt_attribute = $conn->prepare($sql_attribute);
-            $stmt_attribute->bind_param("issdii", $offer_id, $origin, $date_of_harvest, $price_item, $price_kg, $quantity);
+            $stmt_attribute->bind_param("issddd", $offer_id, $origin, $date_of_harvest, $price_item, $price_kg, $quantity);
             $stmt_attribute->execute();
 
             $price = $price_kg;
             $sql_update_offer = "UPDATE Offer SET price = ?, quantity = ? WHERE offer_id = ?";
             $stmt_update_offer = $conn->prepare($sql_update_offer);
-            $stmt_update_offer->bind_param("dii", $price, $quantity, $offer_id);
+            $stmt_update_offer->bind_param("ddi", $price, $quantity, $offer_id);
             $stmt_update_offer->execute();
         } elseif ($type === 'selfpick') {
             $location = $_POST["location"];
@@ -63,13 +63,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             $sql_attribute = "INSERT INTO Attribute (offer_id, origin, date_of_harvest, price_kg, quantity) VALUES (?, ?, ?, ?, ?)";
             $stmt_attribute = $conn->prepare($sql_attribute);
-            $stmt_attribute->bind_param("issdi", $offer_id, $origin, $date_of_harvest, $price_kg, $quantity);
+            $stmt_attribute->bind_param("issddd", $offer_id, $origin, $date_of_harvest, $price_kg, $quantity);
             $stmt_attribute->execute();
 
             $price = $price_kg;
             $sql_update_offer = "UPDATE Offer SET price = ?, quantity = ? WHERE offer_id = ?";
             $stmt_update_offer = $conn->prepare($sql_update_offer);
-            $stmt_update_offer->bind_param("dii", $price, $quantity, $offer_id);
+            $stmt_update_offer->bind_param("ddi", $price, $quantity, $offer_id);
             $stmt_update_offer->execute();
         }
 
