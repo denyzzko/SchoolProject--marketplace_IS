@@ -355,6 +355,21 @@
     background-color: #575757;
 }
 
+#submitEditOfferForm {
+    margin: 0 auto; /* Centrovat horizontálně */
+    display: block; /* Zajistit, že margin bude fungovat */
+}
+
+
+#edit-offer-form select,
+#edit-offer-form input {
+    width: 100%;
+    padding: 10px; /* Ujistěte se, že všechny mají stejný padding */
+    font-size: 14px; /* Nastavení stejné velikosti písma pro všechny prvky */
+    box-sizing: border-box; /* Ujistěte se, že padding je zahrnutý do šířky */
+}
+
+
 /* Form Styling */
 #category-selection, #form-fields {
     display: flex;
@@ -416,4 +431,18 @@
 #form-fields button:hover,
 #edit-offer-form button:hover {
     background-color: #575757;
+}
+
+#submitOfferFormSidebar {
+    display: block; /* Zajistí, že tlačítko je blokový element */
+    margin: 0 auto; /* Automaticky nastaví okraje vlevo a vpravo */
+    text-align: center; /* Pokud chcete text uvnitř tlačítka zarovnat na střed */
+}
+
+
+/* Zvýšení šířky pro všechny vstupní prvky ve formuláři */
+#category-selection select,
+#type-selection select,
+#form-fields select {
+    width: 100%; /* Nastavení šířky na 100 % rodičovského kontejneru */
 }

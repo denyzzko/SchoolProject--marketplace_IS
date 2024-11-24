@@ -1264,3 +1264,16 @@ function areRequiredCategoriesSelected() {
     }
     return false;
 }
+
+// Přidáme event listener na změnu typu nabídky
+document.getElementById('type').addEventListener('change', function () {
+    const selectedType = this.value;
+
+    // Zobrazit tlačítko pouze pokud je vybraný typ nabídky
+    if (selectedType) {
+        document.getElementById('submitOfferFormSidebar').style.display = 'block';
+    } else {
+        document.getElementById('submitOfferFormSidebar').style.display = 'none';
+    }
+});
+
