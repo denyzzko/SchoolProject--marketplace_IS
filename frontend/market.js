@@ -127,7 +127,7 @@ function onCategoryChange(event) {
     });
 
     if (selectedCategoryId) {
-        // Check if this category has subcategories
+        // Fetch subcategories
         fetch(`../backend/categories.php?parent_id=${selectedCategoryId}`)
             .then(response => response.json())
             .then(subcategories => {
@@ -153,12 +153,13 @@ function onCategoryChange(event) {
 
                     // Add event listener
                     subcategorySelect.addEventListener('change', onCategoryChange);
+                }
 
-                    // Hide the rest of the form until a leaf category is selected
-                    hideFormFields();
-                } else {
-                    // No more subcategories, proceed to show form fields
+                // Show or hide form fields based on required category selection
+                if (areRequiredCategoriesSelected()) {
                     showFormFields();
+                } else {
+                    hideFormFields();
                 }
             })
             .catch(error => console.error('Error fetching subcategories:', error));
@@ -167,6 +168,7 @@ function onCategoryChange(event) {
         hideFormFields();
     }
 }
+
 
 function hideFormFields() {
     const formFields = document.getElementById('form-fields');
@@ -225,8 +227,14 @@ function getSelectedCategoryId() {
     return selectedCategoryId;
 }
 
+
 // Handle form submission from the create offer sidebar
 document.getElementById('submitOfferFormSidebar').addEventListener('click', function () {
+    if (!areRequiredCategoriesSelected()) {
+        alert('Please select both root category and first subcategory.');
+        return;
+    }
+
     const selectedCategoryId = getSelectedCategoryId();
     if (!selectedCategoryId) {
         alert('Please select a category.');
@@ -1045,8 +1053,10 @@ function openEditOfferSidebar(offerId) {
                 // Since we have two types, sale and selfpick, we need to handle both
                 formContent += `<input type="hidden" name="offer_id" value="${offerId}">`;
 
-                // Category is not editable
-                formContent += `<p><strong>Category:</strong> ${data.category_name}</p>`;
+                formContent += `
+                    <label for="type">Category:</label>
+                    <input type="text" id="type" name="type" value="${data.category_name}" readonly><br><br>
+                `;
 
                 formContent += `
                     <label for="type">Type:</label>
@@ -1241,4 +1251,16 @@ function showOffersFromFarmer(farmerId) {
             }
         })
         .catch(error => console.error('Error:', error));
+}
+
+// Function to check if root category and first subcategory are selected
+function areRequiredCategoriesSelected() {
+    const categorySelectionDiv = document.getElementById('category-selection');
+    const selects = categorySelectionDiv.querySelectorAll('select');
+    if (selects.length >= 2) {
+        const rootCategorySelect = selects[0];
+        const firstSubcategorySelect = selects[1];
+        return rootCategorySelect.value !== '' && firstSubcategorySelect.value !== '';
+    }
+    return false;
 }

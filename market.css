@@ -378,7 +378,7 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     transition: border-color 0.3s, box-shadow 0.3s;
-    width: 100%;
+    width: 95%;
 }
 
 #category-selection select:focus, 
