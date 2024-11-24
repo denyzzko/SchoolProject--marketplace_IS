@@ -13,7 +13,6 @@ function renderOrders(orders) {
     const orderContainer = document.getElementById('order-container');
     orderContainer.innerHTML = '';
     orders.forEach(order => {
-        // Assign a color class based on the status
         let statusClass = '';
         switch (order.status) {
             case 'pending':
@@ -32,15 +31,15 @@ function renderOrders(orders) {
         orderBox.innerHTML = `
             <div class="order-details">
                 <div>
-                    <p><strong>Name:</strong> ${order.full_category_name}</p>
-                    <p><strong>Farmer:</strong> ${order.farmer_name}</p>
-                    <p>${order.price_kg} CZK/kg</p>
+                    <p><strong>Name:</strong> ${order.full_category_name || 'Offer was deleted'}</p>
+                    <p><strong>Farmer:</strong> ${order.farmer_name || 'Unknown'}</p>
+                    <p>${order.price_kg ? order.price_kg + ' CZK/kg' : 'Price not available'}</p>
                     <p><strong>Bought:</strong> ${order.quantity}</p>
-                    <p><strong>Type:</strong>${order.type === 'sale' ? 'Sale' : 'Selfpick'}</p>
-                    <p><strong>Date:</strong>${order.date}</p>
+                    <p><strong>Type:</strong> ${order.type === 'sale' ? 'Sale' : 'Selfpick'}</p>
+                    <p><strong>Date:</strong> ${order.date}</p>
                     <p><strong>Status:</strong> <span class="order-status ${statusClass}">${order.status}</span></p>
                     <div class="actions">
-                        <button class="order-button" onclick="openPopup(${order.order_id}, '${order.full_category_name}', '${order.farmer_name}')">Review</button>
+                        <button class="order-button" onclick="openPopup(${order.order_id}, '${order.full_category_name || 'Offer was deleted'}', '${order.farmer_name || 'Unknown'}')">Review</button>
                     </div>
                 </div>
             </div>
