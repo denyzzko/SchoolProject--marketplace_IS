@@ -10,6 +10,7 @@ $type = isset($_GET['type']) ? $_GET['type'] : null;
 $price_min = isset($_GET['price_min']) ? $_GET['price_min'] : null;
 $price_max = isset($_GET['price_max']) ? $_GET['price_max'] : null;
 $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
+$farmer_id = isset($_GET['farmer_id']) ? $_GET['farmer_id'] : null;
 
 $params = [];
 $paramTypes = '';
@@ -59,11 +60,17 @@ if ($category_id) {
     $paramTypes .= str_repeat('i', count($categoryIds));
 }
 
+if ($farmer_id) {
+    $whereClauses[] = "Usr.user_id = ?";
+    $params[] = $farmer_id;
+    $paramTypes .= 'i';
+}
+
 // Build the SQL query
 $sql = "SELECT Offer.*, 
                Attribute.price_item, Attribute.price_kg, Attribute.quantity AS attribute_quantity,
                SelfPickingEvent.location, SelfPickingEvent.start_date,
-               Usr.name AS farmer_name, 
+               Usr.name AS farmer_name, Usr.user_id AS farmer_id,
                Category.category_id AS category_id
         FROM Offer 
         LEFT JOIN Attribute ON Offer.offer_id = Attribute.offer_id

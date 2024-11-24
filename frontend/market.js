@@ -542,7 +542,7 @@ function applyFilters() {
                                     <p>Remains: ${offer.attribute_quantity} kg</p>
                                 </div>
                                 <div class="actions">
-                                    <button class="button">More offers</button>
+                                    <button class="button more-offers-button" data-farmer-id="${offer.farmer_id}">More offers</button>
                                 </div>
                             </div>
                         `;
@@ -560,7 +560,7 @@ function applyFilters() {
                                     <p>Available: ${offer.attribute_quantity}</p>
                                 </div>
                                 <div class="actions">
-                                    <button class="button">Details</button>
+                                    <button class="button more-offers-button" data-farmer-id="${offer.farmer_id}">More offers</button>
                                 </div>
                             </div>
                         `;
@@ -572,6 +572,16 @@ function applyFilters() {
                     offerBox.addEventListener('click', function () {
                         openOfferSidebar(offer.offer_id);
                     });
+
+                    // Add event listener to the 'More offers' button
+                    const moreOffersButton = offerBox.querySelector('.more-offers-button');
+                    if (moreOffersButton) {
+                        moreOffersButton.addEventListener('click', function(event) {
+                            event.stopPropagation();
+                            const farmerId = event.currentTarget.dataset.farmerId;
+                            showOffersFromFarmer(farmerId);
+                        });
+                    }
 
                     marketContainer.appendChild(offerBox);
                 });
@@ -612,7 +622,7 @@ window.addEventListener('DOMContentLoaded', () => {
                                 <p>Remains: ${offer.attribute_quantity} kg</p>
                             </div>
                             <div class="actions">
-                                <button class="button">More offers</button>
+                                <button class="button more-offers-button" data-farmer-id="${offer.farmer_id}">More offers</button>
                             </div>
                         </div>
                     `;
@@ -630,7 +640,7 @@ window.addEventListener('DOMContentLoaded', () => {
                                 <p>Available: ${offer.attribute_quantity}</p>
                             </div>
                             <div class="actions">
-                                <button class="button">Details</button>
+                                <button class="button more-offers-button" data-farmer-id="${offer.farmer_id}">More offers</button>
                             </div>
                         </div>
                     `;
@@ -642,6 +652,16 @@ window.addEventListener('DOMContentLoaded', () => {
                 offerBox.addEventListener('click', function () {
                     openOfferSidebar(offer.offer_id);
                 });
+
+                // Add event listener to the 'More offers' button
+                const moreOffersButton = offerBox.querySelector('.more-offers-button');
+                if (moreOffersButton) {
+                    moreOffersButton.addEventListener('click', function(event) {
+                        event.stopPropagation(); // Prevent click from opening offer details
+                        const farmerId = event.currentTarget.dataset.farmerId;
+                        showOffersFromFarmer(farmerId);
+                    });
+                }
 
                 marketContainer.appendChild(offerBox);
             });
@@ -1127,4 +1147,85 @@ function deleteOffer(offerId) {
         })
         .catch(error => console.error('Error:', error));
     }
+}
+
+// Function to display offers from a specific farmer
+function showOffersFromFarmer(farmerId) {
+    fetch(`../backend/get_offers.php?farmer_id=${farmerId}`)
+        .then(response => response.json())
+        .then(data => {
+            const marketContainer = document.getElementById('market-container');
+            marketContainer.innerHTML = ''; // Clear existing offers
+
+            if (data.length === 0) {
+                marketContainer.innerHTML = '<p>No offers found for this farmer.</p>';
+            } else {
+                data.forEach(offer => {
+                    const offerBox = document.createElement('div');
+                    offerBox.className = 'grid-item';
+
+                    let offerContent = '';
+
+                    const imagePath = offer.image_path ? `/${offer.image_path}` : '/assets/images/default.png';
+
+                    if (offer.type === 'sale') {
+                        offerContent = `
+                            <div class="top-section">
+                                <img src="${imagePath}" alt="${offer.full_category_name}">
+                            </div>
+                            <div class="middle-section">Sale</div>
+                            <div class="bottom-section">
+                                <div>
+                                    <p><strong>${offer.full_category_name}</strong></p>
+                                    <p>${offer.farmer_name}</p>
+                                    <p>${offer.price_kg} CZK/kg</p>
+                                    <p>Remains: ${offer.attribute_quantity} kg</p>
+                                </div>
+                                <div class="actions">
+                                    <button class="button more-offers-button" data-farmer-id="${offer.farmer_id}">More offers</button>
+                                </div>
+                            </div>
+                        `;
+                    } else if (offer.type === 'selfpick') {
+                        offerContent = `
+                            <div class="top-section">
+                                <img src="${imagePath}" alt="${offer.full_category_name}">
+                            </div>
+                            <div class="middle-section">Self-pick</div>
+                            <div class="bottom-section">
+                                <div>
+                                    <p><strong>${offer.full_category_name}</strong></p>
+                                    <p>${offer.farmer_name}</p>
+                                    <p>${offer.price_kg} CZK/kg</p>
+                                    <p>Available: ${offer.attribute_quantity}</p>
+                                </div>
+                                <div class="actions">
+                                    <button class="button more-offers-button" data-farmer-id="${offer.farmer_id}">More offers</button>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    offerBox.innerHTML = offerContent;
+
+                    // Add event listener to open offer details
+                    offerBox.addEventListener('click', function () {
+                        openOfferSidebar(offer.offer_id);
+                    });
+
+                    // Add event listener to the 'More offers' button
+                    const moreOffersButton = offerBox.querySelector('.more-offers-button');
+                    if (moreOffersButton) {
+                        moreOffersButton.addEventListener('click', function(event) {
+                            event.stopPropagation(); // Prevent click from opening offer details
+                            const farmerId = event.currentTarget.dataset.farmerId;
+                            showOffersFromFarmer(farmerId);
+                        });
+                    }
+
+                    marketContainer.appendChild(offerBox);
+                });
+            }
+        })
+        .catch(error => console.error('Error:', error));
 }
