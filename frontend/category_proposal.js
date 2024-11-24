@@ -21,10 +21,9 @@ function renderCategories(categories, parentId) {
     const backButton = document.getElementById('back-button');
     const addCategoryContainer = document.getElementById('add-category-container');
 
-    categoriesList.innerHTML = ''; // Clear the current list
-    addCategoryContainer.style.display = 'none'; // Hide the add category form
+    categoriesList.innerHTML = '';
+    addCategoryContainer.style.display = 'none';
 
-    // Show or hide back button
     if (parentId !== null) {
         backButton.style.display = 'block';
     } else {
@@ -43,7 +42,6 @@ function renderCategories(categories, parentId) {
         categoriesList.appendChild(button);
     });
 
-    // Add the "Add new category here" button
     const addButton = document.createElement('button');
     addButton.textContent = 'I want new category here';
     addButton.className = 'add-category-button';
@@ -92,7 +90,6 @@ function submitCategoryProposal() {
             if (data.status === 'success') {
                 displayMessage(successMessageElement, data.message, "success");
                 cancelAddCategory();
-                // Reset page
                 currentParentCategory = null;
                 categoryStack.length = 0;
                 fetchCategories();
@@ -105,6 +102,4 @@ function submitCategoryProposal() {
             displayMessage(errorMessageElement, 'An error occurred. Please try again.', "error");
         });
 }
-
-// Initialize by fetching root categories
 document.addEventListener('DOMContentLoaded', () => fetchCategories());

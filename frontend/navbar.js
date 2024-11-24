@@ -12,7 +12,6 @@ function logout() {
 }
 
 function loadNavbar() {
-    // update navigation bar based on user info & logged in status
     fetch('../backend/index.php')
         .then(response => response.json())
         .then(data => {
@@ -21,9 +20,7 @@ function loadNavbar() {
             const responseElement = document.getElementById('response');
 
             if (data.loggedIn) {
-                // logged in
                 if (data.role === "registered") {
-                    // registered specific
                     navLinks.innerHTML = `
                         <a href="../frontend/category_proposal.html">Category Proposal</a>
                         <a href="../frontend/market.html">Market</a>
@@ -42,7 +39,6 @@ function loadNavbar() {
                     `;
                 }
                 else if (data.role === "customer") {
-                    // customer specific
                     navLinks.innerHTML = `
                         <a href="../frontend/category_proposal.html">Category Proposal</a>
                         <a href="../frontend/market.html">Market</a>
@@ -61,7 +57,6 @@ function loadNavbar() {
                         </div>
                     `;
                 } else if (data.role === "farmer") {
-                    // farmer specific
                     navLinks.innerHTML = `
                         <a href="../frontend/category_proposal.html">Category Proposal</a>
                         <a href="../frontend/market.html">Market</a>
@@ -83,7 +78,6 @@ function loadNavbar() {
                     `;
                 }
                 else if (data.role === "admin") {
-                    // farmer specific
                     navLinks.innerHTML = `
                         <a href="../frontend/manage_users.html">Manage Users</a>
                         <a href="../frontend/create_users.html">Create Users</a>
@@ -101,7 +95,6 @@ function loadNavbar() {
                     `;
                 }
                 else if (data.role === "moderator") {
-                    // moderator specific
                     navLinks.innerHTML = `
                         <a href="../frontend/manage_proposals.html">Proposals</a>
                         <a href="../frontend/manage_categories.html">Categories</a>
@@ -120,7 +113,6 @@ function loadNavbar() {
                 }
 
                 responseElement.textContent = `Hello ${data.name}, how are you today?`;
-                // activate the current page link
                 activateCurrentPageLink();
 
             } else {
@@ -148,7 +140,6 @@ function toggleDropdown() {
     dropdown.classList.toggle("show");
 }
 
-// call loadNavbar on page load
 window.addEventListener('DOMContentLoaded', loadNavbar);
 
 // close the dropdown if the user clicks outside of it

@@ -7,12 +7,12 @@ function resetInactivityTimer() {
 }
 
 function logoutUser() {
-    fetch('../backend/logout.php') // Adjust the path to your logout script
+    fetch('../backend/logout.php')
         .then(response => response.json())
         .then(data => {
             if (data.status === "success") {
-                location.reload(true); // Refresh page
-                window.location.href = "../index.html"; // Redirect
+                location.reload(true);
+                window.location.href = "../index.html";
             }
         })
         .catch(error => console.error('Error logging out:', error));
@@ -23,5 +23,4 @@ document.addEventListener('mousemove', resetInactivityTimer);
 document.addEventListener('keypress', resetInactivityTimer);
 document.addEventListener('click', resetInactivityTimer);
 
-// Initialize the timer on page load
 resetInactivityTimer();

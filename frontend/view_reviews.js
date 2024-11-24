@@ -6,7 +6,7 @@ function getUrlParameter(name) {
     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
 }
 
-let reviewsData = []; // Store reviews data globally
+let reviewsData = [];
 
 // Function to fetch reviews from the backend and display them as individual items
 function loadReviews() {
@@ -16,7 +16,6 @@ function loadReviews() {
         return;
     }
 
-    // Update fetch call to include the farmer_id as a query parameter
     fetch(`../backend/view_reviews.php?farmer_id=${farmerId}`)
     .then(response => response.json())
     .then(data => {
@@ -28,26 +27,23 @@ function loadReviews() {
             console.error('Error:', data.message);
             return;
         }
-        reviewsData = data; // Save the data globally
+        reviewsData = data;
         displayAverageRating(reviewsData);
         renderReviews(reviewsData);
     })
     .catch(error => console.error('Error fetching reviews:', error));
 }
 
-// Load reviews and average rating when the page is loaded
 window.onload = loadReviews;
 
 // Function to render reviews based on data
 function renderReviews(reviews) {
-    console.log('Rendering reviews, count:', reviews.length);  // Debug log
     const container = document.getElementById('review-container');
     container.innerHTML = '';
     reviews.forEach(review => {
         const item = document.createElement('div');
         item.classList.add('review-item');
         
-        // Generate star rating based on the numeric rating
         const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
 
         item.innerHTML = `
@@ -70,7 +66,7 @@ function displayAverageRating(reviews) {
 
 // Function to sort reviews based on selected criteria
 function sortReviews(criteria) {
-    let sortedData = [...reviewsData]; // Clone the original data to avoid mutating it
+    let sortedData = [...reviewsData];
 
     if (criteria === 'rating-high') {
         sortedData.sort((a, b) => b.rating - a.rating);
@@ -82,7 +78,6 @@ function sortReviews(criteria) {
 
     renderReviews(sortedData);
 
-    // Update active button
     document.querySelectorAll('.filter-button').forEach(button => button.classList.remove('active'));
     document.getElementById(`sort-${criteria}`).classList.add('active');
 }

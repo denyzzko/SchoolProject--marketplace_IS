@@ -18,7 +18,7 @@ function fetchProposals() {
 // Render proposals
 function renderProposals(proposals) {
     const container = document.querySelector('.proposals-list');
-    container.innerHTML = ''; // Clear existing proposals
+    container.innerHTML = '';
 
     if (proposals.length === 0) {
         displayMessage('No pending proposals available.', "error");
@@ -65,7 +65,7 @@ function approveProposal(proposalId, parentCategoryId, proposalName) {
         .then(data => {
             if (data.status === "success") {
                 displayMessage(data.message, "success");
-                fetchProposals(); // Refresh proposals
+                fetchProposals();
             } else {
                 displayMessage(data.message, "error");
             }
@@ -90,7 +90,7 @@ function rejectProposal(proposalId) {
         .then(data => {
             if (data.status === "success") {
                 displayMessage(data.message, "success");
-                fetchProposals(); // Refresh proposals
+                fetchProposals();
             } else {
                 displayMessage(data.message, "error");
             }
@@ -100,6 +100,4 @@ function rejectProposal(proposalId) {
             displayMessage('An unexpected error occurred.', "error");
         });
 }
-
-// Initialize proposals on page load
 document.addEventListener('DOMContentLoaded', fetchProposals);

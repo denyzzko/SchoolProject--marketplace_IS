@@ -9,30 +9,24 @@ fetch('../backend/index.php')
             isUserLoggedIn = true;
             userRole = data.role;
 
-            // Enable "Create Offer" button for farmers and customers
             if (userRole === 'farmer' || userRole === 'customer') {
                 document.getElementById('create-offer-btn').disabled = false;
             }
-            // Enable "My Offers" button only for farmers
             if (userRole === 'farmer') {
                 document.getElementById('my-offers-btn').disabled = false;
             }
         } else {
-            // Non-registered user
             isUserLoggedIn = false;
         }
     })
     .catch(error => console.error('Error fetching user state:', error));
 
-// Přidat event listener pro tlačítko "Create Offer"
 document.getElementById('create-offer-btn').addEventListener('click', function () {
-    if (this.disabled) return; // Prevent action if button is disabled
+    if (this.disabled) return;
 
     if (!isUserLoggedIn) {
-        // Pokud není uživatel přihlášen, přesměrovat na login.html
         window.location.href = '../frontend/login.html';
     } else {
-        // Pokud je uživatel přihlášen, otevřít Create Offer sidebar
         document.getElementById('create-offer-sidebar').classList.add('open');
         resetCreateOfferSidebar();
         initCategorySelection();
@@ -55,20 +49,17 @@ window.addEventListener('click', function(event) {
 
 // Function to reset the Create Offer Sidebar
 function resetCreateOfferSidebar() {
-    // Clear category selection
     const categorySelectionDiv = document.getElementById('category-selection');
-    categorySelectionDiv.innerHTML = ''; // Remove any existing category selection UI
+    categorySelectionDiv.innerHTML = '';
 
-    // Hide the form fields
     hideFormFields();
 
-    // Reset form inputs
     const formFields = document.querySelectorAll('#create-offer-form input, #create-offer-form select');
     formFields.forEach(field => {
         if (field.type === 'select-one') {
-            field.selectedIndex = 0; // Reset select fields
+            field.selectedIndex = 0;
         } else if (field.type === 'number' || field.type === 'date' || field.type === 'text') {
-            field.value = ''; // Reset number, date, and text fields
+            field.value = ''; 
         }
     });
 }
@@ -76,14 +67,12 @@ function resetCreateOfferSidebar() {
 // Function to initialize category selection
 function initCategorySelection() {
     const categorySelectionDiv = document.getElementById('category-selection');
-    categorySelectionDiv.innerHTML = ''; // Clear any existing content
+    categorySelectionDiv.innerHTML = ''; 
 
-    // Fetch top-level categories
     fetch('../backend/categories.php')
         .then(response => response.json())
         .then(categories => {
             if (categories.length > 0) {
-                // Create a select element
                 const select = document.createElement('select');
                 select.id = 'category-select-0';
                 select.dataset.level = 0;
@@ -102,7 +91,6 @@ function initCategorySelection() {
 
                 categorySelectionDiv.appendChild(select);
 
-                // Add event listener for change
                 select.addEventListener('change', onCategoryChange);
             } else {
                 console.error('No top-level categories found.');
@@ -117,7 +105,6 @@ function onCategoryChange(event) {
     const selectedCategoryId = select.value;
     const level = parseInt(select.dataset.level);
 
-    // Remove any subcategory selects beyond this level
     const categorySelectionDiv = document.getElementById('category-selection');
     const selects = categorySelectionDiv.querySelectorAll('select');
     selects.forEach(s => {
@@ -127,12 +114,10 @@ function onCategoryChange(event) {
     });
 
     if (selectedCategoryId) {
-        // Fetch subcategories
         fetch(`../backend/categories.php?parent_id=${selectedCategoryId}`)
             .then(response => response.json())
             .then(subcategories => {
                 if (subcategories.length > 0) {
-                    // Create a new select for subcategories
                     const subcategorySelect = document.createElement('select');
                     subcategorySelect.id = `category-select-${level + 1}`;
                     subcategorySelect.dataset.level = level + 1;
@@ -151,11 +136,9 @@ function onCategoryChange(event) {
 
                     categorySelectionDiv.appendChild(subcategorySelect);
 
-                    // Add event listener
                     subcategorySelect.addEventListener('change', onCategoryChange);
                 }
 
-                // Show or hide form fields based on required category selection
                 if (areRequiredCategoriesSelected()) {
                     showFormFields();
                 } else {
@@ -164,7 +147,6 @@ function onCategoryChange(event) {
             })
             .catch(error => console.error('Error fetching subcategories:', error));
     } else {
-        // No category selected, hide form fields
         hideFormFields();
     }
 }
@@ -188,18 +170,14 @@ function showFormFields() {
     const typeSelection = document.getElementById('type-selection');
     typeSelection.style.display = 'block';
 
-    // Initially hide other fields
     document.getElementById('sale-fields').style.display = 'none';
     document.getElementById('selfpick-fields').style.display = 'none';
 
-    // Reset 'type' select
     document.getElementById('type').value = '';
 
-    // Add event listener for 'type' selection change
     document.getElementById('type').addEventListener('change', onTypeChange);
 }
 
-// Event listener for 'type' selection change
 function onTypeChange(event) {
     const type = event.target.value;
     if (type === 'sale') {
@@ -228,7 +206,6 @@ function getSelectedCategoryId() {
 }
 
 
-// Handle form submission from the create offer sidebar
 document.getElementById('submitOfferFormSidebar').addEventListener('click', function () {
     if (!areRequiredCategoriesSelected()) {
         alert('Please select both root category and first subcategory.');
@@ -243,10 +220,8 @@ document.getElementById('submitOfferFormSidebar').addEventListener('click', func
 
     const formData = new FormData();
 
-    // Append the selected category_id
     formData.append('category_id', selectedCategoryId);
 
-    // Get the type
     const type = document.getElementById('type').value;
     if (!type) {
         alert('Please select a type.');
@@ -297,14 +272,11 @@ document.getElementById('submitOfferFormSidebar').addEventListener('click', func
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            //alert(data.message);
             document.getElementById('create-offer-sidebar').classList.remove('open');
-            formData.append('offer_id', data.offer_id); // Append the offer ID to formData
-            addOfferToMarket(formData); // Add the new offer to the market
+            formData.append('offer_id', data.offer_id); 
+            addOfferToMarket(formData); 
 
-            // **Add this code to handle role change**
             if (data.roleChanged) {
-                // Reload the page to update navbar and other elements
                 location.reload();
             }
         } else {
@@ -325,7 +297,6 @@ function addOfferToMarket(formData) {
     const type = formData.get('type');
     const categoryId = formData.get('category_id');
 
-    // Get category info to retrieve name and image_path
     fetch(`../backend/get_category_info.php?category_id=${categoryId}`)
         .then(response => response.json())
         .then(categoryInfo => {
@@ -373,12 +344,10 @@ function addOfferToMarket(formData) {
 
             offerBox.innerHTML = offerContent;
 
-            // Add event listener to open offer details
             offerBox.addEventListener('click', function () {
                 openOfferSidebar(formData.get('offer_id'));
             });
 
-            // Insert the new offer at the beginning
             marketContainer.insertBefore(offerBox, marketContainer.firstChild);
         })
         .catch(error => console.error('Error:', error));
@@ -395,14 +364,12 @@ function initFilterCategorySelection() {
         return;
     }
 
-    categorySelectionDiv.innerHTML = ''; // Clear any existing content
+    categorySelectionDiv.innerHTML = '';
 
-    // Fetch top-level categories
     fetch('../backend/categories.php')
         .then(response => response.json())
         .then(categories => {
             if (categories.length > 0) {
-                // Create a select element
                 const select = document.createElement('select');
                 select.id = 'filter-category-select-0';
                 select.dataset.level = 0;
@@ -421,7 +388,6 @@ function initFilterCategorySelection() {
 
                 categorySelectionDiv.appendChild(select);
 
-                // Add event listener for change
                 select.addEventListener('change', onFilterCategoryChange);
             } else {
                 console.error('No top-level categories found.');
@@ -435,7 +401,6 @@ function onFilterCategoryChange(event) {
     const selectedCategoryId = select.value;
     const level = parseInt(select.dataset.level);
 
-    // Remove any subcategory selects beyond this level
     const categorySelectionDiv = document.getElementById('filter-category-selection');
     const selects = categorySelectionDiv.querySelectorAll('select');
     selects.forEach(s => {
@@ -445,12 +410,10 @@ function onFilterCategoryChange(event) {
     });
 
     if (selectedCategoryId) {
-        // Check if this category has subcategories
         fetch(`../backend/categories.php?parent_id=${selectedCategoryId}`)
             .then(response => response.json())
             .then(subcategories => {
                 if (subcategories.length > 0) {
-                    // Create a new select for subcategories
                     const subcategorySelect = document.createElement('select');
                     subcategorySelect.id = `filter-category-select-${level + 1}`;
                     subcategorySelect.dataset.level = level + 1;
@@ -469,7 +432,6 @@ function onFilterCategoryChange(event) {
 
                     categorySelectionDiv.appendChild(subcategorySelect);
 
-                    // Add event listener
                     subcategorySelect.addEventListener('change', onFilterCategoryChange);
                 }
             })
@@ -484,12 +446,10 @@ document.getElementById('apply-filters-button').addEventListener('click', functi
 function applyFilters() {
     const marketContainer = document.getElementById('market-container');
     marketContainer.innerHTML = '';
-    // Get the filter values
     const type = document.getElementById('filter-type').value;
     const priceMin = document.getElementById('filter-price-min').value;
     const priceMax = document.getElementById('filter-price-max').value;
 
-    // Get the selected category ID
     const categorySelectionDiv = document.getElementById('filter-category-selection');
     const selects = categorySelectionDiv.querySelectorAll('select');
     let selectedCategoryId = null;
@@ -499,7 +459,6 @@ function applyFilters() {
         }
     });
 
-    // Build the query parameters
     let queryParams = [];
     if (type) {
         queryParams.push(`type=${encodeURIComponent(type)}`);
@@ -516,15 +475,13 @@ function applyFilters() {
 
     const queryString = queryParams.length > 0 ? '?' + queryParams.join('&') : '';
 
-    // Fetch the offers with filters applied
     fetch(`../backend/get_offers.php${queryString}`)
         .then(response => response.json())
         .then(data => {
             const marketContainer = document.getElementById('market-container');
-            marketContainer.innerHTML = ''; // Clear content before adding new offers
+            marketContainer.innerHTML = '';
 
             if (data.length === 0) {
-                // Handle empty results
                 marketContainer.innerHTML = '<p>No offers found for the selected filters.</p>';
             } else {
                 data.forEach(offer => {
@@ -533,7 +490,6 @@ function applyFilters() {
 
                     let offerContent = '';
 
-                    // Use image_path from offer data
                     const imagePath = offer.image_path ? `/${offer.image_path}` : '/assets/images/default.png';
 
                     if (offer.type === 'sale') {
@@ -576,12 +532,10 @@ function applyFilters() {
 
                     offerBox.innerHTML = offerContent;
 
-                    // Add event listener to open offer details
                     offerBox.addEventListener('click', function () {
                         openOfferSidebar(offer.offer_id);
                     });
 
-                    // Add event listener to the 'More offers' button
                     const moreOffersButton = offerBox.querySelector('.more-offers-button');
                     if (moreOffersButton) {
                         moreOffersButton.addEventListener('click', function(event) {
@@ -606,7 +560,7 @@ window.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             const marketContainer = document.getElementById('market-container');
-            marketContainer.innerHTML = ''; // Clear content before adding new offers
+            marketContainer.innerHTML = '';
             data.forEach(offer => {
                 const offerBox = document.createElement('div');
                 offerBox.className = 'grid-item';
@@ -619,7 +573,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 let offerContent = '';
 
-                // Use image_path from offer data
                 const imagePath = offer.image_path ? `/${offer.image_path}` : '/assets/images/default.png';
 
                 if (offer.type === 'sale') {
@@ -662,16 +615,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 offerBox.innerHTML = offerContent;
 
-                // Add event listener to open offer details
                 offerBox.addEventListener('click', function () {
                     openOfferSidebar(offer.offer_id);
                 });
 
-                // Add event listener to the 'More offers' button
                 const moreOffersButton = offerBox.querySelector('.more-offers-button');
                 if (moreOffersButton) {
                     moreOffersButton.addEventListener('click', function(event) {
-                        event.stopPropagation(); // Prevent click from opening offer details
+                        event.stopPropagation();
                         const farmerId = event.currentTarget.dataset.farmerId;
                         showOffersFromFarmer(farmerId);
                     });
@@ -702,16 +653,15 @@ function performSearch() {
         const offerType = offer.dataset.offerType.toLowerCase();
         const origin = offer.dataset.origin ? offer.dataset.origin.toLowerCase() : '';
 
-        // Check if the search term matches any of the specified fields
         if (
             farmerName.includes(searchTerm) ||
             categoryName.includes(searchTerm) ||
             offerType.includes(searchTerm) ||
             origin.includes(searchTerm)
         ) {
-            offer.style.display = 'grid'; // Restore original display
+            offer.style.display = 'grid';
         } else {
-            offer.style.display = 'none'; // Hide non-matching offers
+            offer.style.display = 'none';
         }
     });
 }
@@ -720,7 +670,6 @@ let currentOfferId = null;
 
 function openOfferSidebar(offerId) {
     currentOfferId = offerId;
-    // Fetch offer details from the backend
     fetch(`../backend/get_offer_details.php?offer_id=${offerId}`)
         .then(response => response.json())
         .then(data => {
@@ -729,10 +678,8 @@ function openOfferSidebar(offerId) {
 
                 const sidebarContent = document.querySelector('#offer-detail-sidebar .sidebar-content');
 
-                // Clear existing content
                 sidebarContent.innerHTML = '';
 
-                // Common fields
                 let contentHtml = `
                     <p><strong>Category:</strong> ${data.category_name}</p>
                     <p><strong>Type:</strong> ${offerType}</p>
@@ -748,7 +695,6 @@ function openOfferSidebar(offerId) {
                         <p><strong>Available spaces:</strong> ${data.attribute_quantity}</p>
                     `;
 
-                    // Fetch registration status
                     fetch(`../backend/check_event_registration.php?offer_id=${offerId}`)
                         .then(response => response.json())
                         .then(registrationData => {
@@ -760,10 +706,8 @@ function openOfferSidebar(offerId) {
                                 contentHtml += `<button id="follow-button">Add to My Events</button>`;
                             }
 
-                            // Set the content after the button has been added
                             sidebarContent.innerHTML = contentHtml;
 
-                            // Add event listener if not registered and there are available spaces
                             if (!registrationData.registered && parseInt(data.attribute_quantity) > 0) {
                                 document.getElementById('follow-button').addEventListener('click', function() {
                                     registerForEvent();
@@ -785,10 +729,8 @@ function openOfferSidebar(offerId) {
                         <button id="place-order-button">Place Order</button>
                     `;
 
-                    // Set the content for 'sale' offers
                     sidebarContent.innerHTML = contentHtml;
 
-                    // Set up event listeners for 'sale' offers
                     const orderQuantityInput = document.getElementById('order-quantity');
                     updateTotalPrice(data.price_kg);
 
@@ -801,7 +743,6 @@ function openOfferSidebar(offerId) {
                     });
                 }
 
-                // Show the sidebar
                 document.getElementById('offer-detail-sidebar').classList.add('open');
             } else {
                 alert('Error fetching offer details.');
@@ -826,7 +767,6 @@ function updateTotalPrice(pricePerKg) {
 
 function placeOrder(availableQuantity) {
     if (!isUserLoggedIn) {
-        // Redirect non-logged-in users to login page
         window.location.href = '../frontend/login.html';
         return;
     }
@@ -838,7 +778,6 @@ function placeOrder(availableQuantity) {
         return;
     }
 
-    // Send order details to backend
     fetch('../backend/place_order.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -847,15 +786,10 @@ function placeOrder(availableQuantity) {
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            //alert(data.message);
-            // Close the sidebar
             document.getElementById('offer-detail-sidebar').classList.remove('open');
-            // **Add this code to handle role change**
             if (data.roleChanged) {
-                // Reload the page to update navbar and other elements
                 location.reload();
             }
-            // Optionally, refresh the offers or update the specific offer box
         } else {
             alert('Error placing order: ' + data.message);
         }
@@ -879,24 +813,20 @@ window.addEventListener('mouseup', function (event) {
     const sidebar = document.getElementById('offer-detail-sidebar');
     const marketContainer = document.getElementById('market-container');
 
-    // If click is outside sidebar and outside offers
     if (!sidebar.contains(event.target) && !marketContainer.contains(event.target)) {
         if (!isClickInsideSidebar) {
             sidebar.classList.remove('open');
         }
     }
 
-    // Reset indicator
     isClickInsideSidebar = false;
 });
 
 function registerForEvent() {
     if (!isUserLoggedIn) {
-        // Redirect non-logged-in users to login page
         window.location.href = '../frontend/login.html';
         return;
     }
-    // Send request to backend to register for the event
     fetch('../backend/register_for_event.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -911,7 +841,6 @@ function registerForEvent() {
     .then(data => {
         console.log('Response from server:', data);
         if (data.status === 'success') {
-            //alert(data.message);
             document.getElementById('offer-detail-sidebar').classList.remove('open');
             const followButton = document.getElementById('follow-button');
             if (followButton) {
@@ -919,9 +848,7 @@ function registerForEvent() {
                 followButton.disabled = true;
             }
 
-            // **Add this code to handle role change**
             if (data.roleChanged) {
-                // Reload the page to update navbar and other elements
                 location.reload();
             }
 
@@ -938,7 +865,7 @@ function registerForEvent() {
 
 // Event listener for "My Offers" button
 document.getElementById('my-offers-btn').addEventListener('click', function() {
-    if (this.disabled) return; // Prevent action if button is disabled
+    if (this.disabled) return;
     displayMyOffers();
 });
 
@@ -948,19 +875,15 @@ function displayMyOffers() {
         .then(response => response.json())
         .then(data => {
             if (data.status === 'error') {
-                //alert(data.message);
                 return;
             }
-            // Clear the market container
             const marketContainer = document.getElementById('market-container');
             marketContainer.innerHTML = '';
 
             data.forEach(offer => {
-                // Create offer boxes similar to the ones in the market, but with edit and delete options
                 const offerBox = document.createElement('div');
                 offerBox.className = 'grid-item';
 
-                // Add data attributes for search functionality
                 offerBox.dataset.farmerName = offer.farmer_name;
                 offerBox.dataset.categoryName = offer.full_category_name;
                 offerBox.dataset.offerType = offer.type;
@@ -1032,28 +955,21 @@ function displayMyOffers() {
 
 // Function to open the Edit Offer sidebar
 function openEditOfferSidebar(offerId) {
-    // Fetch offer details
     fetch(`../backend/get_offer_details.php?offer_id=${offerId}`)
         .then(response => response.json())
         .then(data => {
             if (data.status !== 'error') {
-                // Open the edit-offer-sidebar
                 const sidebar = document.getElementById('edit-offer-sidebar');
                 sidebar.classList.add('open');
 
-                // Clear previous content
                 const sidebarContent = sidebar.querySelector('.sidebar-content');
                 sidebarContent.innerHTML = '';
 
-                // Create the form dynamically, pre-filled with offer details
                 const form = document.createElement('form');
                 form.id = 'edit-offer-form';
 
-                // Build the form similar to the create-offer-form, but with values pre-filled
-                // Also include a hidden input for offer_id
                 let formContent = '';
 
-                // Since we have two types, sale and selfpick, we need to handle both
                 formContent += `<input type="hidden" name="offer_id" value="${offerId}">`;
 
                 formContent += `
@@ -1113,12 +1029,10 @@ function openEditOfferSidebar(offerId) {
                 form.innerHTML = formContent;
                 sidebarContent.appendChild(form);
 
-                // Add event listener to submit button
                 document.getElementById('submitEditOfferForm').addEventListener('click', function() {
                     submitEditOfferForm();
                 });
 
-                // Add event listener to close button
                 document.getElementById('close-edit-offer-sidebar').addEventListener('click', function() {
                     sidebar.classList.remove('open');
                 });
@@ -1141,10 +1055,7 @@ function submitEditOfferForm() {
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            //alert('Offer updated successfully!');
-            // Close the sidebar
             document.getElementById('edit-offer-sidebar').classList.remove('open');
-            // Refresh the My Offers view
             displayMyOffers();
         } else {
             alert('Error updating offer: ' + data.message);
@@ -1163,8 +1074,6 @@ function deleteOffer(offerId) {
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            //alert('Offer deleted successfully!');
-            // Refresh the My Offers view
             displayMyOffers();
         } else {
             alert('Error deleting offer: ' + data.message);
@@ -1179,7 +1088,7 @@ function showOffersFromFarmer(farmerId) {
         .then(response => response.json())
         .then(data => {
             const marketContainer = document.getElementById('market-container');
-            marketContainer.innerHTML = ''; // Clear existing offers
+            marketContainer.innerHTML = '';
 
             if (data.length === 0) {
                 marketContainer.innerHTML = '<p>No offers found for this farmer.</p>';
@@ -1232,16 +1141,14 @@ function showOffersFromFarmer(farmerId) {
 
                     offerBox.innerHTML = offerContent;
 
-                    // Add event listener to open offer details
                     offerBox.addEventListener('click', function () {
                         openOfferSidebar(offer.offer_id);
                     });
 
-                    // Add event listener to the 'More offers' button
                     const moreOffersButton = offerBox.querySelector('.more-offers-button');
                     if (moreOffersButton) {
                         moreOffersButton.addEventListener('click', function(event) {
-                            event.stopPropagation(); // Prevent click from opening offer details
+                            event.stopPropagation();
                             const farmerId = event.currentTarget.dataset.farmerId;
                             showOffersFromFarmer(farmerId);
                         });
@@ -1266,11 +1173,9 @@ function areRequiredCategoriesSelected() {
     return false;
 }
 
-// Přidáme event listener na změnu typu nabídky
 document.getElementById('type').addEventListener('change', function () {
     const selectedType = this.value;
 
-    // Zobrazit tlačítko pouze pokud je vybraný typ nabídky
     if (selectedType) {
         document.getElementById('submitOfferFormSidebar').style.display = 'block';
     } else {

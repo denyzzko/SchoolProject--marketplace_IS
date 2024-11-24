@@ -11,14 +11,12 @@ function initFilterCategorySelection() {
         return;
     }
 
-    categorySelectionDiv.innerHTML = ''; // Clear any existing content
+    categorySelectionDiv.innerHTML = '';
 
-    // Fetch top-level categories
     fetch('../backend/categories.php')
         .then(response => response.json())
         .then(categories => {
             if (categories.length > 0) {
-                // Create a select element
                 const select = document.createElement('select');
                 select.id = 'filter-category-select-0';
                 select.dataset.level = 0;
@@ -37,7 +35,6 @@ function initFilterCategorySelection() {
 
                 categorySelectionDiv.appendChild(select);
 
-                // Add event listener for change
                 select.addEventListener('change', onFilterCategoryChange);
             } else {
                 console.error('No top-level categories found.');
@@ -51,7 +48,6 @@ function onFilterCategoryChange(event) {
     const selectedCategoryId = select.value;
     const level = parseInt(select.dataset.level);
 
-    // Remove any subcategory selects beyond this level
     const categorySelectionDiv = document.getElementById('filter-category-selection');
     const selects = categorySelectionDiv.querySelectorAll('select');
     selects.forEach(s => {
@@ -61,12 +57,10 @@ function onFilterCategoryChange(event) {
     });
 
     if (selectedCategoryId) {
-        // Check if this category has subcategories
         fetch(`../backend/categories.php?parent_id=${selectedCategoryId}`)
             .then(response => response.json())
             .then(subcategories => {
                 if (subcategories.length > 0) {
-                    // Create a new select for subcategories
                     const subcategorySelect = document.createElement('select');
                     subcategorySelect.id = `filter-category-select-${level + 1}`;
                     subcategorySelect.dataset.level = level + 1;
@@ -85,7 +79,6 @@ function onFilterCategoryChange(event) {
 
                     categorySelectionDiv.appendChild(subcategorySelect);
 
-                    // Add event listener
                     subcategorySelect.addEventListener('change', onFilterCategoryChange);
                 }
             })
@@ -99,7 +92,6 @@ function loadEvents() {
 }
 
 function fetchEventsAndRender() {
-    // Get the selected category ID
     const categorySelectionDiv = document.getElementById('filter-category-selection');
     const selects = categorySelectionDiv.querySelectorAll('select');
     let selectedCategoryId = null;
@@ -109,7 +101,6 @@ function fetchEventsAndRender() {
         }
     });
 
-    // Build the query parameters
     let queryParams = [];
     if (selectedCategoryId) {
         queryParams.push(`category_id=${encodeURIComponent(selectedCategoryId)}`);
@@ -117,7 +108,6 @@ function fetchEventsAndRender() {
 
     const queryString = queryParams.length > 0 ? '?' + queryParams.join('&') : '';
 
-    // Fetch the events with filters applied
     fetch(`../backend/my_events.php${queryString}`)
         .then(response => response.json())
         .then(data => {
@@ -177,7 +167,6 @@ function confirmCancel(isConfirmed) {
     }
 }
 
-// Event listener for applying category filter
 document.getElementById('apply-filters-button').addEventListener('click', function() {
     fetchEventsAndRender();
 });

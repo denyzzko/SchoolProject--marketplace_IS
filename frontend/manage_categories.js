@@ -21,10 +21,9 @@ function renderModeratorCategories(categories, parentId) {
     const backButton = document.getElementById('back-button');
     const addCategoryContainer = document.getElementById('add-category-container');
 
-    categoriesList.innerHTML = ''; // Clear the current list
-    addCategoryContainer.style.display = 'none'; // Hide the add category form
+    categoriesList.innerHTML = '';
+    addCategoryContainer.style.display = 'none';
 
-    // Show or hide back button
     if (parentId !== null) {
         backButton.style.display = 'block';
     } else {
@@ -54,7 +53,6 @@ function renderModeratorCategories(categories, parentId) {
         categoriesList.appendChild(categoryContainer);
     });
 
-    // Add the "Add new category here" button
     const addButton = document.createElement('button');
     addButton.textContent = 'Add new category here';
     addButton.className = 'add-category-button';
@@ -103,7 +101,7 @@ function addCategory() {
             if (data.status === 'success') {
                 displayMessage(successMessageElement, data.message, "success");
                 cancelAddCategory();
-                fetchModeratorCategories(currentParentCategory); // Refresh the list
+                fetchModeratorCategories(currentParentCategory);
             } else {
                 displayMessage(errorMessageElement, data.message, "error");
             }
@@ -127,7 +125,7 @@ function deleteCategory(categoryId) {
         .then(data => {
             if (data.status === 'success') {
                 displayMessage(successMessageElement, data.message, "success");
-                fetchModeratorCategories(currentParentCategory); // Refresh the list
+                fetchModeratorCategories(currentParentCategory);
             } else {
                 displayMessage(errorMessageElement, data.message, "error");
             }
@@ -135,5 +133,4 @@ function deleteCategory(categoryId) {
         .catch(error => console.error('Error deleting category:', error));
 }
 
-// Initialize by fetching root categories
 document.addEventListener('DOMContentLoaded', () => fetchModeratorCategories());

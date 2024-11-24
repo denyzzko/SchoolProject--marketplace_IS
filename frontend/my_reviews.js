@@ -17,7 +17,6 @@ function renderReviews(reviews) {
         const item = document.createElement('div');
         item.classList.add('review-item');
         
-        // Generate star rating based on the numeric rating
         const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
 
         item.innerHTML = `
@@ -62,5 +61,4 @@ function sortReviews(criteria) {
         .catch(error => console.error('Error sorting reviews:', error));
 }
 
-// Load reviews and average rating when the page is loaded
 window.onload = loadReviews;

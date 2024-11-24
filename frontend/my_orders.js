@@ -63,9 +63,8 @@ function sortOrders(criteria) {
             } else if (criteria === 'date-oldest') {
                 data.sort((a, b) => new Date(a.date) - new Date(b.date));
             }
-            renderOrders(data); // Render the sorted orders
+            renderOrders(data);
 
-            // Update active button
             document.querySelectorAll('.filter-button').forEach(button => button.classList.remove('active'));
             document.getElementById(`sort-${criteria}`).classList.add('active');
         })

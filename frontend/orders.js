@@ -17,10 +17,9 @@ function fetchOrders() {
         });
 }
 
-// Render orders
 function renderOrders(orders) {
     const ordersList = document.getElementById('orders-list');
-    ordersList.innerHTML = ''; // Clear existing orders
+    ordersList.innerHTML = '';
 
     if (orders.length === 0) {
         displayMessage("error-message", 'No orders available.', "error");
@@ -59,7 +58,7 @@ function handleOrder(orderId, action) {
         .then(response => response.json())
         .then(data => {
             if (data.status === "success") {
-                fetchOrders(); // Refresh orders
+                fetchOrders();
             }
             displayMessage(data.status === "success" ? "success-message" : "error-message", data.message, data.status);
         })
@@ -80,5 +79,4 @@ function displayMessage(elementId, message, type) {
     element.style.color = type === "success" ? "green" : "red";
 }
 
-// Initialize orders on page load
 document.addEventListener('DOMContentLoaded', fetchOrders);

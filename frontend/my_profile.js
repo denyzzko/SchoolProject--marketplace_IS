@@ -28,7 +28,6 @@ function editProfile() {
     document.getElementById('edit-email').value = document.getElementById('email').textContent;
 }
 
-// Hide form
 function cancelEdit() {
     document.getElementById('edit-form').style.display = 'none';
     document.getElementById('edit-button').style.display = 'inline-block';
