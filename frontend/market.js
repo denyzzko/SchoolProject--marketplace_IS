@@ -777,7 +777,7 @@ function openOfferSidebar(offerId) {
                         <p><strong>Price per Kg:</strong> ${data.price_kg} CZK</p>
 
                         <label for="order-quantity">Enter Quantity:</label>
-                        <input type="number" id="order-quantity" name="order-quantity" min="1" value="1">
+                        <input type="number" id="order-quantity" name="order-quantity" placeholder="Enter quantity..">
                         <p><strong>Total Price:</strong> <span id="total-price">0</span> CZK</p>
 
                         <button id="place-order-button">Place Order</button>
@@ -812,8 +812,8 @@ function updateTotalPrice(pricePerKg) {
     const quantityInput = document.getElementById('order-quantity');
     const quantity = parseInt(quantityInput.value);
 
-    if (isNaN(quantity) || quantity <= 0) {
-        quantityInput.value = 1; // Reset to default valid value
+    if (isNaN(quantity)) {
+        document.getElementById('total-price').innerText = '0';
         return;
     }
 

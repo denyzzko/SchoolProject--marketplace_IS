@@ -337,6 +337,14 @@
     box-sizing: border-box;
 }
 
+#place-order-button {
+    display: block;        /* Zajistí, že tlačítko se bude chovat jako blokový element */
+    margin: 20px auto;     /* Horizontální mezera je nastavena na automatickou, aby bylo tlačítko vycentrované */
+}
+
+
+
+
 #place-order-button,
 #follow-button,
 #submitEditOfferForm {
@@ -348,7 +356,19 @@
     border-radius: 5px;
     cursor: pointer;
 }
-
+#follow-button {
+    display: block;        /* Tlačítko bude blokový element, což nám usnadní zarovnání */
+    margin: 20px auto;     /* Automatické odsazení vlevo a vpravo zarovná tlačítko na střed */
+}
+#follow-button:disabled {
+    background-color: #bbb; /* Světlejší barva pro znázornění neaktivního stavu */
+    color: #333;            /* Změnit barvu textu pro lepší kontrast */
+    cursor: not-allowed;    /* Změnit kurzor na "zakázaný" */
+}
+#follow-button:disabled:hover {
+    background-color: #bbb; /* Zůstane stejná barva jako v neaktivním stavu */
+    cursor: not-allowed;    /* Zachová kurzor jako zakázaný */
+}
 #place-order-button:hover,
 #follow-button:hover,
 #submitEditOfferForm:hover {
