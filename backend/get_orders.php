@@ -62,7 +62,7 @@ try {
     }
 
     if (empty($orders)) {
-        echo json_encode(['status' => 'success', 'message' => 'No orders available.', 'orders' => []]);
+        echo json_encode(['status' => 'error', 'message' => 'No orders available.', 'orders' => []]);
     } else {
         echo json_encode(['status' => 'success', 'orders' => $orders]);
     }
