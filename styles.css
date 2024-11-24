@@ -15,7 +15,7 @@ p {
 
 .container {
     text-align: center;
-    margin-top: 50px;
+    margin-top: 150px;
 }
 
 .box {
@@ -32,6 +32,7 @@ p {
     margin-top: 20px;
     font-size: 18px;
     color: #28a745;
+
 }
 
 /* navbar */

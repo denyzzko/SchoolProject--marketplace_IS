@@ -133,6 +133,7 @@ function loadNavbar() {
                         <button onclick="window.location.href='../frontend/login.html'">Login</button>
                     </div>
                 `;
+                responseElement.textContent = "Please log in or create a new account to access more features.";
             }
         })
         .catch(error => {

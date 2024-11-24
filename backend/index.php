@@ -13,8 +13,6 @@ if (isset($_SESSION["user_id"])) {
     ]);
 } else {
     // not logged in, return false
-    echo json_encode([
-        "loggedIn" => false
-    ]);
+    echo json_encode(["loggedIn" => false]);
 }
 ?>
