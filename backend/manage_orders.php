@@ -22,10 +22,11 @@ if (!$orderId || !$action) {
 try {
     $conn->begin_transaction();
 
-    // Fetch order details
-    $sql = "SELECT o.offer_id, o.quantity, off.quantity AS available_quantity
+    // Fetch order details including attribute quantity
+    $sql = "SELECT o.offer_id, o.quantity, attr.quantity AS available_quantity, attr.attribute_id
             FROM Ordr o
             JOIN Offer off ON o.offer_id = off.offer_id
+            JOIN Attribute attr ON off.offer_id = attr.offer_id
             WHERE o.order_id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('i', $orderId);
@@ -47,10 +48,10 @@ try {
         $stmt->bind_param('i', $orderId);
         $stmt->execute();
 
-        // Decrement available quantity
-        $sql = "UPDATE Offer SET quantity = quantity - ? WHERE offer_id = ?";
+        // Decrement available quantity in the Attribute table
+        $sql = "UPDATE Attribute SET quantity = quantity - ? WHERE attribute_id = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param('ii', $order['quantity'], $order['offer_id']);
+        $stmt->bind_param('ii', $order['quantity'], $order['attribute_id']);
         $stmt->execute();
 
         $message = 'Order successfully confirmed.';

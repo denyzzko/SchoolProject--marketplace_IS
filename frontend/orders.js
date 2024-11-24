@@ -1,10 +1,11 @@
-// Fetch orders for the farmer
+// Get all orders for the logged in farmer
 function fetchOrders() {
     fetch('../backend/get_orders.php')
         .then(response => response.json())
         .then(data => {
             if (data.status === "success") {
-                renderOrders(data.orders);
+                const sortedOrders = data.orders.sort((a, b) => b.order_id - a.order_id); // Sort orders
+                renderOrders(sortedOrders);
                 if (data.message) displayMessage("success-message", data.message, "success");
             } else {
                 displayMessage("error-message", data.message, "error");
@@ -46,7 +47,7 @@ function renderOrders(orders) {
     });
 }
 
-// Handle order acceptance or rejection
+// Accept or reject order
 function handleOrder(orderId, action) {
     fetch('../backend/manage_orders.php', {
         method: 'POST',
@@ -58,7 +59,7 @@ function handleOrder(orderId, action) {
         .then(response => response.json())
         .then(data => {
             if (data.status === "success") {
-                fetchOrders(); // Refresh orders after action
+                fetchOrders(); // Refresh orders
             }
             displayMessage(data.status === "success" ? "success-message" : "error-message", data.message, data.status);
         })
