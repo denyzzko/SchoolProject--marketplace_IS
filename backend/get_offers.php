@@ -68,8 +68,8 @@ if ($farmer_id) {
 
 // Build the SQL query
 $sql = "SELECT Offer.*, 
-               Attribute.price_item, Attribute.price_kg, Attribute.quantity AS attribute_quantity,
-               SelfPickingEvent.location, SelfPickingEvent.start_date,
+               Attribute.price_item, Attribute.price_kg, Attribute.quantity AS attribute_quantity, Attribute.origin,
+               SelfPickingEvent.location, SelfPickingEvent.start_date, SelfPickingEvent.end_date,
                Usr.name AS farmer_name, Usr.user_id AS farmer_id,
                Category.category_id AS category_id
         FROM Offer 

@@ -10,6 +10,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'farmer') {
 
 $user_id = $_SESSION['user_id'];
 
+// Get the search term from the request
+$searchTerm = isset($_GET['searchTerm']) ? strtolower(trim($_GET['searchTerm'])) : null;
+
 // Function to get full category name and image_path
 function getFullCategoryInfo($categoryId, $conn) {
     $nameParts = [];
@@ -45,10 +48,10 @@ function getFullCategoryInfo($categoryId, $conn) {
     return ['full_category_name' => $name, 'image_path' => $image_path];
 }
 
-// Now fetch offers created by this farmer
+// Build the SQL query
 $sql = "SELECT Offer.*, 
-               Attribute.price_item, Attribute.price_kg, Attribute.quantity AS attribute_quantity,
-               SelfPickingEvent.location, SelfPickingEvent.start_date,
+               Attribute.price_item, Attribute.price_kg, Attribute.quantity AS attribute_quantity, Attribute.origin,
+               SelfPickingEvent.location, SelfPickingEvent.start_date, SelfPickingEvent.end_date,
                Usr.name AS farmer_name, 
                Category.category_id AS category_id
         FROM Offer 
@@ -58,9 +61,30 @@ $sql = "SELECT Offer.*,
         JOIN Category ON Offer.category_id = Category.category_id
         WHERE Offer.user_id = ?";
 
+// If a search term is provided, add filtering conditions
+if ($searchTerm) {
+    $sql .= " AND (
+        LOWER(Usr.name) LIKE ? OR 
+        LOWER(Category.name) LIKE ? OR 
+        LOWER(Offer.type) LIKE ? OR 
+        LOWER(Attribute.origin) LIKE ?
+    )";
+}
+
+// Order the results by offer ID in descending order
 $sql .= " ORDER BY Offer.offer_id DESC";
+
+// Prepare the statement
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $user_id);
+
+// Bind parameters
+if ($searchTerm) {
+    $searchTermWildcard = "%" . $searchTerm . "%";
+    $stmt->bind_param("issss", $user_id, $searchTermWildcard, $searchTermWildcard, $searchTermWildcard, $searchTermWildcard);
+} else {
+    $stmt->bind_param("i", $user_id);
+}
+
 $stmt->execute();
 $result = $stmt->get_result();
 

@@ -603,6 +603,12 @@ window.addEventListener('DOMContentLoaded', () => {
                 const offerBox = document.createElement('div');
                 offerBox.className = 'grid-item';
 
+                // Add data attributes for search functionality
+                offerBox.dataset.farmerName = offer.farmer_name;
+                offerBox.dataset.categoryName = offer.full_category_name;
+                offerBox.dataset.offerType = offer.type;
+                offerBox.dataset.origin = offer.origin || '';
+
                 let offerContent = '';
 
                 // Use image_path from offer data
@@ -669,37 +675,38 @@ window.addEventListener('DOMContentLoaded', () => {
         .catch(error => console.error('Error:', error));
 });
 
+
 // Search functionality
-document.getElementById('search-button').addEventListener('click', function () {
+document.getElementById('search-button').addEventListener('click', performSearch);
+document.getElementById('search-input').addEventListener('keyup', function (event) {
+    if (event.key === 'Enter') {
+        performSearch();
+    }
+});
+
+function performSearch() {
     const searchTerm = document.getElementById('search-input').value.toLowerCase();
     const offers = document.querySelectorAll('.grid-item');
 
     offers.forEach(offer => {
-        const offerText = offer.textContent.toLowerCase();
-        if (offerText.includes(searchTerm)) {
+        const farmerName = offer.dataset.farmerName.toLowerCase();
+        const categoryName = offer.dataset.categoryName.toLowerCase();
+        const offerType = offer.dataset.offerType.toLowerCase();
+        const origin = offer.dataset.origin ? offer.dataset.origin.toLowerCase() : '';
+
+        // Check if the search term matches any of the specified fields
+        if (
+            farmerName.includes(searchTerm) ||
+            categoryName.includes(searchTerm) ||
+            offerType.includes(searchTerm) ||
+            origin.includes(searchTerm)
+        ) {
             offer.style.display = 'grid'; // Restore original display
         } else {
             offer.style.display = 'none'; // Hide non-matching offers
         }
     });
-});
-
-// Search when the Enter key is pressed
-document.getElementById('search-input').addEventListener('keyup', function (event) {
-    if (event.key === 'Enter') {
-        const searchTerm = this.value.toLowerCase();
-        const offers = document.querySelectorAll('.grid-item');
-
-        offers.forEach(offer => {
-            const offerText = offer.textContent.toLowerCase();
-            if (offerText.includes(searchTerm)) {
-                offer.style.display = 'grid'; // Restore original display
-            } else {
-                offer.style.display = 'none'; // Hide non-matching offers
-            }
-        });
-    }
-});
+}
 
 let currentOfferId = null;
 
@@ -941,6 +948,12 @@ function displayMyOffers() {
                 // Create offer boxes similar to the ones in the market, but with edit and delete options
                 const offerBox = document.createElement('div');
                 offerBox.className = 'grid-item';
+
+                // Add data attributes for search functionality
+                offerBox.dataset.farmerName = offer.farmer_name;
+                offerBox.dataset.categoryName = offer.full_category_name;
+                offerBox.dataset.offerType = offer.type;
+                offerBox.dataset.origin = offer.origin || '';
 
                 let offerContent = '';
                 const imagePath = offer.image_path ? `/${offer.image_path}` : '/assets/images/default.png';
