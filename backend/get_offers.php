@@ -5,7 +5,6 @@ if (!$conn) {
     die(json_encode(['status' => 'error', 'message' => 'Database connection not established.']));
 }
 
-// Get filter parameters
 $type = isset($_GET['type']) ? $_GET['type'] : null;
 $price_min = isset($_GET['price_min']) ? $_GET['price_min'] : null;
 $price_max = isset($_GET['price_max']) ? $_GET['price_max'] : null;
@@ -16,7 +15,6 @@ $params = [];
 $paramTypes = '';
 $whereClauses = [];
 
-// Build the WHERE clauses
 if ($type) {
     $whereClauses[] = "Offer.type = ?";
     $params[] = $type;
@@ -36,8 +34,6 @@ if ($price_max) {
 }
 
 if ($category_id) {
-    // Include offers in the selected category and its subcategories
-    // Get all descendant category IDs
     function getDescendantCategoryIds($parentId, $conn) {
         $ids = [$parentId];
         $sql = "SELECT category_id FROM Category WHERE parent_category = ?";
@@ -66,7 +62,6 @@ if ($farmer_id) {
     $paramTypes .= 'i';
 }
 
-// Build the SQL query
 $sql = "SELECT Offer.*, 
                Attribute.price_item, Attribute.price_kg, Attribute.quantity AS attribute_quantity, Attribute.origin,
                SelfPickingEvent.location, SelfPickingEvent.start_date, SelfPickingEvent.end_date,
@@ -88,7 +83,6 @@ if ($stmt === false) {
     die(json_encode(['status' => 'error', 'message' => 'SQL prepare failed: ' . $conn->error]));
 }
 
-// Bind parameters
 if (count($params) > 0) {
     $stmt->bind_param($paramTypes, ...$params);
 }
@@ -98,7 +92,6 @@ $result = $stmt->get_result();
 
 $offers = [];
 if ($result && $result->num_rows > 0) {
-    // Ensure getFullCategoryInfo is defined
     function getFullCategoryInfo($categoryId, $conn) {
         $nameParts = [];
         $currentId = $categoryId;
@@ -112,10 +105,8 @@ if ($result && $result->num_rows > 0) {
             $result = $stmt->get_result();
 
             if ($row = $result->fetch_assoc()) {
-                // Add category name to the beginning of the array
                 array_unshift($nameParts, $row['name']);
 
-                // Save image_path if not already set
                 if (!$image_path && !empty($row['image_path'])) {
                     $image_path = $row['image_path'];
                 }
@@ -128,12 +119,10 @@ if ($result && $result->num_rows > 0) {
             $stmt->close();
         }
 
-        // Remove root category
         if (count($nameParts) > 1) {
             array_shift($nameParts);
         }
 
-        // Build the category name without the root
         $name = implode(' ', $nameParts);
 
         return ['full_category_name' => $name, 'image_path' => $image_path];

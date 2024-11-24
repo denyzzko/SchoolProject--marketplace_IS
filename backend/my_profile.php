@@ -3,7 +3,6 @@ include 'session_start.php';
 header('Content-Type: application/json');
 include 'db.php';
 
-// Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['status' => 'error', 'message' => 'You are not logged in.']);
     exit();
@@ -12,7 +11,6 @@ if (!isset($_SESSION['user_id'])) {
 $userId = $_SESSION['user_id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    // Handle GET request: Fetch profile information
     $sql = "SELECT name, email, role FROM Usr WHERE user_id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('i', $userId);
@@ -28,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     $stmt->close();
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Handle POST request: Update profile information
     $data = json_decode(file_get_contents('php://input'), true);
     $name = $data['name'] ?? null;
     $email = $data['email'] ?? null;

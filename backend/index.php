@@ -1,7 +1,6 @@
 <?php
 include 'session_start.php';
 
-// content type as JSON
 header('Content-Type: application/json');
 
 if (isset($_SESSION["user_id"])) {

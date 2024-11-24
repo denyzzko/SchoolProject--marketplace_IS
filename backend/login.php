@@ -3,7 +3,6 @@ include 'session_start.php';
 include 'db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // retrieve user inputs
     $email = $_POST["email"];
     $password = $_POST["password"];
 
@@ -15,7 +14,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = $stmt->get_result();
 
     if ($result->num_rows == 1) {
-        // email exists so verify password
         $row = $result->fetch_assoc();
         if (password_verify($password, $row["password"])) {
             // password correct so set session
@@ -32,7 +30,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo json_encode(["status" => "error", "message" => "No user found with this email!"]);
     }
 
-    // close statement and connection
     $stmt->close();
     $conn->close();
 }

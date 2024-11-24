@@ -2,7 +2,6 @@
 include 'db.php';
 include 'session_start.php';
 
-// Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'message' => 'User not logged in']);
     exit;
@@ -10,7 +9,6 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Get the reviews for offers made by the logged-in user
 $sql = "SELECT DISTINCT r.rating, r.comment, o.category_id
         FROM Review r
         JOIN Offer o ON r.offer_id = o.offer_id
@@ -40,17 +38,14 @@ function getFullCategoryInfo($categoryId, $conn) {
     $result = $stmt->get_result();
 
     if ($row = $result->fetch_assoc()) {
-        // Skip main categories "Fruit" and "Vegetable"
         if (in_array($row['name'], ['Fruit', 'Vegetable'])) {
-            return ''; // Skip main categories
+            return '';
         }
         
-        // If the category has no parent, return the name
         if (empty($row['parent_category'])) {
             return $row['name'];
         }
         
-        // Get the parent category name
         $parentId = $row['parent_category'];
         $parentStmt = $conn->prepare($sql);
         $parentStmt->bind_param("i", $parentId);
@@ -58,7 +53,6 @@ function getFullCategoryInfo($categoryId, $conn) {
         $parentResult = $parentStmt->get_result();
 
         if ($parentRow = $parentResult->fetch_assoc()) {
-            // Skip main categories for the parent as well
             if (!in_array($parentRow['name'], ['Fruit', 'Vegetable'])) {
                 return $parentRow['name'] . ' ' . $row['name'];
             } else {
@@ -75,7 +69,6 @@ function getFullCategoryInfo($categoryId, $conn) {
 while ($row = $result->fetch_assoc()) {
     $categoryInfo = getFullCategoryInfo($row['category_id'], $conn);
     $row['full_category_name'] = $categoryInfo;
-    // If full_category_name is empty, skip adding this review
     if (!empty($row['full_category_name'])) {
         $reviews[] = $row;
     }

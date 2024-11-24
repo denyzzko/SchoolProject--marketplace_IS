@@ -3,7 +3,6 @@ include 'db.php';
 
 $categoryId = $_GET['category_id'];
 
-// Funkce pro získání úplného názvu kategorie a image_path
 function getFullCategoryInfo($categoryId, $conn) {
     $nameParts = [];
     $currentId = $categoryId;
@@ -17,10 +16,8 @@ function getFullCategoryInfo($categoryId, $conn) {
         $result = $stmt->get_result();
 
         if ($row = $result->fetch_assoc()) {
-            // Přidáme název kategorie na začátek pole
             array_unshift($nameParts, $row['name']);
 
-            // Uložíme image_path, pokud ještě nemáme
             if (!$image_path && !empty($row['image_path'])) {
                 $image_path = $row['image_path'];
             }
@@ -33,12 +30,10 @@ function getFullCategoryInfo($categoryId, $conn) {
         $stmt->close();
     }
 
-    // Odstraníme kořenovou kategorii
     if (count($nameParts) > 1) {
-        array_shift($nameParts); // Odstraní první prvek (kořenovou kategorii)
+        array_shift($nameParts);
     }
 
-    // Sestavíme název kategorie bez kořenové kategorie
     $name = implode(' ', $nameParts);
 
     return ['full_category_name' => $name, 'image_path' => $image_path];

@@ -2,7 +2,6 @@
 include 'db.php';
 session_start();
 
-// Check if user is logged in and is a farmer
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'farmer') {
     echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
     exit();
@@ -10,7 +9,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'farmer') {
 
 $user_id = $_SESSION['user_id'];
 
-// Get the search term from the request
 $searchTerm = isset($_GET['searchTerm']) ? strtolower(trim($_GET['searchTerm'])) : null;
 
 // Function to get full category name and image_path
@@ -48,7 +46,6 @@ function getFullCategoryInfo($categoryId, $conn) {
     return ['full_category_name' => $name, 'image_path' => $image_path];
 }
 
-// Build the SQL query
 $sql = "SELECT Offer.*, 
                Attribute.price_item, Attribute.price_kg, Attribute.quantity AS attribute_quantity, Attribute.origin,
                SelfPickingEvent.location, SelfPickingEvent.start_date, SelfPickingEvent.end_date,
@@ -61,7 +58,6 @@ $sql = "SELECT Offer.*,
         JOIN Category ON Offer.category_id = Category.category_id
         WHERE Offer.user_id = ?";
 
-// If a search term is provided, add filtering conditions
 if ($searchTerm) {
     $sql .= " AND (
         LOWER(Usr.name) LIKE ? OR 
@@ -71,13 +67,10 @@ if ($searchTerm) {
     )";
 }
 
-// Order the results by offer ID in descending order
 $sql .= " ORDER BY Offer.offer_id DESC";
 
-// Prepare the statement
 $stmt = $conn->prepare($sql);
 
-// Bind parameters
 if ($searchTerm) {
     $searchTermWildcard = "%" . $searchTerm . "%";
     $stmt->bind_param("issss", $user_id, $searchTermWildcard, $searchTermWildcard, $searchTermWildcard, $searchTermWildcard);
@@ -98,10 +91,8 @@ if ($result->num_rows > 0) {
     }
 }
 
-// Return the offers
 echo json_encode($offers);
 
-// Close the statement and connection
 $stmt->close();
 $conn->close();
 ?>

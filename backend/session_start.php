@@ -7,7 +7,6 @@ $timeout = 600; // 10 minutes
 if (isset($_SESSION['last_activity'])) {
     $elapsedTime = time() - $_SESSION['last_activity'];
     if ($elapsedTime > $timeout) {
-        // Destroy session if timeout is exceeded
         session_unset();
         session_destroy();
         echo json_encode(["status" => "error", "message" => "Session timed out. Please log in again."]);
@@ -15,6 +14,5 @@ if (isset($_SESSION['last_activity'])) {
     }
 }
 
-// Update last activity time
 $_SESSION['last_activity'] = time();
 ?>

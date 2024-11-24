@@ -2,7 +2,6 @@
 include 'db.php';
 session_start();
 
-// Check if user is logged in and is a farmer
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'farmer') {
     echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
     exit();
@@ -11,7 +10,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'farmer') {
 $user_id = $_SESSION['user_id'];
 $offer_id = $_POST['offer_id'];
 
-// Fetch the offer to ensure it belongs to this user
 $sql = "SELECT * FROM Offer WHERE offer_id = ? AND user_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("ii", $offer_id, $user_id);
@@ -23,15 +21,12 @@ if ($result->num_rows === 0) {
     exit();
 }
 
-// Now, update the offer based on its type
 $type = $_POST['type'];
 
-// Start transaction
 $conn->begin_transaction();
 
 try {
     if ($type === 'sale') {
-        // Update Attribute table
         $price_kg = $_POST['price_kg'];
         $quantity = $_POST['quantity'];
         $origin = $_POST['origin'];
@@ -42,7 +37,6 @@ try {
         $stmt->bind_param("dissi", $price_kg, $quantity, $origin, $date_of_harvest, $offer_id);
         $stmt->execute();
 
-        // Update Offer table
         $sql = "UPDATE Offer SET price = ?, quantity = ? WHERE offer_id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("dii", $price_kg, $quantity, $offer_id);
@@ -51,7 +45,6 @@ try {
         $conn->commit();
         echo json_encode(['status' => 'success', 'message' => 'Offer updated successfully']);
     } else if ($type === 'selfpick') {
-        // Update SelfPickingEvent table
         $location = $_POST['location'];
         $start_date = $_POST['start_date'];
         $end_date = $_POST['end_date'];
@@ -63,13 +56,11 @@ try {
         $stmt->bind_param("sssi", $location, $start_date, $end_date, $offer_id);
         $stmt->execute();
 
-        // Update Attribute table
         $sql = "UPDATE Attribute SET price_kg = ?, quantity = ? WHERE offer_id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("dii", $price_kg, $quantity, $offer_id);
         $stmt->execute();
 
-        // Update Offer table
         $sql = "UPDATE Offer SET price = ?, quantity = ? WHERE offer_id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("dii", $price_kg, $quantity, $offer_id);

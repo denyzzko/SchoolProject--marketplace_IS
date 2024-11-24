@@ -3,7 +3,6 @@ include 'session_start.php';
 include 'db.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Get and validate input data
     $user_id = $_SESSION["user_id"];
     $category_id = $_POST["category_id"];
     $type = $_POST["type"];
@@ -13,11 +12,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit();
     }
 
-    // Start transaction
     $conn->begin_transaction();
 
     try {
-        // Insert into Offer table
         $sql_offer = "INSERT INTO Offer (user_id, category_id, type) VALUES (?, ?, ?)";
         $stmt_offer = $conn->prepare($sql_offer);
         $stmt_offer->bind_param("iis", $user_id, $category_id, $type);
@@ -25,7 +22,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $offer_id = $conn->insert_id;
 
         if ($type === 'sale') {
-            // Get sale-specific fields
             $quantity = $_POST["quantity"];
             $origin = $_POST["origin"];
             $date_of_harvest = $_POST["date_of_harvest"];
@@ -36,20 +32,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 throw new Exception("Invalid input data for sale offer.");
             }
 
-            // Insert into Attribute table
             $sql_attribute = "INSERT INTO Attribute (offer_id, origin, date_of_harvest, price_item, price_kg, quantity) VALUES (?, ?, ?, ?, ?, ?)";
             $stmt_attribute = $conn->prepare($sql_attribute);
             $stmt_attribute->bind_param("issdii", $offer_id, $origin, $date_of_harvest, $price_item, $price_kg, $quantity);
             $stmt_attribute->execute();
 
-            // Update Offer table with price and quantity
-            $price = $price_kg; // Assuming price in Offer table is price per kg
+            $price = $price_kg;
             $sql_update_offer = "UPDATE Offer SET price = ?, quantity = ? WHERE offer_id = ?";
             $stmt_update_offer = $conn->prepare($sql_update_offer);
             $stmt_update_offer->bind_param("dii", $price, $quantity, $offer_id);
             $stmt_update_offer->execute();
         } elseif ($type === 'selfpick') {
-            // Get selfpick-specific fields
             $location = $_POST["location"];
             $start_date = $_POST["start_date"];
             $end_date = $_POST["end_date"];
@@ -60,31 +53,26 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 throw new Exception("Invalid input data for self-pick offer.");
             }
 
-            // Insert into SelfPickingEvent table
             $sql_selfpick = "INSERT INTO SelfPickingEvent (offer_id, location, start_date, end_date) VALUES (?, ?, ?, ?)";
             $stmt_selfpick = $conn->prepare($sql_selfpick);
             $stmt_selfpick->bind_param("isss", $offer_id, $location, $start_date, $end_date);
             $stmt_selfpick->execute();
 
-            // Static values for origin and date_of_harvest
-            $origin = 'Czech Republic'; // Statická hodnota pro origin
-            $date_of_harvest = '1900-01-01'; // Statické datum
+            $origin = 'Czech Republic';
+            $date_of_harvest = '1900-01-01';
 
-            // Insert into Attribute table
             $sql_attribute = "INSERT INTO Attribute (offer_id, origin, date_of_harvest, price_kg, quantity) VALUES (?, ?, ?, ?, ?)";
             $stmt_attribute = $conn->prepare($sql_attribute);
             $stmt_attribute->bind_param("issdi", $offer_id, $origin, $date_of_harvest, $price_kg, $quantity);
             $stmt_attribute->execute();
 
-            // Update Offer table with price and quantity
-            $price = $price_kg; // Assuming price in Offer table is price per kg
+            $price = $price_kg;
             $sql_update_offer = "UPDATE Offer SET price = ?, quantity = ? WHERE offer_id = ?";
             $stmt_update_offer = $conn->prepare($sql_update_offer);
             $stmt_update_offer->bind_param("dii", $price, $quantity, $offer_id);
             $stmt_update_offer->execute();
         }
 
-        // Commit transaction
         $conn->commit();
 
         $roleChanged = false;
@@ -95,7 +83,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $stmt_update_role->execute();
             $stmt_update_role->close();
 
-            // Update session role
             $_SESSION['role'] = 'farmer';
 
             $message = "Offer created successfully. You have now become a farmer.";
@@ -104,7 +91,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $message = "Offer created successfully.";
         }
 
-        // Send JSON response with roleChanged flag
         echo json_encode([
             "status" => "success",
             "message" => $message,
@@ -112,7 +98,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             "roleChanged" => $roleChanged
         ]);
     } catch (Exception $e) {
-        // Rollback transaction
         $conn->rollback();
         echo json_encode(["status" => "error", "message" => "Error occurred: " . $e->getMessage()]);
     } finally {

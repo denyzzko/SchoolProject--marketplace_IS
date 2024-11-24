@@ -2,13 +2,11 @@
 include 'db.php';
 include 'session_start.php';
 
-// Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'message' => 'User not logged in']);
     exit;
 }
 
-// Check if farmer_id is provided
 if (!isset($_GET['farmer_id'])) {
     echo json_encode(['success' => false, 'message' => 'Farmer ID not provided']);
     exit;
@@ -16,7 +14,6 @@ if (!isset($_GET['farmer_id'])) {
 
 $farmer_id = $_GET['farmer_id'];
 
-// Get all reviews for offers created by the specific farmer
 $sql = "SELECT DISTINCT r.rating, r.comment, o.category_id
         FROM Review r
         JOIN Offer o ON r.offer_id = o.offer_id
@@ -46,17 +43,14 @@ function getFullCategoryInfo($categoryId, $conn) {
     $result = $stmt->get_result();
 
     if ($row = $result->fetch_assoc()) {
-        // Skip categories that have no parent (i.e., root categories)
         if (is_null($row['parent_category'])) {
-            return ''; // Skip root categories
+            return '';
         }
         
-        // If the category has no parent, return the name
         if (empty($row['parent_category'])) {
             return $row['name'];
         }
         
-        // Get the parent category name
         $parentId = $row['parent_category'];
         $parentStmt = $conn->prepare($sql);
         $parentStmt->bind_param("i", $parentId);
@@ -64,7 +58,6 @@ function getFullCategoryInfo($categoryId, $conn) {
         $parentResult = $parentStmt->get_result();
 
         if ($parentRow = $parentResult->fetch_assoc()) {
-            // If the parent category is "Fruit" or "Vegetable", return only the child name
             if (in_array($parentRow['name'], ['Fruit', 'Vegetable'])) {
                 return $row['name'];
             } else {
@@ -81,7 +74,6 @@ function getFullCategoryInfo($categoryId, $conn) {
 while ($row = $result->fetch_assoc()) {
     $categoryInfo = getFullCategoryInfo($row['category_id'], $conn);
     $row['full_category_name'] = $categoryInfo;
-    // Add the review only if the category is not empty
     if (!empty($row['full_category_name'])) {
         $reviews[] = $row;
     }

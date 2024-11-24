@@ -2,7 +2,6 @@
 include 'db.php';
 include 'session_start.php';
 
-// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['error' => 'User not logged in']);
     exit;
@@ -10,7 +9,6 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Get the category filter if provided
 $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 
 // Function to get all child category IDs for a given category ID
@@ -23,14 +21,12 @@ function getChildCategoryIds($parentId, $conn) {
     $result = $stmt->get_result();
     while ($row = $result->fetch_assoc()) {
         $categoryIds[] = $row['category_id'];
-        // Recursively get child categories
         $categoryIds = array_merge($categoryIds, getChildCategoryIds($row['category_id'], $conn));
     }
     $stmt->close();
     return $categoryIds;
 }
 
-// Query to get self-picking events for the current user
 $sql = "SELECT e.event_id, e.offer_id, e.location, e.start_date, e.end_date, c.category_id, o2.order_id
         FROM SelfPickingEvent e
         JOIN Offer o ON e.offer_id = o.offer_id
@@ -42,7 +38,7 @@ $sql = "SELECT e.event_id, e.offer_id, e.location, e.start_date, e.end_date, c.c
 $params = ["i", $user_id];
 if ($category_id) {
     $childCategoryIds = getChildCategoryIds($category_id, $conn);
-    $childCategoryIds[] = $category_id; // Include the selected category itself
+    $childCategoryIds[] = $category_id;
     $placeholders = implode(',', array_fill(0, count($childCategoryIds), '?'));
     $sql .= " AND c.category_id IN ($placeholders)";
     $params[0] .= str_repeat("i", count($childCategoryIds));
@@ -79,17 +75,14 @@ function getFullCategoryInfo($categoryId, $conn) {
     $result = $stmt->get_result();
 
     if ($row = $result->fetch_assoc()) {
-        // Skip categories that have no parent (i.e., root categories)
         if (is_null($row['parent_category'])) {
-            return ''; // Skip root categories
+            return '';
         }
         
-        // If the category has no parent, return the name
         if (empty($row['parent_category'])) {
             return $row['name'];
         }
         
-        // Get the parent category name
         $parentId = $row['parent_category'];
         $parentStmt = $conn->prepare($sql);
         $parentStmt->bind_param("i", $parentId);
@@ -97,7 +90,6 @@ function getFullCategoryInfo($categoryId, $conn) {
         $parentResult = $parentStmt->get_result();
 
         if ($parentRow = $parentResult->fetch_assoc()) {
-            // If the parent category is "Fruit" or "Vegetable", return only the child name
             if (in_array($parentRow['name'], ['Fruit', 'Vegetable'])) {
                 return $row['name'];
             } else {
@@ -115,7 +107,6 @@ $events = array();
 while ($row = $result->fetch_assoc()) {
     $categoryInfo = getFullCategoryInfo($row['category_id'], $conn);
     $row['full_category_name'] = $categoryInfo;
-    // Add the event only if the category is not empty
     if (!empty($row['full_category_name'])) {
         $events[] = $row;
     }

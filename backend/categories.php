@@ -1,7 +1,6 @@
 <?php
 include 'db.php';
 header('Content-Type: application/json');
-// Get root categories or corresponding subcatecories
 $parentId = isset($_GET['parent_id']) ? $_GET['parent_id'] : null;
 $sql = $parentId
     ? "SELECT * FROM Category WHERE parent_category = ?"

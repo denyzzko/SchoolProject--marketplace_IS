@@ -4,7 +4,6 @@ header('Content-Type: application/json');
 
 include 'db.php';
 
-// Check if the user is a moderator
 if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "moderator") {
     echo json_encode(["status" => "error", "message" => "You are not authorized to manage proposals."]);
     exit();
@@ -23,8 +22,8 @@ function getCategoryFullPath($categoryId, $conn) {
 
         if ($result->num_rows === 1) {
             $row = $result->fetch_assoc();
-            array_unshift($path, $row['name']); // Prepend category name
-            $categoryId = $row['parent_category']; // Move to parent category
+            array_unshift($path, $row['name']);
+            $categoryId = $row['parent_category'];
         } else {
             break;
         }
@@ -32,10 +31,9 @@ function getCategoryFullPath($categoryId, $conn) {
         $stmt->close();
     }
 
-    return implode('/', $path); // Join path elements with a slash
+    return implode('/', $path);
 }
 
-// Retrieve pending proposals
 $sql = "SELECT cp.proposal_id, cp.proposal, cp.status, cp.parent_category_id, u.email 
         FROM CategoryProposal cp 
         JOIN Usr u ON cp.user_id = u.user_id 
@@ -59,7 +57,6 @@ while ($row = $result->fetch_assoc()) {
     ];
 }
 
-// Check if there are proposals
 if (empty($proposals)) {
     echo json_encode(["status" => "success", "message" => "No new category proposals available.", "proposals" => []]);
 } else {

@@ -2,7 +2,6 @@
 include 'db.php';
 include 'session_start.php';
 
-// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['error' => 'User not logged in']);
     exit;
@@ -43,7 +42,7 @@ if (!$result) {
 // Function to get full category info, excluding main categories "Fruit" and "Vegetable"
 function getFullCategoryInfo($categoryId, $conn) {
     if (is_null($categoryId)) {
-        return 'Offer was deleted'; // Default text for missing categories
+        return 'Offer was deleted';
     }
 
     $sql = "SELECT name, parent_category FROM Category WHERE category_id = ?";
@@ -74,14 +73,13 @@ function getFullCategoryInfo($categoryId, $conn) {
     }
 
     $stmt->close();
-    return 'Unknown'; // Default text if category not found
+    return 'Unknown';
 }
 
 $orders = array();
 while ($row = $result->fetch_assoc()) {
     $categoryInfo = getFullCategoryInfo($row['category_id'], $conn);
     $row['full_category_name'] = $categoryInfo;
-    // Add the order only if the category is not empty
     if (!empty($row['full_category_name'])) {
         $orders[] = $row;
     }

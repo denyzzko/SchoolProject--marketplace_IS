@@ -3,7 +3,6 @@ include 'db.php';
 
 $offer_id = $_GET['offer_id'];
 
-// Funkce pro získání úplného názvu kategorie (bez kořene)
 function getFullCategoryName($categoryId, $conn) {
     $nameParts = [];
     $currentId = $categoryId;
@@ -17,10 +16,9 @@ function getFullCategoryName($categoryId, $conn) {
 
         if ($row = $result->fetch_assoc()) {
             if (!$row['parent_category']) {
-                // Pokud je to kořenová kategorie, přestaň přidávat názvy
                 break;
             }
-            array_unshift($nameParts, $row['name']); // Přidáme název na začátek pole
+            array_unshift($nameParts, $row['name']);
             $currentId = $row['parent_category'];
         } else {
             break;
@@ -54,7 +52,6 @@ $result = $stmt->get_result();
 if($result->num_rows > 0) {
     $offer = $result->fetch_assoc();
 
-    // Získáme úplný název kategorie
     $offer['category_name'] = getFullCategoryName($offer['category_id'], $conn);
 
     echo json_encode($offer);

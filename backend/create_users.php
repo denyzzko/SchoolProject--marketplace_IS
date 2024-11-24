@@ -4,26 +4,22 @@ header('Content-Type: application/json');
 
 include 'db.php';
 
-// Ensure the request comes from an admin
 if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "admin") {
     echo json_encode(["status" => "error", "message" => "You are not authorized to create users."]);
     exit();
 }
 
-// Get JSON input
 $data = json_decode(file_get_contents("php://input"), true);
 $name = $data['name'] ?? null;
 $email = $data['email'] ?? null;
 $password = $data['password'] ?? null;
 $role = $data['role'] ?? null;
 
-// Validate input
 if (!$name || !$email || !$password || !$role) {
     echo json_encode(["status" => "error", "message" => "All fields are required."]);
     exit();
 }
 
-// Check if email is already exists
 $sql = "SELECT * FROM Usr WHERE email = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $email);
@@ -35,7 +31,6 @@ if ($result->num_rows > 0) {
     exit();
 }
 
-// Insert new user into the database
 $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 $sql = "INSERT INTO Usr (name, email, password, role) VALUES (?, ?, ?, ?)";
 $stmt = $conn->prepare($sql);

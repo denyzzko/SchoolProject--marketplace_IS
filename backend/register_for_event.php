@@ -2,9 +2,8 @@
 include 'db.php';
 include 'session_start.php';
 
-header('Content-Type: application/json'); // Set the correct header
+header('Content-Type: application/json');
 
-// Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['status' => 'error', 'message' => 'User not logged in']);
     exit;
@@ -20,7 +19,6 @@ if (!isset($input['offer_id'])) {
 
 $offer_id = $input['offer_id'];
 
-// Check if the offer is of type 'selfpick'
 $sql = "SELECT type FROM Offer WHERE offer_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $offer_id);
@@ -38,7 +36,6 @@ if ($row['type'] !== 'selfpick') {
     exit;
 }
 
-// Check if the user is already registered
 $sql = "SELECT * FROM Ordr WHERE user_id = ? AND offer_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("ii", $user_id, $offer_id);
@@ -50,7 +47,6 @@ if ($result->num_rows > 0) {
     exit;
 }
 
-// Check available spaces
 $sql = "SELECT quantity FROM Attribute WHERE offer_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $offer_id);
@@ -70,11 +66,9 @@ if ($available_spaces <= 0) {
     exit;
 }
 
-// Start transaction
 $conn->begin_transaction();
 
 try {
-    // Insert new order
     $sql = "INSERT INTO Ordr (user_id, offer_id, quantity, date, status) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     $quantity = 1; // For self-pick events
@@ -86,7 +80,6 @@ try {
         throw new Exception('Failed to register for the event');
     }
 
-    // Decrement available spaces
     $sql = "UPDATE Attribute SET quantity = quantity - 1 WHERE offer_id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $offer_id);
@@ -94,20 +87,16 @@ try {
         throw new Exception('Failed to update available spaces');
     }
 
-    // Commit transaction
     $conn->commit();
 
-    // **Add this code to change the user's role if they are 'registered'**
     $roleChanged = false;
     if ($_SESSION['role'] === 'registered') {
-        // Update the user's role in the database
         $sql_update_role = "UPDATE Usr SET role = 'customer' WHERE user_id = ?";
         $stmt_update_role = $conn->prepare($sql_update_role);
         $stmt_update_role->bind_param("i", $user_id);
         $stmt_update_role->execute();
         $stmt_update_role->close();
 
-        // Update the session variable
         $_SESSION['role'] = 'customer';
 
         $message = 'Successfully registered for the event. You have now become a customer.';
@@ -119,7 +108,6 @@ try {
     echo json_encode(['status' => 'success', 'message' => $message, 'roleChanged' => $roleChanged]);
 
 } catch (Exception $e) {
-    // Rollback transaction
     $conn->rollback();
     echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
 }

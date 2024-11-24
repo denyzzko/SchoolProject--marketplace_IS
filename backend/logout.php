@@ -1,11 +1,8 @@
 <?php
 session_start();
-// unset all session variables
 session_unset();
-// destroy the session
 session_destroy();
 
-// send message
 echo json_encode(["status" => "success", "message" => "Logged out successfully."]);
 exit();
 ?>

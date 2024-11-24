@@ -10,12 +10,10 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "moderator") {
     exit();
 }
 
-// Get JSON input
 $data = json_decode(file_get_contents("php://input"), true);
 $proposalId = $data['proposal_id'] ?? null;
-$action = $data['action'] ?? null; // 'approve' or 'reject'
+$action = $data['action'] ?? null; 
 
-// Validate input
 if (!$proposalId || !$action) {
     echo json_encode(["status" => "error", "message" => "Invalid request."]);
     exit();
@@ -30,17 +28,14 @@ if ($action === 'approve') {
         exit();
     }
 
-    // Begin a transaction for approving a proposal
     $conn->begin_transaction();
 
     try {
-        // Update proposal status to 'approved'
         $updateSql = "UPDATE CategoryProposal SET status = 'approved' WHERE proposal_id = ?";
         $stmt = $conn->prepare($updateSql);
         $stmt->bind_param("i", $proposalId);
         $stmt->execute();
 
-        // Add the new category
         $insertSql = "INSERT INTO Category (parent_category, name) VALUES (?, ?)";
         $stmt = $conn->prepare($insertSql);
         $stmt->bind_param("is", $parentCategoryId, $proposalName);
@@ -54,7 +49,6 @@ if ($action === 'approve') {
     }
 
 } elseif ($action === 'reject') {
-    // Update proposal status to 'rejected'
     $sql = "UPDATE CategoryProposal SET status = 'rejected' WHERE proposal_id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $proposalId);
