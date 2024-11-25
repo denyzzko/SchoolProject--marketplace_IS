@@ -33,7 +33,7 @@ function loadNavbar() {
                         </div>
                         <img src="/assets/images/profile_icon.png" alt="Profile" class="profile-icon" onclick="toggleDropdown()">
                         <div class="dropdown" id="profileDropdown">
-                            <a href="my_profile.html">My Profile</a>
+                            <a href="../frontend/my_profile.html">My Profile</a>
                             <a href="#" onclick="logout()">Logout</a>
                         </div>
                     `;
@@ -51,7 +51,7 @@ function loadNavbar() {
                         </div>
                         <img src="/assets/images/profile_icon.png" alt="Profile" class="profile-icon" onclick="toggleDropdown()">
                         <div class="dropdown" id="profileDropdown">
-                            <a href="my_profile.html">My Profile</a>
+                            <a href="../frontend/my_profile.html">My Profile</a>
                             <a href="../frontend/my_orders.html">My Orders</a>
                             <a href="#" onclick="logout()">Logout</a>
                         </div>
@@ -70,7 +70,7 @@ function loadNavbar() {
                         </div>
                         <img src="/assets/images/profile_icon.png" alt="Profile" class="profile-icon" onclick="toggleDropdown()">
                         <div class="dropdown" id="profileDropdown">
-                            <a href="my_profile.html">My Profile</a>
+                            <a href="../frontend/my_profile.html">My Profile</a>
                             <a href="../frontend/my_orders.html">My Orders</a>
                             <a href="../frontend/my_reviews.html">My Reviews</a>
                             <a href="#" onclick="logout()">Logout</a>
@@ -89,7 +89,7 @@ function loadNavbar() {
                         </div>
                         <img src="/assets/images/profile_icon.png" alt="Profile" class="profile-icon" onclick="toggleDropdown()">
                         <div class="dropdown" id="profileDropdown">
-                            <a href="my_profile.html">My Profile</a>
+                            <a href="../frontend/my_profile.html">My Profile</a>
                             <a href="#" onclick="logout()">Logout</a>
                         </div>
                     `;
@@ -106,7 +106,7 @@ function loadNavbar() {
                         </div>
                         <img src="/assets/images/profile_icon.png" alt="Profile" class="profile-icon" onclick="toggleDropdown()">
                         <div class="dropdown" id="profileDropdown">
-                            <a href="my_profile.html">My Profile</a>
+                            <a href="../frontend/my_profile.html">My Profile</a>
                             <a href="#" onclick="logout()">Logout</a>
                         </div>
                     `;
