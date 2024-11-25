@@ -37,12 +37,7 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("iidss", $user_id, $offer_id, $quantity, $date, $status);
 $stmt->execute();
 
-//Update quantity
-$new_quantity = $offer['quantity'] - $quantity;
-$sql = "UPDATE Attribute SET quantity = ? WHERE offer_id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("di", $new_quantity, $offer_id);
-$stmt->execute();
+
 
 //Update user to customer if user is registered
 $roleChanged = false;

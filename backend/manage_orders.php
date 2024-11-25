@@ -56,7 +56,7 @@ try {
         //SQL query to update quantity
         $sql = "UPDATE Attribute SET quantity = quantity - ? WHERE attribute_id = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param('ii', $order['quantity'], $order['attribute_id']);
+        $stmt->bind_param('di', $order['quantity'], $order['attribute_id']);
         $stmt->execute();
 
         $message = 'Order successfully confirmed.';
