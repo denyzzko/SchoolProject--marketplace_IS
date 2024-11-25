@@ -10,19 +10,23 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "moderator") {
     exit();
 }
 
+//Get input data
 $data = json_decode(file_get_contents("php://input"), true);
 $proposalId = $data['proposal_id'] ?? null;
 $action = $data['action'] ?? null; 
 
+//Validate request
 if (!$proposalId || !$action) {
     echo json_encode(["status" => "error", "message" => "Invalid request."]);
     exit();
 }
 
+//handle action approve
 if ($action === 'approve') {
     $parentCategoryId = $data['parent_category_id'] ?? null;
     $proposalName = $data['proposal'] ?? null;
 
+    //Check for category name
     if (!$proposalName) {
         echo json_encode(["status" => "error", "message" => "Category name is missing in proposal."]);
         exit();
@@ -31,11 +35,13 @@ if ($action === 'approve') {
     $conn->begin_transaction();
 
     try {
+        //SQL query to update proposal status to approved
         $updateSql = "UPDATE CategoryProposal SET status = 'approved' WHERE proposal_id = ?";
         $stmt = $conn->prepare($updateSql);
         $stmt->bind_param("i", $proposalId);
         $stmt->execute();
 
+        //SQL query to insert the new approved category
         $insertSql = "INSERT INTO Category (parent_category, name) VALUES (?, ?)";
         $stmt = $conn->prepare($insertSql);
         $stmt->bind_param("is", $parentCategoryId, $proposalName);
@@ -48,7 +54,9 @@ if ($action === 'approve') {
         echo json_encode(["status" => "error", "message" => "Failed to approve proposal."]);
     }
 
+//Handle action reject
 } elseif ($action === 'reject') {
+    //SQL query to update proposal status to rejected
     $sql = "UPDATE CategoryProposal SET status = 'rejected' WHERE proposal_id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $proposalId);

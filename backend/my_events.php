@@ -2,13 +2,16 @@
 include 'db.php';
 include 'session_start.php';
 
+//Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['error' => 'User not logged in']);
     exit;
 }
 
+//Get User Id from session
 $user_id = $_SESSION['user_id'];
 
+//Get category Id from session
 $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 
 // Function to get all child category IDs for a given category ID
@@ -27,6 +30,7 @@ function getChildCategoryIds($parentId, $conn) {
     return $categoryIds;
 }
 
+//SQL query to get selfpicking events
 $sql = "SELECT e.event_id, e.offer_id, e.location, e.start_date, e.end_date, c.category_id, o2.order_id
         FROM SelfPickingEvent e
         JOIN Offer o ON e.offer_id = o.offer_id
@@ -34,7 +38,7 @@ $sql = "SELECT e.event_id, e.offer_id, e.location, e.start_date, e.end_date, c.c
         JOIN Category c ON o.category_id = c.category_id
         WHERE o2.user_id = ? AND o.type = 'selfpick'";
 
-// Add category filter if it is provided
+// Add category filter
 $params = ["i", $user_id];
 if ($category_id) {
     $childCategoryIds = getChildCategoryIds($category_id, $conn);
@@ -74,6 +78,7 @@ function getFullCategoryInfo($categoryId, $conn) {
     $stmt->execute();
     $result = $stmt->get_result();
 
+    //Fetch category info
     if ($row = $result->fetch_assoc()) {
         if (is_null($row['parent_category'])) {
             return '';
@@ -83,6 +88,7 @@ function getFullCategoryInfo($categoryId, $conn) {
             return $row['name'];
         }
         
+        //Get parent category info
         $parentId = $row['parent_category'];
         $parentStmt = $conn->prepare($sql);
         $parentStmt->bind_param("i", $parentId);
@@ -103,6 +109,7 @@ function getFullCategoryInfo($categoryId, $conn) {
     return '';
 }
 
+//Fetch selfpicking events details and add full category name
 $events = array();
 while ($row = $result->fetch_assoc()) {
     $categoryInfo = getFullCategoryInfo($row['category_id'], $conn);

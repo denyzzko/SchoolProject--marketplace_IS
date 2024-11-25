@@ -2,13 +2,16 @@
 include 'db.php';
 include 'session_start.php';
 
+//Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['error' => 'User not logged in']);
     exit;
 }
 
+//Get User ID from session
 $session_user_id = $_SESSION['user_id'];
 
+//SQL query to get order details
 $sql = "SELECT o.order_id, o.date, o.status, u.name AS farmer_name, c.category_id, o.quantity, off.type, a.price_kg
         FROM Ordr o
         LEFT JOIN Offer off ON o.offer_id = off.offer_id
@@ -45,23 +48,27 @@ function getFullCategoryInfo($categoryId, $conn) {
         return 'Offer was deleted';
     }
 
+    //SQL Query to get category name and parent category
     $sql = "SELECT name, parent_category FROM Category WHERE category_id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $categoryId);
     $stmt->execute();
     $result = $stmt->get_result();
 
+    //Fetch category info
     if ($row = $result->fetch_assoc()) {
         if (is_null($row['parent_category'])) {
             return $row['name'];
         }
 
+        //Get parent category info
         $parentId = $row['parent_category'];
         $parentStmt = $conn->prepare($sql);
         $parentStmt->bind_param("i", $parentId);
         $parentStmt->execute();
         $parentResult = $parentStmt->get_result();
 
+        //Fetch parent category info
         if ($parentRow = $parentResult->fetch_assoc()) {
             if (in_array($parentRow['name'], ['Fruit', 'Vegetable'])) {
                 return $row['name'];
@@ -76,6 +83,7 @@ function getFullCategoryInfo($categoryId, $conn) {
     return 'Unknown';
 }
 
+//Fetch order details and add full category name
 $orders = array();
 while ($row = $result->fetch_assoc()) {
     $categoryInfo = getFullCategoryInfo($row['category_id'], $conn);

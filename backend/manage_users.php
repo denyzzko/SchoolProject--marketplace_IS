@@ -9,14 +9,18 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "admin") {
     exit();
 }
 
+//Get input data and action type
 $data = json_decode(file_get_contents('php://input'), true);
 $action = $_GET['action'] ?? $data['action'];
+//Handle search action
 if ($action === "search") {
+    //Check for email
     if (!isset($_GET['email'])) {
         echo json_encode(["status" => "error", "message" => "Email is required."]);
         exit();
     }
-
+    
+    //SQL query to search for user by given email
     $email = $_GET['email'];
     $sql = "SELECT name, email, role FROM Usr WHERE email = ?";
     $stmt = $conn->prepare($sql);
@@ -24,6 +28,7 @@ if ($action === "search") {
     $stmt->execute();
     $result = $stmt->get_result();
 
+    //Check if user is found
     if ($result->num_rows === 1) {
         $user = $result->fetch_assoc();
         echo json_encode(["status" => "success", "user" => $user]);
@@ -32,6 +37,7 @@ if ($action === "search") {
     }
 
     $stmt->close();
+//Handle action update
 } elseif ($action === "update") {
     if (!isset($data['email'], $data['name'], $data['role'])) {
         echo json_encode(["status" => "error", "message" => "All fields are required."]);
@@ -42,6 +48,7 @@ if ($action === "search") {
     $name = $data['name'];
     $role = $data['role'];
 
+    //SQL query to update user details
     $sql = "UPDATE Usr SET name = ?, role = ? WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("sss", $name, $role, $email);
@@ -53,14 +60,15 @@ if ($action === "search") {
     }
 
     $stmt->close();
+//Handle action delete
 } elseif ($action === "delete") {
     if (!isset($data['email'])) {
         echo json_encode(["status" => "error", "message" => "Email is required."]);
         exit();
     }
 
+    //SQL query to delete user
     $email = $data['email'];
-
     $sql = "DELETE FROM Usr WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
