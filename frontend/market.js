@@ -691,7 +691,7 @@ function openOfferSidebar(offerId) {
                         <p><strong>Start Date:</strong> ${data.start_date}</p>
                         <p><strong>End Date:</strong> ${data.end_date}</p>
                         <p><strong>Price per Kg:</strong> ${data.price_kg} CZK</p>
-                        <p><strong>Available spaces:</strong> ${data.attribute_quantity}</p>
+                        <p><strong>Available spaces:</strong> ${Math.trunc(data.attribute_quantity)}</p>
                     `;
 
                     fetch(`../backend/check_event_registration.php?offer_id=${offerId}`)
@@ -1019,7 +1019,7 @@ function openEditOfferSidebar(offerId) {
                         <input type="number" id="price_kg" name="price_kg" step="0.01" value="${data.price_kg}" required><br><br>
                     
                         <label for="quantity">Maximum Number of Registrations:</label>
-                        <input type="number" id="quantity" name="quantity" value="${data.attribute_quantity}" required><br><br>
+                        <input type="number" id="quantity" name="quantity" value="${Math.trunc(data.attribute_quantity)}" required><br><br>
                     `;
                 }
 
