@@ -4,6 +4,7 @@ header('Content-Type: application/json');
 
 include 'db.php';
 
+// Check if the user is logged in and has a moderator role
 if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "moderator") {
     echo json_encode(["status" => "error", "message" => "You are not authorized to manage proposals."]);
     exit();
@@ -12,8 +13,9 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "moderator") {
 // Function to generate full category path
 function getCategoryFullPath($categoryId, $conn) {
     $path = [];
-
+    // Traverse up the category hierarchy until root
     while ($categoryId !== null) {
+        // SQL query to fetch category details based on the category_id
         $sql = "SELECT category_id, name, parent_category FROM Category WHERE category_id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $categoryId);
@@ -30,18 +32,18 @@ function getCategoryFullPath($categoryId, $conn) {
 
         $stmt->close();
     }
-
+    // Return full path as a string, separated by /
     return implode('/', $path);
 }
-
+// SQL to retrieve all pending category proposals and related user information
 $sql = "SELECT cp.proposal_id, cp.proposal, cp.status, cp.parent_category_id, u.email 
         FROM CategoryProposal cp 
         JOIN Usr u ON cp.user_id = u.user_id 
         WHERE cp.status = 'pending'";
 $result = $conn->query($sql);
-
+// Array to store proposals
 $proposals = [];
-
+// Process each proposal
 while ($row = $result->fetch_assoc()) {
     $fullPath = $row['parent_category_id'] 
         ? getCategoryFullPath($row['parent_category_id'], $conn) . '/' . $row['proposal']

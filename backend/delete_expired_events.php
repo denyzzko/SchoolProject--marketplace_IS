@@ -4,7 +4,7 @@ include 'db.php';
 
 // Get the current date in the format "YYYY-MM-DD"
 $currentDate = date('Y-m-d');
-
+// SQL query to delete self-picking offers that have ended before the current date
 $sql = "
     DELETE Offer 
     FROM Offer 
@@ -25,4 +25,5 @@ if ($stmt) {
 } else {
     echo "Error preparing the query: " . $conn->error;
 }
+$conn->close();
 ?>

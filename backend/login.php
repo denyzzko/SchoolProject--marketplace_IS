@@ -3,10 +3,11 @@ include 'session_start.php';
 include 'db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Retrieve the email and password from the POST request
     $email = $_POST["email"];
     $password = $_POST["password"];
 
-    // check if email exists in the database
+    // SQL to check if email exists in the database
     $sql = "SELECT * FROM Usr WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
@@ -16,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows == 1) {
         $row = $result->fetch_assoc();
         if (password_verify($password, $row["password"])) {
-            // password correct so set session
+            // Password correct so set session
             $_SESSION["user_id"] = $row["user_id"];
             $_SESSION["role"] = $row["role"];
             $_SESSION["name"] = $row["name"];

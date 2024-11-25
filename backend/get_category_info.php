@@ -1,14 +1,15 @@
 <?php
 include 'db.php';
-
+// Retrieve category_id from GET request
 $categoryId = $_GET['category_id'];
-
+// Function to retrieve the full hierarchical name and image path of a category
 function getFullCategoryInfo($categoryId, $conn) {
     $nameParts = [];
     $currentId = $categoryId;
     $image_path = '';
-
+     // Loop to traverse up category hierarchy
     while ($currentId) {
+        // SQL statement to select the category details
         $sql = "SELECT name, parent_category, image_path FROM Category WHERE category_id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $currentId);
@@ -29,7 +30,7 @@ function getFullCategoryInfo($categoryId, $conn) {
 
         $stmt->close();
     }
-
+    // Remove root category from name
     if (count($nameParts) > 1) {
         array_shift($nameParts);
     }
@@ -42,5 +43,6 @@ function getFullCategoryInfo($categoryId, $conn) {
 
 $categoryInfo = getFullCategoryInfo($categoryId, $conn);
 echo json_encode($categoryInfo);
+
 $conn->close();
 ?>
