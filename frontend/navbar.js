@@ -17,7 +17,6 @@ function loadNavbar() {
         .then(data => {
             const navLinks = document.getElementById('nav-links');
             const profile = document.getElementById('profile');
-            const responseElement = document.getElementById('response');
 
             if (data.loggedIn) {
                 if (data.role === "registered") {
@@ -112,8 +111,6 @@ function loadNavbar() {
                     `;
                 }
 
-                responseElement.textContent = `Hello ${data.name}, how are you today?`;
-                activateCurrentPageLink();
 
             } else {
                 // not logged in
@@ -126,8 +123,8 @@ function loadNavbar() {
                         <button onclick="window.location.href='../frontend/login.html'">Login</button>
                     </div>
                 `;
-                responseElement.textContent = "Please log in or create a new account to access more features.";
             }
+            activateCurrentPageLink();
         })
         .catch(error => {
             console.error('Error:', error);
