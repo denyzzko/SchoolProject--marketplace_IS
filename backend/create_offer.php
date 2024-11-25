@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             $sql_attribute = "INSERT INTO Attribute (offer_id, origin, date_of_harvest, price_kg, quantity) VALUES (?, ?, ?, ?, ?)";
             $stmt_attribute = $conn->prepare($sql_attribute);
-            $stmt_attribute->bind_param("issddd", $offer_id, $origin, $date_of_harvest, $price_kg, $quantity);
+            $stmt_attribute->bind_param("issdd", $offer_id, $origin, $date_of_harvest, $price_kg, $quantity);
             $stmt_attribute->execute();
 
             $price = $price_kg;

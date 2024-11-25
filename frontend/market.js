@@ -230,7 +230,6 @@ document.getElementById('submitOfferFormSidebar').addEventListener('click', func
     formData.append('type', type);
 
     if (type === 'sale') {
-        // Get fields specific to 'sale'
         const price_kg = document.getElementById('price_kg').value;
         const quantity = document.getElementById('quantity').value;
         const origin = document.getElementById('origin').value;
