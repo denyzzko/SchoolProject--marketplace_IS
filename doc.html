@@ -35,7 +35,7 @@
 			<li>- moderátor stránka</li>
 			<li>- profilová stránka</li>
 			<li>- návrh nových kategorií užívatelom</li>
-			<li>- vybavovaneie objednávok</li>
+			<li>- vybavovanie objednávok</li>
 		</ul>
 	</dd><br>
   <dd>Tomáš Potůček 
@@ -44,10 +44,9 @@
 		<ul style="list-style-type:none;margin:0;">
 			<li>- návrh systému ve figmě</li>
 			<li>- vytvoření nabídek/objednávek</li>
-		  <li>- správa nabídek (upravit/smazat)</li>
-		  <li>- vyhledávací panel nabídek</li>
-		  <li>- zobrazení všech nabídek konkrétního farmáře</li>
-		  <li>- market design</li>
+		  	<li>- správa nabídek (upravit/smazat)</li>
+		  	<li>- vyhledávací panel nabídek</li>
+		  	<li>- zobrazení všech nabídek konkrétního farmáře</li>
 		</ul>
 	</dd>
 	<dt>URL aplikace</dt>
@@ -168,13 +167,25 @@
 
 Stručně popište: 
 <ul>
-<li>postup instalace na server,</li>
-<li>softwarové požadavky (verze PHP apod.),</li>
-<li>jak rozbalit, konfigurovat, inicializovat databázi, ...</li>
+	<li>softwarové požadavky:</li>
+		<ul>
+			<li>Potrebná verzia PHP 8.1.2 alebo novšia</li>
+			<li>Nainštalované rozšírenie php-mysqli</li>
+		</ul>
+	<li>postup:</li>
+	<ol>
+		<li>Spustenie MySQL serveru </li>
+		<li>Prihlásenie sa do databázového systému a vytvorenie novej databázy pre tento projekt (napr. MySQL Workbench)</li>
+		<li>V adresári projektu je sql script pre inicializáciu štruktúry database/scheme.sql</li>
+		<li>V súbore backend/db.php je potrebné zadať údaje pre pripojenie k databáze</li>
+		<li>Spustenie lokálneho php serveru v koreňovom adresári projektu</li>
+	</ol>
 </ul>
 
 <h2>Známé problémy</h2>
-<p>Zde popište, které body zadání nejsou implementovány a z jakého důvodu. Např. &#8222;Z časových důvodů nebyla implementována správa uživatelů.&#8221; Pomůžete tím zrychlit hodnocení, když neimplementované funkce nebudeme muset dlouze hledat.</p>
+<p>Nie je implementovaná správa atribútov z časových dôvodov (Dôvodu odsúhlasenia návrh systému na konzultácii čo sa neskôr prejavilo ako neriešitelné. Očividné nepremyslenie tejto časti zadania
+	čo môže byť patrné aj z fóra. Mať rôzne atribúty pre rôzne kategórie s rôznymi datovými typmi a zároveň umožnovať toto všetko dynamicky meniť nedáva zmysel.)
+</p>
 
 
 
