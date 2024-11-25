@@ -11,7 +11,6 @@ function searchUser() {
     const successMessageElement = document.getElementById('success-message');
     const userInfoElement = document.getElementById('user-info');
 
-    // Clear previous messages and user info
     errorMessageElement.textContent = '';
     successMessageElement.textContent = '';
     userInfoElement.style.display = 'none';
@@ -20,13 +19,11 @@ function searchUser() {
         .then(response => response.json())
         .then(data => {
             if (data.status === "success") {
-                // Populate user information so it is pre-filled
                 userInfoElement.style.display = 'block';
                 document.getElementById('user-name').value = data.user.name;
                 document.getElementById('user-email').value = data.user.email;
                 document.getElementById('user-role').value = data.user.role;
             } else {
-                // Display error message
                 displayMessage(errorMessageElement, data.message, "error");
             }
         })
@@ -55,7 +52,6 @@ function updateUser() {
         .then(response => response.json())
         .then(data => {
             if (data.status === "success") {
-                // Display success message and hide user info
                 displayMessage(successMessageElement, data.message, "success");
                 userInfoElement.style.display = 'none';
             } else {
